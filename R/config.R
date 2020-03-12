@@ -1,5 +1,3 @@
-COMET_CONFIG_FILE_NAME <- ".comet.yml"
-
 get_config_api_key <- function(value = NULL) {
   get_config_param("COMET_API_KEY", value = value)
 }
@@ -59,7 +57,7 @@ get_config_from_homedir <- function(name) {
 
 get_config_from_configfile <- function(name, dir) {
   tryCatch({
-    file <- file.path(dir, COMET_CONFIG_FILE_NAME)
+    file <- file.path(dir, .cometenv$COMET_CONFIG_FILE_NAME)
     if (file.exists(file)) {
       configs <- suppressWarnings(yaml::read_yaml(file, eval.expr = TRUE))
       configs[[name]]
