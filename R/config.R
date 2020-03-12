@@ -28,16 +28,16 @@ get_config_logging_file_level <- function(value = NULL) {
 get_config_param <- function(name, value = NULL, default = NULL) {
   value <- get_config_from_value(value)
   if (!is_config_empty(value)) return(value)
-  
+
   value <- get_config_from_envvar(name)
   if (!is_config_empty(value)) return(value)
-  
+
   value <- get_config_from_wd(name)
   if (!is_config_empty(value)) return(value)
-  
+
   value <- get_config_from_homedir(name)
   if (!is_config_empty(value)) return(value)
-  
+
   default
 }
 
@@ -67,7 +67,7 @@ get_config_from_configfile <- function(name, dir) {
       NULL
     }
   }, error = function(err) {
-    NULL    
+    NULL
   })
 }
 
