@@ -19,7 +19,7 @@ get_startup_args <- function() {
 }
 
 get_startup_packages <- function() {
-  packages <- installed.packages(noCache = TRUE)
+  packages <- installed.packages(noCache = TRUE, priority = "NA")
   packages <- as.data.frame(packages, stringsAsFactors = FALSE)
   rownames(packages) <- NULL
   packages <- packages[, c("Package", "Version")]
