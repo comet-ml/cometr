@@ -1,40 +1,41 @@
 COMET_CONFIG_FILE_NAME <- ".comet.yml"
 
 get_config_api_key <- function(value = NULL) {
-  get_config_param("COMET_API_KEY")
+  get_config_param("COMET_API_KEY", value = value)
 }
 
 get_config_url <- function(value = NULL) {
-  get_config_param("COMET_API_URL")
+  get_config_param("COMET_API_URL", value = value,
+                   default = "https://www.comet.ml/api/rest/v2")
 }
 
 get_config_workspace <- function(value = NULL) {
-  get_config_param("COMET_WORKSPACE")
+  get_config_param("COMET_WORKSPACE", value = value)
 }
 
 get_config_project_name <- function(value = NULL) {
-  get_config_param("COMET_PROJECT_NAME")
+  get_config_param("COMET_PROJECT_NAME", value = value)
 }
 
 get_config_logging_file <- function(value = NULL) {
-  get_config_param("COMET_LOGGING_FILE")
+  get_config_param("COMET_LOGGING_FILE", value = value)
 }
 
 get_config_logging_file_level <- function(value = NULL) {
-  get_config_param("COMET_LOGGING_FILE_LEVEL")
+  get_config_param("COMET_LOGGING_FILE_LEVEL", value = value)
 }
 
-get_config_param <- function(name, default = NULL) {
+get_config_param <- function(name, value = NULL, default = NULL) {
   value <- get_config_from_value(value)
   if (!is_config_empty(value)) return(value)
   
-  value <- get_config_from_envvar(varname)
+  value <- get_config_from_envvar(name)
   if (!is_config_empty(value)) return(value)
   
-  value <- get_config_from_wd(varname)
+  value <- get_config_from_wd(name)
   if (!is_config_empty(value)) return(value)
   
-  value <- get_config_from_homedir(varname)
+  value <- get_config_from_homedir(name)
   if (!is_config_empty(value)) return(value)
   
   default
@@ -60,7 +61,7 @@ get_config_from_configfile <- function(name, dir) {
   tryCatch({
     file <- file.path(dir, COMET_CONFIG_FILE_NAME)
     if (file.exists(file)) {
-      configs <- yaml::read_yaml(file, eval.expr = TRUE)
+      configs <- suppressWarnings(yaml::read_yaml(file, eval.expr = TRUE))
       configs[[name]]
     } else {
       NULL
