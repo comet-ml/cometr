@@ -3,8 +3,7 @@ get_config_api_key <- function(value = NULL) {
 }
 
 get_config_url <- function(value = NULL) {
-  get_config_param("COMET_API_URL", value = value,
-                   default = "https://www.comet.ml/api/rest/v2")
+  get_config_param("COMET_API_URL", value = value, default = .cometenv$COMET_API_DEFAULT_URL)
 }
 
 get_config_workspace <- function(value = NULL) {
