@@ -7,6 +7,7 @@
 
 .cometenv$LOG_LEVEL_MAP <- list(DEBUG = 1, INFO = 2, ERROR = 3)
 .cometenv$logging_enabled <- FALSE
+.cometenv$logging_queue <- list()
 
 .cometenv$cache <- list()
 .cometenv$cache$config <- list()
