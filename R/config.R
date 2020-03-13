@@ -37,7 +37,14 @@ get_config_param <- function(param, default = NULL) {
   if (is.null(.cometenv$cache$config[[param]])) {
     LOG_DEBUG("Searching for config param `", param, "`")
     value <- search_config_param(param = param, default = default)
-    save_config_param(param = param, value = value)
+    if (!is_config_empty(value)) {
+      # Take special care for the log file - want to ensure we use the full path
+      # so that if the user changes directories during the analysis, same file is used
+      if (param == "COMET_LOGGING_FILE") {
+        value <- normalizePath(value)
+      }
+      save_config_param(param = param, value = value)
+    }
   }
   .cometenv$cache$config[[param]]
 }
@@ -53,16 +60,17 @@ search_config_param <- function(param, default = NULL) {
   value <- get_config_from_homedir(param)
   if (!is_config_empty(value)) return(value)
 
+  LOG_DEBUG("Param not found, using default value")
   default
 }
 
 save_config_param <- function(param, value) {
-  LOG_DEBUG("Caching `", param, "` as `", value, "`")
+  LOG_DEBUG("Saving `", param, "` as `", value, "`")
   .cometenv$cache$config[[param]] <- value
 }
 
 get_config_from_envvar <- function(name) {
-  LOG_DEBUG("Searching `", name, "` in envvars")
+  LOG_DEBUG("Searching in envvars")
   Sys.getenv(name, "")
 }
 
@@ -77,7 +85,7 @@ get_config_from_homedir <- function(name) {
 get_config_from_configfile <- function(name, dir) {
   tryCatch({
     file <- file.path(dir, .cometenv$COMET_CONFIG_FILE_NAME)
-    LOG_DEBUG("Searching `", name, "` in config file ", file)
+    LOG_DEBUG("Searching in config file ", file)
     if (file.exists(file)) {
       configs <- suppressWarnings(yaml::read_yaml(file, eval.expr = TRUE))
       configs[[name]]

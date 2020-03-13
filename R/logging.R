@@ -36,7 +36,10 @@ comet_log_helper <- function(text, level) {
       config_level <- .cometenv$LOG_LEVEL_MAP[[get_config_logging_file_level()]]
       if (requested_level >= config_level) {
         write(
-          sprintf("%s [%s] %s", get_human_time(), level, text),
+          sprintf("%s [%s] %s",
+                  get_human_time(),
+                  .cometenv$LOG_LEVEL_SHORTHAND[[level]],
+                  text),
           file = get_config_logging_file(),
           append = TRUE
         )
