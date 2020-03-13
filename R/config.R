@@ -20,10 +20,14 @@ get_config_url <- function() {
 }
 
 get_config_logging_file <- function() {
+  .cometenv$logging_enabled <- FALSE
+  on.exit(.cometenv$logging_enabled <- TRUE)
   get_config_param("COMET_LOGGING_FILE")
 }
 
 get_config_logging_file_level <- function() {
+  .cometenv$logging_enabled <- FALSE
+  on.exit(.cometenv$logging_enabled <- TRUE)
   get_config_param("COMET_LOGGING_FILE_LEVEL")
 }
 

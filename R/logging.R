@@ -17,17 +17,19 @@ comet_log <- function(..., level) {
 
   tryCatch({
     text <- paste(list(...), collapse = "")
-    requested_level <- .cometenv$LOG_LEVEL_MAP[[level]]
-    config_level <- .cometenv$LOG_LEVEL_MAP[[get_config_logging_file_level()]]
-    if (can_write_log() && requested_level >= config_level) {
-      write(
-        sprintf("%s [%s] %s", get_human_time(), level, text),
-        file = get_config_logging_file(),
-        append = TRUE
-      )
+    if (can_write_log()) {
+      requested_level <- .cometenv$LOG_LEVEL_MAP[[level]]
+      config_level <- .cometenv$LOG_LEVEL_MAP[[get_config_logging_file_level()]]
+      if (requested_level >= config_level) {
+        write(
+          sprintf("%s [%s] %s", get_human_time(), level, text),
+          file = get_config_logging_file(),
+          append = TRUE
+        )
+      }
     }
   }, error = function(err) {
-    warning("Failed to write cometr to log.", call. = TRUE)
+    warning("Failed to write cometr to log.", call. = FALSE)
   })
 }
 
@@ -46,7 +48,7 @@ can_write_log_helper <- function() {
   }
   if (xor(is.null(logfile), is.null(loglevel))) {
     warning("You must set both `COMET_LOGGING_FILE` and `COMET_LOGGING_FILE_LEVEL` ",
-            "in order to log cometr activity.", call. = FALSE)
+      "in order to log cometr activity.", call. = FALSE)
     return(FALSE)
   }
 
@@ -79,4 +81,14 @@ can_write_log_helper <- function() {
 
 get_human_time <- function(time = Sys.time()) {
   format(time, "%Y%m%d%H%M%S")
+}
+
+comet_stop <- function(...) {
+  LOG_ERROR(...)
+  stop(..., call. = FALSE)
+}
+
+comet_warning <- function(...) {
+  LOG_ERROR(...)
+  warning(..., call. = FALSE)
 }

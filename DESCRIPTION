@@ -10,8 +10,6 @@ Description: TODO
 URL: https://github.com/daattali/cometr
 BugReports: https://github.com/daattali/cometr/issues
 Imports:
-    curl,
-    glue,
     R.utils,
     yaml
 Depends:
