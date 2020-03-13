@@ -1,5 +1,7 @@
 # cometr
 
+[![Travis build status](https://travis-ci.org/daattali/cometr.svg?branch=master)](https://travis-ci.org/daattali/cometr)
+
 Comet SDK for R
 
 

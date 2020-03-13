@@ -1,3 +1,4 @@
 ^cometr\.Rproj$
 ^\.Rproj\.user$
 ^\.comet\.yml$
+^\.travis\.yml$
