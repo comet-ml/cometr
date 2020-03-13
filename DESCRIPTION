@@ -10,6 +10,7 @@ Description: TODO
 URL: https://github.com/daattali/cometr
 BugReports: https://github.com/daattali/cometr/issues
 Imports:
+    httr,
     R.utils,
     yaml
 Depends:

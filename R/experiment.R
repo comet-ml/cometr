@@ -1,3 +1,8 @@
+#' Create a new experiment
+#' @param project_name
+#' @param workspace
+#' @param api_key
+#' @param log_errors
 #' @export
 experiment <- function(
   project_name = NULL, workspace = NULL, api_key = NULL, log_errors = FALSE
