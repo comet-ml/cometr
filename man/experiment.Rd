@@ -16,7 +16,7 @@ experiment(
 
 \item{workspace}{Workspace name}
 
-\item{api_key}{API key}
+\item{api_key}{Comet API key}
 
 \item{log_errors}{Whether or not to log errors}
 }
