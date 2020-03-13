@@ -11,6 +11,15 @@ experiment(
   log_errors = FALSE
 )
 }
+\arguments{
+\item{project_name}{Project name}
+
+\item{workspace}{Workspace name}
+
+\item{api_key}{API key}
+
+\item{log_errors}{Whether or not to log errors}
+}
 \description{
 Create a new experiment
 }
