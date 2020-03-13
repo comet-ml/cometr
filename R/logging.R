@@ -43,7 +43,7 @@ comet_log_helper <- function(text, level) {
       }
     }
   }, error = function(err) {
-    warning("Failed to write cometr to log.", call. = FALSE)
+    warning("Failed to write cometr to log: ", err$message, call. = FALSE)
   })
 }
 

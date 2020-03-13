@@ -82,10 +82,11 @@ get_config_from_configfile <- function(name, dir) {
       configs <- suppressWarnings(yaml::read_yaml(file, eval.expr = TRUE))
       configs[[name]]
     } else {
+      LOG_DEBUG("Config file not found")
       NULL
     }
   }, error = function(err) {
-    NULL
+    LOG_ERROR("Error trying to read from config file: ", err$message)
   })
 }
 

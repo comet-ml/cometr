@@ -1,7 +1,7 @@
 #' Create a new experiment
 #' @param project_name Project name
 #' @param workspace Workspace name
-#' @param api_key API key
+#' @param api_key Comet API key
 #' @param log_errors Whether or not to log errors
 #' @export
 experiment <- function(
