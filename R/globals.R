@@ -6,7 +6,7 @@
 .cometenv$COMET_API_ENDPOINT_BASE <- paste0("/api/rest/", .cometenv$COMET_API_VERSION)
 
 .cometenv$LOG_LEVEL_MAP <- list(DEBUG = 1, INFO = 2, ERROR = 3)
-.cometenv$log_init <- FALSE
+.cometenv$logging_enabled <- FALSE
 
 .cometenv$cache <- list()
 .cometenv$cache$config <- list()

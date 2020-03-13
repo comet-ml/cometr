@@ -11,7 +11,7 @@ LOG_ERROR <- function(...) {
 }
 
 comet_log <- function(..., level) {
-  if (!.cometenv$log_init) {
+  if (!.cometenv$logging_enabled) {
     return()
   }
 
