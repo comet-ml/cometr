@@ -6,19 +6,19 @@
 \usage{
 experiment(
   project_name = NULL,
-  workspace = NULL,
+  workspace_name = NULL,
   api_key = NULL,
   log_errors = FALSE
 )
 }
 \arguments{
-\item{project_name}{Project name}
+\item{project_name}{Project name.}
 
-\item{workspace}{Workspace name}
+\item{workspace_name}{Workspace name.}
 
-\item{api_key}{Comet API key}
+\item{api_key}{Comet API key.}
 
-\item{log_errors}{Whether or not to log errors}
+\item{log_errors}{Whether or not to log errors.}
 }
 \description{
 Create a new experiment

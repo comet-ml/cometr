@@ -3,16 +3,16 @@
 # in a "cache" so that it can be retrieved in the future in the same session
 # without having to do any I/O
 
-get_config_api_key <- function() {
-  get_config_param("COMET_API_KEY")
+get_config_api_key <- function(must_work = FALSE) {
+  get_config_param("COMET_API_KEY", must_work = must_work)
 }
 
-get_config_workspace <- function() {
-  get_config_param("COMET_WORKSPACE")
+get_config_workspace <- function(must_work = FALSE) {
+  get_config_param("COMET_WORKSPACE", must_work = must_work)
 }
 
-get_config_project_name <- function() {
-  get_config_param("COMET_PROJECT_NAME")
+get_config_project_name <- function(must_work = FALSE) {
+  get_config_param("COMET_PROJECT_NAME", must_work = must_work)
 }
 
 get_config_url <- function() {
@@ -33,7 +33,7 @@ get_config_logging_file_level <- function() {
 
 # Helper function to get the value of any comet config param, use a cache
 # so that we don't constantly read config files
-get_config_param <- function(param, default = NULL) {
+get_config_param <- function(param, default = NULL, must_work = FALSE) {
   if (is.null(.cometenv$cache$config[[param]])) {
     LOG_DEBUG("Searching for config param `", param, "`")
     value <- search_config_param(param = param, default = default)
@@ -46,7 +46,11 @@ get_config_param <- function(param, default = NULL) {
       save_config_param(param = param, value = value)
     }
   }
-  .cometenv$cache$config[[param]]
+  value <- .cometenv$cache$config[[param]]
+  if (must_work && is_config_empty(value)) {
+    comet_stop(param, " must be provided")
+  }
+  value
 }
 
 # Look for a config param in envvars and config files, or return a default if not found

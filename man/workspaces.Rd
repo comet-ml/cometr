@@ -2,13 +2,13 @@
 % Please edit documentation in R/read_general.R
 \name{workspaces}
 \alias{workspaces}
-\title{Get user workspaces}
+\title{Get a user's workspaces}
 \usage{
 workspaces(api_key = NULL)
 }
 \arguments{
-\item{api_key}{Comet API key}
+\item{api_key}{Comet API key.}
 }
 \description{
-Get user workspaces
+Get a user's workspaces
 }
