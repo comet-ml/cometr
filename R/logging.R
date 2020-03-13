@@ -97,7 +97,7 @@ can_write_log_helper <- function() {
 }
 
 get_human_time <- function(time = Sys.time()) {
-  format(time, "%Y%m%d%H%M%S")
+  format(time, "%Y-%m-%d %H:%M:%S")
 }
 
 comet_stop <- function(...) {
