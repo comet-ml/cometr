@@ -31,7 +31,6 @@ with_mock(
       expect_identical(get_config_workspace(), "workspace_full")
       expect_identical(get_config_project_name(), "project_full")
       expect_identical(get_config_url(), "comet.ml")
-      print("HERE'S THE FILE: ", get_config_logging_file())
       expect_identical(get_config_logging_file(), normalizePath("cometr.log", mustWork = FALSE))
       expect_identical(get_config_logging_file_level(), "ERROR")
     })
