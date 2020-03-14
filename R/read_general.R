@@ -1,5 +1,5 @@
 #' Get a user's workspaces
-#' @param api_key Comet API key.
+#' @inheritParams experiment
 #' @export
 workspaces <- function(api_key = NULL) {
   endpoint <- "/workspaces"
@@ -9,8 +9,7 @@ workspaces <- function(api_key = NULL) {
 }
 
 #' Get a workspace's projects
-#' @param workspace_name Workspace name.
-#' @param api_key Comet API key.
+#' @inheritParams experiment
 #' @export
 projects <- function(workspace_name = NULL, api_key = NULL) {
   workspace_name <- workspace_name %||% get_config_workspace(must_work = TRUE)
@@ -27,14 +26,12 @@ projects <- function(workspace_name = NULL, api_key = NULL) {
 #' should be provided. If `project_id` is provided, then `project_name` and `workspace_name`
 #' are ignored.
 #'
+#' @inheritParams experiment
 #' @param project_id Project ID.
-#' @param project_name Project name.
-#' @param workspace_name Workspace name.
-#' @param archived Whether to retrieve archived experiments.
-#' @param api_key Comet API key.
+#' @param archived Whether to retrieve archived experiments or active experiments.
 #' @export
 experiments <- function(
-  project_id = NULL, project_name = NULL, workspace_name = NULL, archived = FALSE, api_key = NULL
+  project_id = NULL, project_name = NULL, workspace_name = NULL, api_key = NULL, archived = FALSE
 ) {
   if (is.null(project_id)) {
     project_name <- project_name %||% get_config_project_name(must_work = TRUE)

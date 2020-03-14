@@ -12,11 +12,14 @@ experiment(
 )
 }
 \arguments{
-\item{project_name}{Project name.}
+\item{project_name}{Project name (can also be specified using the \code{COMET_PROJECT_NAME}
+parameter as an environment variable or in a comet config file).}
 
-\item{workspace_name}{Workspace name.}
+\item{workspace_name}{Workspace name (can also be specified using the \code{COMET_WORKSPACE}
+parameter as an environment variable or in a comet config file).}
 
-\item{api_key}{Comet API key.}
+\item{api_key}{Comet API key (can also be specified using the \code{COMET_API_KEY}
+parameter as an environment variable or in a comet config file).}
 
 \item{log_errors}{Whether or not to log errors.}
 }

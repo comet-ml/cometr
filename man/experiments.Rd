@@ -8,22 +8,26 @@ experiments(
   project_id = NULL,
   project_name = NULL,
   workspace_name = NULL,
-  archived = FALSE,
-  api_key = NULL
+  api_key = NULL,
+  archived = FALSE
 )
 }
 \arguments{
 \item{project_id}{Project ID.}
 
-\item{project_name}{Project name.}
+\item{project_name}{Project name (can also be specified using the \code{COMET_PROJECT_NAME}
+parameter as an environment variable or in a comet config file).}
 
-\item{workspace_name}{Workspace name.}
+\item{workspace_name}{Workspace name (can also be specified using the \code{COMET_WORKSPACE}
+parameter as an environment variable or in a comet config file).}
 
-\item{archived}{Whether to retrieve archives experiments.}
+\item{api_key}{Comet API key (can also be specified using the \code{COMET_API_KEY}
+parameter as an environment variable or in a comet config file).}
 
-\item{api_key}{Comet API key.}
+\item{archived}{Whether to retrieve archived experiments.}
 }
 \description{
 Either \code{project_id} should be provided, or both \code{project_name} and \code{workspace_name}
-should be provided.
+should be provided. If \code{project_id} is provided, then \code{project_name} and \code{workspace_name}
+are ignored.
 }

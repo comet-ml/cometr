@@ -7,7 +7,8 @@
 workspaces(api_key = NULL)
 }
 \arguments{
-\item{api_key}{Comet API key.}
+\item{api_key}{Comet API key (can also be specified using the \code{COMET_API_KEY}
+parameter as an environment variable or in a comet config file).}
 }
 \description{
 Get a user's workspaces
