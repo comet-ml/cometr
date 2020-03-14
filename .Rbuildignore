@@ -3,3 +3,4 @@
 ^\.comet\.yml$
 ^\.travis\.yml$
 ^cometr\.log$
+^codecov\.yml$
