@@ -13,3 +13,8 @@ PACKAGE_NAME <- "cometr"
 
 .cometenv$cache <- list()
 .cometenv$cache$config <- list()
+
+reset_comet_cache <- function() {
+  .cometenv$cache <- list()
+  .cometenv$cache$config <- list()
+}

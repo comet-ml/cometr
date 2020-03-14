@@ -41,7 +41,7 @@ get_config_param <- function(param, default = NULL, must_work = FALSE) {
       # Take special care for the log file - want to ensure we use the full path
       # so that if the user changes directories during the analysis, same file is used
       if (param == "COMET_LOGGING_FILE") {
-        value <- normalizePath(value)
+        value <- normalizePath(value, mustWork = FALSE)
       }
       save_config_param(param = param, value = value)
     }
@@ -83,12 +83,12 @@ get_config_from_wd <- function(name) {
 }
 
 get_config_from_homedir <- function(name) {
-  get_config_from_configfile(name, path.expand("~"))
+  get_config_from_configfile(name, get_home_dir())
 }
 
 get_config_from_configfile <- function(name, dir) {
   tryCatch({
-    file <- file.path(dir, .cometenv$COMET_CONFIG_FILE_NAME)
+    file <- file.path(dir, get_config_filename())
     LOG_DEBUG("Searching in config file ", file)
     if (file.exists(file)) {
       configs <- suppressWarnings(yaml::read_yaml(file, eval.expr = TRUE))
@@ -98,8 +98,17 @@ get_config_from_configfile <- function(name, dir) {
       NULL
     }
   }, error = function(err) {
-    LOG_ERROR("Error trying to read from config file: ", err$message)
+    comet_warning("Error trying to read from config file: ", err$message)
+    NULL
   })
+}
+
+get_config_filename <- function() {
+  .cometenv$COMET_CONFIG_FILE_NAME
+}
+
+get_home_dir <- function() {
+  path.expand("~")
 }
 
 is_config_empty <- function(value) {

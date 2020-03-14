@@ -2,3 +2,4 @@
 ^\.Rproj\.user$
 ^\.comet\.yml$
 ^\.travis\.yml$
+^cometr\.log$
