@@ -5,6 +5,7 @@ test_that("config utils work", {
   expect_false(is_config_empty("test"))
   expect_false(is_config_empty(FALSE))
 
+  expect_identical(get_config_filename(), .cometenv$COMET_CONFIG_FILE_NAME)
   expect_identical(R.utils::getAbsolutePath(get_home_dir(), expandTilde = TRUE), R.utils::getAbsolutePath("~", expandTilde = TRUE))
 })
 
