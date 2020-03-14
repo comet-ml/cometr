@@ -5,7 +5,7 @@ test_that("config utils work", {
   expect_false(is_config_empty("test"))
   expect_false(is_config_empty(FALSE))
 
-  expect_identical(normalizePath(get_home_dir()), normalizePath("~"))
+  expect_identical(R.utils::getAbsolutePath(get_home_dir(), expandTilde = TRUE), R.utils::getAbsolutePath("~", expandTilde = TRUE))
 })
 
 with_mock(
@@ -31,9 +31,7 @@ with_mock(
       expect_identical(get_config_workspace(), "workspace_full")
       expect_identical(get_config_project_name(), "project_full")
       expect_identical(get_config_url(), "comet.ml")
-      print("FILEEEEEEEEEEEEE:")
-      print(get_config_logging_file())
-      expect_identical(get_config_logging_file(), normalizePath("cometr.log", mustWork = FALSE))
+      expect_identical(get_config_logging_file(), R.utils::getAbsolutePath("cometr.log", expandTilde = TRUE))
       expect_identical(get_config_logging_file_level(), "ERROR")
     })
 
@@ -55,7 +53,7 @@ with_mock(
     })
 
     test_that("config priority is correct: envvar -> working dir config file -> home dir config file", {
-      config_home_dir <- normalizePath("config/homedir")
+      config_home_dir <- R.utils::getAbsolutePath("config/homedir", expandTilde = TRUE)
       with_mock(
         `cometr:::get_home_dir` = function() config_home_dir,
         {

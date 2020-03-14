@@ -41,7 +41,7 @@ get_config_param <- function(param, default = NULL, must_work = FALSE) {
       # Take special care for the log file - want to ensure we use the full path
       # so that if the user changes directories during the analysis, same file is used
       if (param == "COMET_LOGGING_FILE") {
-        value <- normalizePath(value, mustWork = FALSE)
+        value <- R.utils::getAbsolutePath(value, expandTilde = TRUE)
       }
       save_config_param(param = param, value = value)
     }

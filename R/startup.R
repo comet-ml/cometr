@@ -6,7 +6,7 @@ get_startup_script <- function() {
   filename <- ""
   if (length(file_idx) == 1) {
     filename <- sub("^--file=", "", args[file_idx])
-    filename <- normalizePath(filename)
+    filename <- R.utils::getAbsolutePath(filename, expandTilde = TRUE)
   }
   filename
 }
