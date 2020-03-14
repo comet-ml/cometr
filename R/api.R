@@ -8,7 +8,7 @@ check_response <- function(res) {
   tryCatch({
     if (httr::status_code(res) != 200) {
       code <- httr::status_code(res)
-      res <- parse_response(res)
+      res <- try(parse_response(res), silent = TRUE)
       if (is.list(res) && !is.null(res[["msg"]])) {
         stop(res[["msg"]])
       } else {
@@ -37,7 +37,11 @@ call_api <- function(endpoint, method = c("GET", "POST"), params = list(), api_k
   LOG_INFO("API call: ", method, " ", url)
 
   if (method == "GET") {
-    response <- httr::GET(url, auth, agent)
+    tryCatch({
+      response <- httr::GET(url, auth, agent)
+    }, error = function(err) {
+      comet_stop("Error calling Comet API: ", err$message)
+    })
   }
   check_response(response)
   LOG_DEBUG("Request: ", response$request)
@@ -48,7 +52,11 @@ call_api <- function(endpoint, method = c("GET", "POST"), params = list(), api_k
 }
 
 parse_response <- function(res) {
-  parsed <- httr::content(res, as = "text", encoding = "UTF-8")
-  parsed <- jsonlite::fromJSON(parsed, simplifyVector = FALSE)
-  parsed
+  tryCatch({
+    parsed <- httr::content(res, as = "text", encoding = "UTF-8")
+    parsed <- jsonlite::fromJSON(parsed, simplifyVector = FALSE)
+    parsed
+  }, error = function(err) {
+    comet_stop("Error parsing Comet API response: ", err$message)
+  })
 }
