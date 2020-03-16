@@ -8,8 +8,6 @@ PACKAGE_NAME <- "cometr"
 
 .cometenv$LOG_LEVEL_MAP <- list(DEBUG = 1, INFO = 2, ERROR = 3)
 .cometenv$LOG_LEVEL_SHORTHAND <- list(DEBUG = "DBG", INFO = "INF", ERROR = "ERR")
-.cometenv$logging_enabled <- TRUE
-.cometenv$logging_queue <- list()
 
 .cometenv$cache <- list()
 .cometenv$cache$config <- list()

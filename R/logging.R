@@ -13,19 +13,6 @@ LOG_ERROR <- function(...) {
 comet_log <- function(..., level) {
   text <- paste(list(...), collapse = "")
 
-  if (!.cometenv$logging_enabled) {
-    .cometenv$logging_queue <- c(.cometenv$logging_queue,
-                                 list(list(level = level, text = text)))
-    return()
-  }
-
-  if (length(.cometenv$logging_queue) > 0) {
-    lapply(.cometenv$logging_queue, function(message) {
-      comet_log_helper(text = message$text, level = message$level)
-    })
-    .cometenv$logging_queue <- list()
-  }
-
   comet_log_helper(text = text, level = level)
 }
 
