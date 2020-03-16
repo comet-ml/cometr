@@ -31,7 +31,7 @@ with_mock(
       expect_identical(get_config_api_key(), "key_full")
       expect_identical(get_config_workspace(), "workspace_full")
       expect_identical(get_config_project_name(), "project_full")
-      expect_identical(get_config_url(), "comet.ml")
+      expect_identical(get_config_url(), "cometrtest.com")
       expect_identical(get_config_logging_file(), R.utils::getAbsolutePath("cometr.log", expandTilde = TRUE))
       expect_identical(get_config_logging_file_level(), "ERROR")
     })
@@ -50,7 +50,7 @@ with_mock(
       owd <- setwd("config/simple")
       on.exit(setwd(owd))
       reset_comet_cache()
-      expect_identical(get_config_url(), .cometenv$COMET_API_DEFAULT_URL)
+      expect_identical(get_config_url(), modify_config_url(.cometenv$COMET_API_DEFAULT_URL))
     })
 
     test_that("config priority is correct: envvar -> working dir config file -> home dir config file", {

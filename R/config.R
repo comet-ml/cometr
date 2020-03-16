@@ -38,11 +38,15 @@ get_config_param <- function(param, default = NULL, must_work = FALSE) {
     LOG_DEBUG("Searching for config param `", param, "`")
     value <- search_config_param(param = param, default = default)
     if (!is_config_empty(value)) {
-      # Take special care for the log file - want to ensure we use the full path
-      # so that if the user changes directories during the analysis, same file is used
+
       if (param == "COMET_LOGGING_FILE") {
-        value <- R.utils::getAbsolutePath(value, expandTilde = TRUE)
+        value <- modify_config_logging_file(value)
       }
+
+      if (param == "COMET_API_URL") {
+        value <- modify_config_url(value)
+      }
+
       save_config_param(param = param, value = value)
     }
   }
@@ -51,6 +55,17 @@ get_config_param <- function(param, default = NULL, must_work = FALSE) {
     comet_stop(param, " must be provided")
   }
   value
+}
+
+# For log files - want to ensure we use the full path
+# so that if the user changes directories during the analysis, same file is used
+modify_config_logging_file <- function(value) {
+  R.utils::getAbsolutePath(value, expandTilde = TRUE)
+}
+
+# For API base URL - strip the "/clientlib/" from the end
+modify_config_url <- function(value) {
+  sub("/clientlib[/]?$", "", value)
 }
 
 # Look for a config param in envvars and config files, or return a default if not found
