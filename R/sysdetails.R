@@ -1,6 +1,6 @@
 # Get the full path of the script that was called by the shell,
 # or "" if it cannot be determined
-get_startup_script <- function() {
+get_system_script <- function() {
   args <- commandArgs(trailingOnly = FALSE)
   file_idx <- grep("^--file=", args)
   filename <- ""
@@ -12,13 +12,13 @@ get_startup_script <- function() {
 }
 
 # Get the command-line arguments that were used to run this script
-get_startup_args <- function() {
+get_system_args <- function() {
   args <- commandArgs(trailingOnly = TRUE)
   args <- paste(args, collapse = " ")
   args
 }
 
-get_startup_packages <- function() {
+get_system_packages <- function() {
   packages <- installed.packages(noCache = TRUE, priority = "NA")
   packages <- as.data.frame(packages, stringsAsFactors = FALSE)
   rownames(packages) <- NULL
@@ -26,7 +26,7 @@ get_startup_packages <- function() {
   packages
 }
 
-get_startup_executable <- function() {
+get_system_executable <- function() {
   args <- commandArgs(trailingOnly = FALSE)
   if (length(args) >= 1) {
     args[1]
@@ -35,7 +35,7 @@ get_startup_executable <- function() {
   }
 }
 
-get_startup_hostname <- function() {
+get_system_hostname <- function() {
   hostname <- R.utils::getHostname.System()
   if (length(hostname) >= 1) {
     hostname[[1]]
@@ -44,23 +44,33 @@ get_startup_hostname <- function() {
   }
 }
 
-get_startup_pid <- function() {
+get_system_pid <- function() {
   Sys.getpid()
 }
 
-get_startup_rVersion <- function() {
+get_system_pythonVersion <- function() {
   as.character(getRversion())
 }
 
-get_startup_rVersionVerbose <- function() {
+get_system_pythonVersionVerbose <- function() {
   R.version.string
 }
 
-get_startup_user <- function() {
+get_system_user <- function() {
   user <- R.utils::getUsername.System()
   if (length(user) >= 1) {
     user[[1]]
   } else {
     ""
   }
+}
+
+get_system_osType <- function() {
+  as.character(Sys.info()["sysname"])
+}
+
+get_system_os <- function() {
+  paste(as.character(Sys.info()["sysname"]),
+        as.character(Sys.info()["release"]),
+        as.character(Sys.info()["version"]))
 }
