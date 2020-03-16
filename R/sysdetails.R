@@ -23,6 +23,7 @@ get_system_packages <- function() {
   packages <- as.data.frame(packages, stringsAsFactors = FALSE)
   rownames(packages) <- NULL
   packages <- packages[, c("Package", "Version")]
+  packages <- paste(packages$Package, packages$Version, sep = "@")
   packages
 }
 
@@ -70,7 +71,9 @@ get_system_osType <- function() {
 }
 
 get_system_os <- function() {
-  paste(as.character(Sys.info()["sysname"]),
-        as.character(Sys.info()["release"]),
-        as.character(Sys.info()["version"]))
+  paste(
+    as.character(Sys.info()["sysname"]),
+    as.character(Sys.info()["release"]),
+    as.character(Sys.info()["version"])
+  )
 }
