@@ -50,24 +50,19 @@ can_write_log_helper <- function() {
   if (is.null(logfile) && is.null(loglevel)) {
     return(FALSE)
   }
+
   if (xor(is.null(logfile), is.null(loglevel))) {
     warning("You must set both `COMET_LOGGING_FILE` and `COMET_LOGGING_FILE_LEVEL` ",
       "in order to log cometr activity.", call. = FALSE)
     return(FALSE)
   }
 
-  if (is.null(loglevel)) {
-    return(FALSE)
-  }
   if (!loglevel %in% names(.cometenv$LOG_LEVEL_MAP)) {
     warning("`COMET_LOGGING_FILE_LEVEL` must be one of \"",
             paste(names(.cometenv$LOG_LEVEL_MAP), collapse = "\", \""), "\".", call. = FALSE)
     return(FALSE)
   }
 
-  if (is.null(logfile)) {
-    return(FALSE)
-  }
   if (!file.exists(logfile)) {
     success <- try(file.create(logfile, showWarnings = FALSE), silent = TRUE)
     if ("try-error" %in% class(success) || !success) {
@@ -75,6 +70,7 @@ can_write_log_helper <- function() {
       return(FALSE)
     }
   }
+
   if (file.access(logfile, mode = 2)[[1]] != 0) {
     warning("Cannot write to log file ", logfile, call. = FALSE)
     return(FALSE)

@@ -10,8 +10,7 @@ test_that("config utils work", {
 })
 
 with_mock(
-  `cometr:::get_config_filename` = function() "comet.yml",
-  {
+  `cometr:::get_config_filename` = function() "comet.yml", {
     test_that("get_config_from_configfile works", {
       expect_identical(get_config_from_configfile("COMET_WORKSPACE", "config/simple"), "workspace_simple")
       expect_identical(get_config_from_configfile("COMET_PROJECT_NAME", "config/simple"), "project_simple")
@@ -56,8 +55,7 @@ with_mock(
     test_that("config priority is correct: envvar -> working dir config file -> home dir config file", {
       config_home_dir <- R.utils::getAbsolutePath("config/homedir", expandTilde = TRUE)
       with_mock(
-        `cometr:::get_home_dir` = function() config_home_dir,
-        {
+        `cometr:::get_home_dir` = function() config_home_dir, {
           owd <- setwd("config/homedir")
           on.exit(setwd(owd))
           reset_comet_cache()
