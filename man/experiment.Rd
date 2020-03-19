@@ -5,6 +5,7 @@
 \title{Create a new experiment}
 \usage{
 experiment(
+  experiment_name = NULL,
   project_name = NULL,
   workspace_name = NULL,
   api_key = NULL,
@@ -12,6 +13,8 @@ experiment(
 )
 }
 \arguments{
+\item{experiment_name}{Experiment name.}
+
 \item{project_name}{Project name (can also be specified using the \code{COMET_PROJECT_NAME}
 parameter as an environment variable or in a comet config file).}
 
