@@ -1,21 +1,53 @@
-# Get the full path of the script that was called by the shell,
-# or "" if it cannot be determined
+write_sysdetails <- function(experiment_key, api_key) {
+  params <- list(
+    experimentKey = experiment_key,
+    command = get_system_command(),
+    executable = get_system_executable(),
+    hostname = get_system_hostname(),
+    installedPackages = get_system_packages(),
+    os = get_system_os(),
+    osType = get_system_osType(),
+    pid = get_system_pid(),
+    user = get_system_user(),
+    pythonVersion = get_system_pythonVersion(),
+    pythonVersionVerbose = get_system_pythonVersionVerbose()
+  )
+
+  endpoint <- "/write/experiment/system-details"
+  method <- "POST"
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}
+
+get_system_command <- function() {
+  command <- c(get_system_script(), get_system_args())
+  if (is.null(command)) {
+    NULL
+  } else {
+    as.list(command)
+  }
+}
+
+# Get the full path of the script that was called by the shell
 get_system_script <- function() {
   args <- commandArgs(trailingOnly = FALSE)
   file_idx <- grep("^--file=", args)
-  filename <- ""
   if (length(file_idx) == 1) {
     filename <- sub("^--file=", "", args[file_idx])
     filename <- R.utils::getAbsolutePath(filename, expandTilde = TRUE)
+    filename
+  } else {
+    NULL
   }
-  filename
 }
 
 # Get the command-line arguments that were used to run this script
 get_system_args <- function() {
   args <- commandArgs(trailingOnly = TRUE)
-  args <- paste(args, collapse = " ")
-  args
+  if (length(args) > 0) {
+    args
+  } else {
+    NULL
+  }
 }
 
 get_system_packages <- function() {
@@ -32,7 +64,7 @@ get_system_executable <- function() {
   if (length(args) >= 1) {
     args[1]
   } else {
-    ""
+    NULL
   }
 }
 
@@ -41,7 +73,7 @@ get_system_hostname <- function() {
   if (length(hostname) >= 1) {
     hostname[[1]]
   } else {
-    ""
+    NULL
   }
 }
 
@@ -62,7 +94,7 @@ get_system_user <- function() {
   if (length(user) >= 1) {
     user[[1]]
   } else {
-    ""
+    NULL
   }
 }
 

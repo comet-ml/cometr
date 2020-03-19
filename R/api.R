@@ -32,19 +32,21 @@ call_api <- function(endpoint, method = c("GET", "POST"), params = list(), api_k
   auth <- httr::add_headers("Authorization" = api_key)
   agent <- httr::user_agent(sprintf("Comet SDK for R cometr/%s", utils::packageVersion(PACKAGE_NAME)))
   url <- sprintf("%s%s%s", get_config_url(), .cometenv$COMET_API_ENDPOINT_BASE, endpoint)
-  url <- httr::modify_url(url, query = params)
 
-  LOG_INFO("API call: ", method, " ", url)
-
-  if (method == "GET") {
-    tryCatch({
+  tryCatch({
+    if (method == "GET") {
+      url <- httr::modify_url(url, query = params)
+      LOG_INFO("API call: ", method, " ", url)
       response <- httr::GET(url, auth, agent)
-    }, error = function(err) {
-      comet_stop("Error calling Comet API: ", err$message)
-    })
-  }
+    } else if (method == "POST") {
+      LOG_INFO("API call: ", method, " ", url, " ", params)
+      response <- httr::POST(url, auth, agent, encode = "json", body = params)
+    }
+  }, error = function(err) {
+    comet_stop("Error calling Comet API: ", err$message)
+  })
+
   check_response(response)
-  LOG_DEBUG("Request: ", response$request)
 
   parsed <- parse_response(response)
   LOG_INFO("Parsed response: ", parsed)

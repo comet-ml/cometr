@@ -1,4 +1,5 @@
 #' Create a new experiment
+#' @param experiment_name Experiment name.
 #' @param project_name Project name (can also be specified using the `COMET_PROJECT_NAME`
 #' parameter as an environment variable or in a comet config file).
 #' @param workspace_name Workspace name (can also be specified using the `COMET_WORKSPACE`
@@ -8,11 +9,29 @@
 #' @param log_errors Whether or not to log errors.
 #' @export
 experiment <- function(
-  project_name = NULL, workspace_name = NULL, api_key = NULL, log_errors = FALSE
+  experiment_name = NULL, project_name = NULL, workspace_name = NULL,
+  api_key = NULL, log_errors = FALSE
 ) {
-  #TODO collect all startup info
+  project_name <- project_name %||% get_config_project_name(must_work = TRUE)
+  workspace_name <- workspace_name %||% get_config_workspace(must_work = TRUE)
+  endpoint <- "/write/experiment/create"
+  method <- "POST"
+  params <- list(
+    experimentName = experiment_name,
+    projectName = project_name,
+    workspaceName = workspace_name
+  )
+  resp <- call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+
+  experiment_key <- resp[["experimentKey"]]
+  if (is.null(experiment_key)) {
+    comet_stop("Create experiment in Comet failed.")
+  }
+  LOG_INFO("Experiment created with key ", experiment_key)
+  message("Experiment created with key ", experiment_key)
+
+  write_sysdetails(experiment_key = experiment_key, api_key = api_key)
+
   #TODO call update_status() continually
   #TODO set up stdout/stderr logging
-  #TODO set up internal logging
 }
-
