@@ -1,7 +1,7 @@
 #' Get a user's workspaces
-#' @inheritParams experiment
+#' @inheritParams create_experiment
 #' @export
-workspaces <- function(api_key = NULL) {
+get_workspaces <- function(api_key = NULL) {
   endpoint <- "/workspaces"
   method <- "GET"
   params <- list()
@@ -9,9 +9,9 @@ workspaces <- function(api_key = NULL) {
 }
 
 #' Get a workspace's projects
-#' @inheritParams experiment
+#' @inheritParams create_experiment
 #' @export
-projects <- function(workspace_name = NULL, api_key = NULL) {
+get_projects <- function(workspace_name = NULL, api_key = NULL) {
   workspace_name <- workspace_name %||% get_config_workspace(must_work = TRUE)
 
   endpoint <- "/projects"
@@ -26,11 +26,11 @@ projects <- function(workspace_name = NULL, api_key = NULL) {
 #' should be provided. If `project_id` is provided, then `project_name` and `workspace_name`
 #' are ignored.
 #'
-#' @inheritParams experiment
+#' @inheritParams create_experiment
 #' @param project_id Project ID.
 #' @param archived Whether to retrieve archived experiments or active experiments.
 #' @export
-experiments <- function(
+get_experiments <- function(
   project_id = NULL, project_name = NULL, workspace_name = NULL, api_key = NULL, archived = FALSE
 ) {
   if (is.null(project_id)) {

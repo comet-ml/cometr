@@ -8,7 +8,7 @@
 #' parameter as an environment variable or in a comet config file).
 #' @param log_errors Whether or not to log errors.
 #' @export
-experiment <- function(
+create_experiment <- function(
   experiment_name = NULL, project_name = NULL, workspace_name = NULL,
   api_key = NULL, log_errors = FALSE
 ) {

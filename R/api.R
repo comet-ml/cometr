@@ -4,6 +4,19 @@ get_api_version <- function() {
   .cometenv$COMET_API_VERSION
 }
 
+#' Call a Comet REST API endpoint
+#'
+#' This function is only meant for advanced users. If you would like to call any
+#' arbitrary Comet API endpoint that isn't natively supported by `cometr`, you can
+#' use this function.
+#'
+#' @inheritParams create_experiment
+#' @param endpoint The REST API endpoint.
+#' @param method The HTTP method to use, either "GET" or "POST".
+#' @param params A list of parameters. For GET endpoints, the parameters are appended
+#' to the URL; for POST endpoints, the parameters are sent in the body of the request.
+#' @return The parsed response
+#' @export
 call_api <- function(endpoint, method = c("GET", "POST"), params = list(), api_key = NULL) {
   LOG_DEBUG("Call to API endpoint ", endpoint)
   method <- match.arg(method)
