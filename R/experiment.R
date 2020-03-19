@@ -24,14 +24,20 @@ experiment <- function(
   resp <- call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
 
   experiment_key <- resp[["experimentKey"]]
-  if (is.null(experiment_key)) {
+  experiment_link <- resp[["link"]]
+  if (is.null(experiment_key) || is.null(experiment_link)) {
     comet_stop("Create experiment in Comet failed.")
   }
-  LOG_INFO("Experiment created with key ", experiment_key)
-  message("Experiment created with key ", experiment_key)
+  LOG_INFO("Experiment created: ", experiment_link)
+  message("Experiment created: ", experiment_link)
 
-  write_sysdetails(experiment_key = experiment_key, api_key = api_key)
+  LOG_DEBUG("Sending system details to the newly created experiment")
+  try(
+    write_sysdetails(experiment_key = experiment_key, api_key = api_key),
+    silent = TRUE
+  )
 
   #TODO call update_status() continually
   #TODO set up stdout/stderr logging
+  invisible(experiment_key)
 }
