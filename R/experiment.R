@@ -37,7 +37,23 @@ create_experiment <- function(
     silent = TRUE
   )
 
-  #TODO call update_status() continually
+  callr::r_bg(
+    function(exp) {
+      while(TRUE) {
+        keepalive <- cometr::call_api("/write/experiment/set-status", "GET", list(experimentKey = exp))
+        writeLines(as.character(Sys.time()), "ff.txt")
+        sleeptime <- keepalive[["isAliveBeatDurationMillis"]]
+        if (is.null(sleeptime)) {
+          break
+        }
+        Sys.sleep(sleeptime / 1000)
+      }
+    },
+    args = list(exp = experiment_key)
+  )
+
+  # keepalive_process$kill()
+
   #TODO set up stdout/stderr logging
   invisible(experiment_key)
 }
