@@ -4,26 +4,6 @@ get_api_version <- function() {
   .cometenv$COMET_API_VERSION
 }
 
-check_response <- function(res) {
-  tryCatch({
-    if (httr::status_code(res) != 200) {
-      code <- httr::status_code(res)
-      res <- try(parse_response(res), silent = TRUE)
-      if (is.list(res) && !is.null(res[["msg"]])) {
-        stop(res[["msg"]])
-      } else {
-        stop("Comet API response status was not OK (", code, ")")
-      }
-    }
-    if (httr::http_type(res) != "application/json") {
-      stop("Comet API did not return json (", httr::http_type(res), ")")
-    }
-  }, error = function(err) {
-    comet_stop("Error with Comet API response status: ", err$message)
-  })
-  LOG_DEBUG("API response OK")
-}
-
 call_api <- function(endpoint, method = c("GET", "POST"), params = list(), api_key = NULL) {
   LOG_DEBUG("Call to API endpoint ", endpoint)
   method <- match.arg(method)
@@ -51,6 +31,26 @@ call_api <- function(endpoint, method = c("GET", "POST"), params = list(), api_k
   parsed <- parse_response(response)
   LOG_INFO("Parsed response: ", parsed)
   parsed
+}
+
+check_response <- function(res) {
+  tryCatch({
+    if (httr::status_code(res) != 200) {
+      code <- httr::status_code(res)
+      res <- try(parse_response(res), silent = TRUE)
+      if (is.list(res) && !is.null(res[["msg"]])) {
+        stop(res[["msg"]])
+      } else {
+        stop("Comet API response status was not OK (", code, ")")
+      }
+    }
+    if (httr::http_type(res) != "application/json") {
+      stop("Comet API did not return json (", httr::http_type(res), ")")
+    }
+  }, error = function(err) {
+    comet_stop("Error with Comet API response status: ", err$message)
+  })
+  LOG_DEBUG("API response OK")
 }
 
 parse_response <- function(res) {
