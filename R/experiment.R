@@ -20,7 +20,7 @@ create_experiment <- function(
   }
 
   api_key <- api_key %||% get_config_api_key(must_work = TRUE)
-  resp <- create_experiment_api(
+  resp <- new_experiment(
     experiment_name = experiment_name,
     project_name = project_name,
     workspace_name = workspace_name,
@@ -101,12 +101,32 @@ Experiment <- R6::R6Class(
 
     #' @description
     #' Set (or append onto) an experiment's HTML.
-    #' @param html An HTML string to add to the experiment.
+    #' @param html (Required) An HTML string to add to the experiment.
     #' @param override If `TRUE`, override the previous HTML. If `FALSE`, append to it.
     set_html = function(html, override = NULL) {
       private$check_active()
       set_html(experiment_key = private$experiment_key, api_key = private$api_key,
                html = html, override = override)
+      invisible(self)
+    },
+
+    #' @description
+    #' Upload a file to the experiment.
+    #' @param file (Required) Path to the file to upload.
+    #' @param step Step number.
+    #' @param overwrite If `TRUE`, overwrite any uploaded file with the same name.
+    #' @param context The context.
+    #' @param type The type.
+    #' @param name Name of the file on comet. By default the name of the file will
+    #' match the file that you upload, but you can use this parameter to use a
+    #' different name.
+    #' @param metadata Metadata to upload along with the file.
+    upload_file = function(file, step = NULL, overwrite = NULL, context = NULL,
+                           type = NULL, name = NULL, metadata = NULL) {
+      private$check_active()
+      upload_file(experiment_key = private$experiment_key, api_key = private$api_key,
+                  file = file, step = step, overwrite = overwrite,
+                  context = context, type = type, name = name, metadata = metadata)
       invisible(self)
     }
 
@@ -118,7 +138,8 @@ Experiment <- R6::R6Class(
     keepalive_process = NULL,
 
     check_active = function() {
-      if (self$get_experiment_key() != .cometrenv$curexp$get_experiment_key()) {
+      if (is.null(.cometrenv$curexp) ||
+          self$get_experiment_key() != .cometrenv$curexp$get_experiment_key()) {
         comet_stop("This experiment already ended and cannot be modified.")
       }
     },

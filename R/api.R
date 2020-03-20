@@ -29,7 +29,17 @@ call_api <- function(endpoint, method = c("GET", "POST"), params = list(), api_k
   url <- sprintf("%s%s%s", get_config_url(), .cometrenv$COMET_API_ENDPOINT_BASE, endpoint)
 
   tryCatch({
-    if (method == "GET") {
+    if (endpoint == "/write/experiment/upload-asset") {
+      LOG_INFO("API call: ", endpoint)
+      body_params <- list(file = httr::upload_file(params$file))
+      params$file <- NULL
+      if (!is.null(params$metadata)) {
+        body_params$metadata <- jsonlite::toJSON(params$metadata)
+        params$metadata <- NULL
+      }
+      url <- httr::modify_url(url, query = params)
+      response <- httr::POST(url, auth, agent, encode = "multipart", body = body_params, timeout)
+    } else if (method == "GET") {
       url <- httr::modify_url(url, query = params)
       LOG_INFO("API call: ", method, " ", url)
       response <- httr::GET(url, auth, agent, timeout)

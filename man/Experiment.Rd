@@ -15,6 +15,7 @@ pp
 \item \href{#method-get_experiment_key}{\code{Experiment$get_experiment_key()}}
 \item \href{#method-get_html}{\code{Experiment$get_html()}}
 \item \href{#method-set_html}{\code{Experiment$set_html()}}
+\item \href{#method-upload_file}{\code{Experiment$upload_file()}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -88,9 +89,48 @@ Set (or append onto) an experiment's HTML.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{html}}{An HTML string to add to the experiment.}
+\item{\code{html}}{(Required) An HTML string to add to the experiment.}
 
 \item{\code{override}}{If \code{TRUE}, override the previous HTML. If \code{FALSE}, append to it.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-upload_file"></a>}}
+\if{latex}{\out{\hypertarget{method-upload_file}{}}}
+\subsection{Method \code{upload_file()}}{
+Upload a file to the experiment.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$upload_file(
+  file,
+  step = NULL,
+  overwrite = NULL,
+  context = NULL,
+  type = NULL,
+  name = NULL,
+  metadata = NULL
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{file}}{(Required) Path to the file to upload.}
+
+\item{\code{step}}{Step number.}
+
+\item{\code{overwrite}}{If \code{TRUE}, overwrite any uploaded file with the same name.}
+
+\item{\code{context}}{The context.}
+
+\item{\code{type}}{The type.}
+
+\item{\code{name}}{Name of the file on comet. By default the name of the file will
+match the file that you upload, but you can use this parameter to use a
+different name.}
+
+\item{\code{metadata}}{Metadata to upload along with the file.}
 }
 \if{html}{\out{</div>}}
 }
