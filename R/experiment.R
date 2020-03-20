@@ -21,6 +21,7 @@ create_experiment <- function(
 
   project_name <- project_name %||% get_config_project_name(must_work = TRUE)
   workspace_name <- workspace_name %||% get_config_workspace(must_work = TRUE)
+  api_key <- api_key %||% get_config_api_key(must_work = TRUE)
   endpoint <- "/write/experiment/create"
   method <- "POST"
   params <- list(
@@ -44,7 +45,7 @@ create_experiment <- function(
   )
 
   .cometrenv$cancreate <- TRUE
-  experiment <- Experiment$new(experiment_key = experiment_key)
+  experiment <- Experiment$new(experiment_key = experiment_key, api_key = api_key)
   .cometrenv$curexp <- experiment
 
   #TODO set up stdout/stderr logging
@@ -61,21 +62,22 @@ Experiment <- R6::R6Class(
   public = list(
 
     #' @description sdfds
-    #' @param experiment_key dsf
-    initialize = function(experiment_key) {
+    #' @param experiment_key Experiment key.
+    #' @param api_key API key.
+    initialize = function(experiment_key, api_key) {
       if (!isTRUE(.cometrenv$cancreate)) {
         comet_stop("Do not call this function directly. Use `create_experiment()` instead.")
         return()
       }
       .cometrenv$cancreate <- FALSE
       private$experiment_key <- experiment_key
+      private$api_key <- api_key
 
       private$keepalive_process <- callr::r_bg(
-        function(exp) {
+        function(exp_key, api_key) {
           cometr::disable_logging()
           while(TRUE) {
-            writeLines(as.character(Sys.time()), "ff.txt")
-            keepalive <- cometr::call_api("/write/experiment/set-status", "GET", list(experimentKey = exp))
+            keepalive <- asNamespace("cometr")$send_keepalive(experiment_key = exp_key, api_key = api_key)
             sleeptime <- keepalive[["isAliveBeatDurationMillis"]]
             if (is.null(sleeptime)) {
              break
@@ -83,7 +85,7 @@ Experiment <- R6::R6Class(
             Sys.sleep(sleeptime / 1000)
           }
         },
-        args = list(exp = experiment_key)
+        args = list(exp_key = private$experiment_key, api_key = private$api_key)
       )
     },
 
@@ -104,6 +106,7 @@ Experiment <- R6::R6Class(
   private = list(
 
     experiment_key = NULL,
+    api_key = NULL,
     keepalive_process = NULL,
 
     finalize = function() {
