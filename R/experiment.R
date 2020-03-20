@@ -121,12 +121,12 @@ Experiment <- R6::R6Class(
     #' match the file that you upload, but you can use this parameter to use a
     #' different name.
     #' @param metadata Metadata to upload along with the file.
-    upload_file = function(file, step = NULL, overwrite = NULL, context = NULL,
+    upload_asset = function(file, step = NULL, overwrite = NULL, context = NULL,
                            type = NULL, name = NULL, metadata = NULL) {
       private$check_active()
-      upload_file(experiment_key = private$experiment_key, api_key = private$api_key,
-                  file = file, step = step, overwrite = overwrite,
-                  context = context, type = type, name = name, metadata = metadata)
+      upload_asset(experiment_key = private$experiment_key, api_key = private$api_key,
+                   file = file, step = step, overwrite = overwrite,
+                   context = context, type = type, name = name, metadata = metadata)
       invisible(self)
     }
 

@@ -15,7 +15,7 @@ pp
 \item \href{#method-get_experiment_key}{\code{Experiment$get_experiment_key()}}
 \item \href{#method-get_html}{\code{Experiment$get_html()}}
 \item \href{#method-set_html}{\code{Experiment$set_html()}}
-\item \href{#method-upload_file}{\code{Experiment$upload_file()}}
+\item \href{#method-upload_asset}{\code{Experiment$upload_asset()}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -97,12 +97,12 @@ Set (or append onto) an experiment's HTML.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-upload_file"></a>}}
-\if{latex}{\out{\hypertarget{method-upload_file}{}}}
-\subsection{Method \code{upload_file()}}{
+\if{html}{\out{<a id="method-upload_asset"></a>}}
+\if{latex}{\out{\hypertarget{method-upload_asset}{}}}
+\subsection{Method \code{upload_asset()}}{
 Upload a file to the experiment.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$upload_file(
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$upload_asset(
   file,
   step = NULL,
   overwrite = NULL,

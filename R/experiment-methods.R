@@ -46,9 +46,9 @@ set_html <- function(experiment_key, html, override = NULL, api_key = NULL) {
   call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
 }
 
-upload_file <- function(experiment_key, file, step = NULL, overwrite = NULL,
-                        context = NULL, type = NULL, name = NULL, metadata = NULL,
-                        api_key = NULL) {
+upload_asset <- function(experiment_key, file, step = NULL, overwrite = NULL,
+                         context = NULL, type = NULL, name = NULL, metadata = NULL,
+                         api_key = NULL) {
   if (missing(file) || is.null(file)) {
     comet_stop("`file` parameter must be provided.")
   }
