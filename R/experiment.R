@@ -72,9 +72,10 @@ Experiment <- R6::R6Class(
 
       private$keepalive_process <- callr::r_bg(
         function(exp) {
+          cometr::disable_logging()
           while(TRUE) {
-            keepalive <- cometr::call_api("/write/experiment/set-status", "GET", list(experimentKey = exp))
             writeLines(as.character(Sys.time()), "ff.txt")
+            keepalive <- cometr::call_api("/write/experiment/set-status", "GET", list(experimentKey = exp))
             sleeptime <- keepalive[["isAliveBeatDurationMillis"]]
             if (is.null(sleeptime)) {
              break
@@ -84,15 +85,14 @@ Experiment <- R6::R6Class(
         },
         args = list(exp = experiment_key)
       )
-
     },
 
+    #' @description Stop an experiment
     stop = function() {
       private$finalize()
       invisible(self)
     },
 
-    #' lala
     #' @description haha
     #' @return the key
     #' @export

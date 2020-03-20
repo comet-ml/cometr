@@ -1,3 +1,14 @@
+#' Disable cometr logging
+#'
+#' Generally, if the `COMET_LOGGING_FILE` and `COMET_LOGGING_FILE_LEVEL` parameters
+#' are found, then `cometr` will log internal information. You can disable logging
+#' for a particular R session by calling `disable_logging()`.
+#' @export
+disable_logging <- function() {
+  .cometrenv$cache$canlog <- FALSE
+  invisible(NULL)
+}
+
 LOG_DEBUG <- function(..., echo = FALSE) {
   comet_log(..., level = "DEBUG", echo = echo)
 }

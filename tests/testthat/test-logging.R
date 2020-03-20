@@ -87,6 +87,18 @@ test_that("logging gets canceled and errors correctly when appropriate", {
 
   with_mock(
     `cometr:::get_config_logging_file` = function() logfile,
+    `cometr:::get_config_logging_file_level` = function() "DEBUG", {
+      expect_true(can_write_log())
+      cleanup()
+      disable_logging()
+      expect_false(can_write_log())
+      cleanup()
+      expect_true(can_write_log())
+    }
+  )
+
+  with_mock(
+    `cometr:::get_config_logging_file` = function() logfile,
     `cometr:::get_config_logging_file_level` = function() "NOSUCHLEVEL", {
       expect_warning(value <- can_write_log_helper())
       expect_false(value)

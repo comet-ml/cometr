@@ -10,6 +10,7 @@ pp
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{Experiment$new()}}
+\item \href{#method-stop}{\code{Experiment$stop()}}
 \item \href{#method-get_experiment_key}{\code{Experiment$get_experiment_key()}}
 }
 }
@@ -25,11 +26,20 @@ sdfds
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{experiment_key}}{dsf
-lala}
+\item{\code{experiment_key}}{dsf}
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-stop"></a>}}
+\if{latex}{\out{\hypertarget{method-stop}{}}}
+\subsection{Method \code{stop()}}{
+Stop an experiment
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$stop()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_experiment_key"></a>}}
