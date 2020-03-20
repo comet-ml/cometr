@@ -16,7 +16,7 @@ get_config_project_name <- function(must_work = FALSE) {
 }
 
 get_config_url <- function() {
-  get_config_param("COMET_API_URL", default = .cometenv$COMET_API_DEFAULT_URL)
+  get_config_param("COMET_API_URL", default = .cometrenv$COMET_API_DEFAULT_URL)
 }
 
 get_config_logging_file <- function() {
@@ -30,7 +30,7 @@ get_config_logging_file_level <- function() {
 # Helper function to get the value of any comet config param, use a cache
 # so that we don't constantly read config files
 get_config_param <- function(param, default = NULL, must_work = FALSE) {
-  if (is.null(.cometenv$cache$config[[param]])) {
+  if (is.null(.cometrenv$cache$config[[param]])) {
     value <- search_config_param(param = param, default = default)
     if (!is_config_empty(value)) {
 
@@ -45,7 +45,7 @@ get_config_param <- function(param, default = NULL, must_work = FALSE) {
       save_config_param(param = param, value = value)
     }
   }
-  value <- .cometenv$cache$config[[param]]
+  value <- .cometrenv$cache$config[[param]]
   if (must_work && is_config_empty(value)) {
     comet_stop(param, " must be provided")
   }
@@ -78,7 +78,7 @@ search_config_param <- function(param, default = NULL) {
 }
 
 save_config_param <- function(param, value) {
-  .cometenv$cache$config[[param]] <- value
+  .cometrenv$cache$config[[param]] <- value
 }
 
 get_config_from_envvar <- function(name) {
@@ -109,7 +109,7 @@ get_config_from_configfile <- function(name, dir) {
 }
 
 get_config_filename <- function() {
-  .cometenv$COMET_CONFIG_FILE_NAME
+  .cometrenv$COMET_CONFIG_FILE_NAME
 }
 
 get_home_dir <- function() {

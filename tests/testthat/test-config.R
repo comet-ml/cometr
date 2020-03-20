@@ -5,7 +5,7 @@ test_that("config utils work", {
   expect_false(is_config_empty("test"))
   expect_false(is_config_empty(FALSE))
 
-  expect_identical(get_config_filename(), .cometenv$COMET_CONFIG_FILE_NAME)
+  expect_identical(get_config_filename(), .cometrenv$COMET_CONFIG_FILE_NAME)
   expect_identical(R.utils::getAbsolutePath(get_home_dir(), expandTilde = TRUE), R.utils::getAbsolutePath("~", expandTilde = TRUE))
 })
 
@@ -49,7 +49,7 @@ with_mock(
       owd <- setwd("config/simple")
       on.exit(setwd(owd))
       reset_comet_cache()
-      expect_identical(get_config_url(), modify_config_url(.cometenv$COMET_API_DEFAULT_URL))
+      expect_identical(get_config_url(), modify_config_url(.cometrenv$COMET_API_DEFAULT_URL))
     })
 
     test_that("config priority is correct: envvar -> working dir config file -> home dir config file", {

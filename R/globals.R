@@ -1,18 +1,22 @@
 PACKAGE_NAME <- "cometr"
-.cometenv <- new.env(parent = emptyenv())
+.cometrenv <- new.env(parent = emptyenv())
 
-.cometenv$COMET_CONFIG_FILE_NAME <- ".comet.yml"
-.cometenv$COMET_API_DEFAULT_URL <- "https://www.comet.ml/clientlib/"
-.cometenv$COMET_API_VERSION <- "v2"
-.cometenv$COMET_API_ENDPOINT_BASE <- paste0("/api/rest/", .cometenv$COMET_API_VERSION)
+.cometrenv$COMET_CONFIG_FILE_NAME <- ".comet.yml"
+.cometrenv$COMET_API_DEFAULT_URL <- "https://www.comet.ml/clientlib/"
+.cometrenv$COMET_API_VERSION <- "v2"
+.cometrenv$COMET_API_ENDPOINT_BASE <- paste0("/api/rest/", .cometrenv$COMET_API_VERSION)
 
-.cometenv$LOG_LEVEL_MAP <- list(DEBUG = 1, INFO = 2, ERROR = 3)
-.cometenv$LOG_LEVEL_SHORTHAND <- list(DEBUG = "DBG", INFO = "INF", ERROR = "ERR")
+.cometrenv$LOG_LEVEL_MAP <- list(DEBUG = 1, INFO = 2, ERROR = 3)
+.cometrenv$LOG_LEVEL_SHORTHAND <- list(DEBUG = "DBG", INFO = "INF", ERROR = "ERR")
 
-.cometenv$cache <- list()
-.cometenv$cache$config <- list()
+.cometrenv$curexp <- NULL
+.cometrenv$cancreate <- FALSE
+
+.cometrenv$cache <- list()
+.cometrenv$cache$canlog <- NULL
+.cometrenv$cache$config <- list()
 
 reset_comet_cache <- function() {
-  .cometenv$cache <- list()
-  .cometenv$cache$config <- list()
+  .cometrenv$cache <- list()
+  .cometrenv$cache$config <- list()
 }

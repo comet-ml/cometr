@@ -1,7 +1,7 @@
 #' Get the Comet API version
 #' @export
 get_api_version <- function() {
-  .cometenv$COMET_API_VERSION
+  .cometrenv$COMET_API_VERSION
 }
 
 #' Call a Comet REST API endpoint
@@ -25,7 +25,7 @@ call_api <- function(endpoint, method = c("GET", "POST"), params = list(), api_k
   auth <- httr::add_headers("Authorization" = api_key)
   agent <- httr::user_agent(sprintf("Comet SDK for R cometr/%s", utils::packageVersion(PACKAGE_NAME)))
   timeout <- httr::timeout(20)
-  url <- sprintf("%s%s%s", get_config_url(), .cometenv$COMET_API_ENDPOINT_BASE, endpoint)
+  url <- sprintf("%s%s%s", get_config_url(), .cometrenv$COMET_API_ENDPOINT_BASE, endpoint)
 
   tryCatch({
     if (method == "GET") {

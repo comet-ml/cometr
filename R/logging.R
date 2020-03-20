@@ -1,17 +1,20 @@
-LOG_DEBUG <- function(...) {
-  comet_log(..., level = "DEBUG")
+LOG_DEBUG <- function(..., echo = FALSE) {
+  comet_log(..., level = "DEBUG", echo = echo)
 }
 
-LOG_INFO <- function(...) {
-  comet_log(..., level = "INFO")
+LOG_INFO <- function(..., echo = FALSE) {
+  comet_log(..., level = "INFO", echo = echo)
 }
 
-LOG_ERROR <- function(...) {
-  comet_log(..., level = "ERROR")
+LOG_ERROR <- function(..., echo = FALSE) {
+  comet_log(..., level = "ERROR", echo = echo)
 }
 
-comet_log <- function(..., level) {
+comet_log <- function(..., level, echo = FALSE) {
   text <- paste(list(...), collapse = "")
+  if (echo) {
+    message(text)
+  }
 
   comet_log_helper(text = text, level = level)
 }
@@ -19,13 +22,13 @@ comet_log <- function(..., level) {
 comet_log_helper <- function(text, level) {
   tryCatch({
     if (can_write_log()) {
-      requested_level <- .cometenv$LOG_LEVEL_MAP[[level]]
-      config_level <- .cometenv$LOG_LEVEL_MAP[[get_config_logging_file_level()]]
+      requested_level <- .cometrenv$LOG_LEVEL_MAP[[level]]
+      config_level <- .cometrenv$LOG_LEVEL_MAP[[get_config_logging_file_level()]]
       if (requested_level >= config_level) {
         write(
           sprintf("%s [%s] %s",
                   get_human_time(),
-                  .cometenv$LOG_LEVEL_SHORTHAND[[level]],
+                  .cometrenv$LOG_LEVEL_SHORTHAND[[level]],
                   text),
           file = get_config_logging_file(),
           append = TRUE
@@ -38,10 +41,10 @@ comet_log_helper <- function(text, level) {
 }
 
 can_write_log <- function() {
-  if (is.null(.cometenv$cache$canlog)) {
-    .cometenv$cache$canlog <- can_write_log_helper()
+  if (is.null(.cometrenv$cache$canlog)) {
+    .cometrenv$cache$canlog <- can_write_log_helper()
   }
-  .cometenv$cache$canlog
+  .cometrenv$cache$canlog
 }
 
 can_write_log_helper <- function() {
@@ -57,9 +60,9 @@ can_write_log_helper <- function() {
     return(FALSE)
   }
 
-  if (!loglevel %in% names(.cometenv$LOG_LEVEL_MAP)) {
+  if (!loglevel %in% names(.cometrenv$LOG_LEVEL_MAP)) {
     warning("`COMET_LOGGING_FILE_LEVEL` must be one of \"",
-            paste(names(.cometenv$LOG_LEVEL_MAP), collapse = "\", \""), "\".", call. = FALSE)
+            paste(names(.cometrenv$LOG_LEVEL_MAP), collapse = "\", \""), "\".", call. = FALSE)
     return(FALSE)
   }
 
