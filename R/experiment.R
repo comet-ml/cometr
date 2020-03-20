@@ -122,6 +122,7 @@ Experiment <- R6::R6Class(
     #' @param html An HTML string to add to the experiment.
     #' @param override If `TRUE`, override the previous HTML. If `FALSE`, append to it.
     set_html = function(html, override = NULL) {
+      private$check_active()
       set_html(experiment_key = private$experiment_key, api_key = private$api_key,
                html = html, override = override)
       invisible(self)
@@ -133,6 +134,12 @@ Experiment <- R6::R6Class(
     experiment_key = NULL,
     api_key = NULL,
     keepalive_process = NULL,
+
+    check_active = function() {
+      if (self$get_experiment_key() != .cometrenv$curexp$get_experiment_key()) {
+        comet_stop("This experiment already ended and cannot be modified.")
+      }
+    },
 
     finalize = function() {
       LOG_DEBUG("Stopping experiment ", private$experiment_key)
