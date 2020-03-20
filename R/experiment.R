@@ -19,17 +19,13 @@ create_experiment <- function(
     .cometrenv$curexp$stop()
   }
 
-  project_name <- project_name %||% get_config_project_name(must_work = TRUE)
-  workspace_name <- workspace_name %||% get_config_workspace(must_work = TRUE)
   api_key <- api_key %||% get_config_api_key(must_work = TRUE)
-  endpoint <- "/write/experiment/create"
-  method <- "POST"
-  params <- list(
-    experimentName = experiment_name,
-    projectName = project_name,
-    workspaceName = workspace_name
+  resp <- create_experiment_api(
+    experiment_name = experiment_name,
+    project_name = project_name,
+    workspace_name = workspace_name,
+    api_key = api_key
   )
-  resp <- call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
 
   experiment_key <- resp[["experimentKey"]]
   experiment_link <- resp[["link"]]
@@ -74,21 +70,7 @@ Experiment <- R6::R6Class(
       .cometrenv$cancreate <- FALSE
       private$experiment_key <- experiment_key
       private$api_key <- api_key
-
-      private$keepalive_process <- callr::r_bg(
-        function(exp_key, api_key) {
-          cometr::disable_logging()
-          while(TRUE) {
-            keepalive <- asNamespace("cometr")$send_keepalive(experiment_key = exp_key, api_key = api_key)
-            sleeptime <- keepalive[["isAliveBeatDurationMillis"]]
-            if (is.null(sleeptime)) {
-             break
-            }
-            Sys.sleep(sleeptime / 1000)
-          }
-        },
-        args = list(exp_key = private$experiment_key, api_key = private$api_key)
-      )
+      private$keepalive_process <- create_keepalive_process(exp_key = experiment_key, api_key = api_key)
     },
 
     #' @description
@@ -142,14 +124,31 @@ Experiment <- R6::R6Class(
     },
 
     finalize = function() {
-      LOG_DEBUG("Stopping experiment ", private$experiment_key)
       if (!is.null(.cometrenv$curexp) && self$get_experiment_key() == .cometrenv$curexp$get_experiment_key()) {
         .cometrenv$curexp <- NULL
       }
       if (!is.null(private$keepalive_process) && private$keepalive_process$is_alive()) {
+        LOG_DEBUG("Stopping experiment ", private$experiment_key)
         private$keepalive_process$kill()
       }
     }
 
   )
 )
+
+create_keepalive_process <- function(exp_key, api_key) {
+  callr::r_bg(
+    function(exp_key, api_key) {
+      cometr::disable_logging()
+      while(TRUE) {
+        keepalive <- asNamespace("cometr")$send_keepalive(experiment_key = exp_key, api_key = api_key)
+        sleeptime <- keepalive[["isAliveBeatDurationMillis"]]
+        if (is.null(sleeptime)) {
+          break
+        }
+        Sys.sleep(sleeptime / 1000)
+      }
+    },
+    args = list(exp_key = exp_key, api_key = api_key)
+  )
+}
