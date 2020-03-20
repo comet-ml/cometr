@@ -4,7 +4,13 @@
 \alias{call_api}
 \title{Call a Comet REST API endpoint}
 \usage{
-call_api(endpoint, method = c("GET", "POST"), params = list(), api_key = NULL)
+call_api(
+  endpoint,
+  method = c("GET", "POST"),
+  params = list(),
+  response_json = TRUE,
+  api_key = NULL
+)
 }
 \arguments{
 \item{endpoint}{The REST API endpoint.}
@@ -13,6 +19,9 @@ call_api(endpoint, method = c("GET", "POST"), params = list(), api_key = NULL)
 
 \item{params}{A list of parameters. For GET endpoints, the parameters are appended
 to the URL; for POST endpoints, the parameters are sent in the body of the request.}
+
+\item{response_json}{If \code{TRUE}, try to parse the response as JSON. If \code{FALSE}, return
+the response as raw data (useful when the response is a file).}
 
 \item{api_key}{Comet API key (can also be specified using the \code{COMET_API_KEY}
 parameter as an environment variable or in a comet config file).}

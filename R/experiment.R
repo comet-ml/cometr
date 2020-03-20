@@ -111,12 +111,28 @@ Experiment <- R6::R6Class(
     },
 
     #' @description
+    #' Get an experiment's asset list.
+    #' @param type The type of assets to retrieve (by default, all assets are returned).
+    get_asset_list = function(type = NULL) {
+      get_asset_list(experiment_key = private$experiment_key, api_key = private$api_key,
+                     type = type)
+    },
+
+    #' @description
+    #' Get an asset.
+    #' @param assetId (Required) The asset ID to retrieve.
+    get_asset = function(assetId) {
+      get_asset(experiment_key = private$experiment_key, api_key = private$api_key,
+                assetId = assetId)
+    },
+
+    #' @description
     #' Upload a file to the experiment.
     #' @param file (Required) Path to the file to upload.
     #' @param step Step number.
     #' @param overwrite If `TRUE`, overwrite any uploaded file with the same name.
     #' @param context The context.
-    #' @param type The type.
+    #' @param type The type of asset.
     #' @param name Name of the file on comet. By default the name of the file will
     #' match the file that you upload, but you can use this parameter to use a
     #' different name.

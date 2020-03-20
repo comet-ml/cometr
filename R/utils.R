@@ -1,5 +1,5 @@
 `%||%` <- function(x, y) {
-  if (!is.null(x)) x else y
+  if (length(x) > 0) x else y
 }
 
 epoch_ms <- function() {

@@ -15,9 +15,11 @@ get_api_version <- function() {
 #' @param method The HTTP method to use, either "GET" or "POST".
 #' @param params A list of parameters. For GET endpoints, the parameters are appended
 #' to the URL; for POST endpoints, the parameters are sent in the body of the request.
+#' @param response_json If `TRUE`, try to parse the response as JSON. If `FALSE`, return
+#' the response as raw data (useful when the response is a file).
 #' @return The parsed response
 #' @export
-call_api <- function(endpoint, method = c("GET", "POST"), params = list(), api_key = NULL) {
+call_api <- function(endpoint, method = c("GET", "POST"), params = list(), response_json = TRUE, api_key = NULL) {
   LOG_DEBUG("Call to API endpoint ", endpoint)
   method <- match.arg(method)
   api_key <- api_key %||% get_config_api_key(must_work = TRUE)
@@ -53,7 +55,7 @@ call_api <- function(endpoint, method = c("GET", "POST"), params = list(), api_k
 
   check_response(response)
 
-  parsed <- parse_response(response)
+  parsed <- parse_response(response, response_json = response_json)
   LOG_INFO("Parsed response: ", parsed)
   parsed
 }
@@ -69,20 +71,24 @@ check_response <- function(res) {
         stop("Comet API response status was not OK (", code, ")")
       }
     }
-    if (httr::http_type(res) != "application/json") {
-      stop("Comet API did not return json (", httr::http_type(res), ")")
-    }
   }, error = function(err) {
     comet_stop("Error with Comet API response status: ", err$message)
   })
   LOG_DEBUG("API response OK")
 }
 
-parse_response <- function(res) {
+parse_response <- function(res, response_json = TRUE) {
   tryCatch({
-    parsed <- httr::content(res, as = "text", encoding = "UTF-8")
-    parsed <- jsonlite::fromJSON(parsed, simplifyVector = FALSE)
-    parsed
+    if (response_json) {
+      if (httr::http_type(res) != "application/json") {
+        stop("Comet API did not return json (", httr::http_type(res), ")")
+      }
+      parsed <- httr::content(res, as = "text", encoding = "UTF-8")
+      parsed <- jsonlite::fromJSON(parsed, simplifyVector = FALSE)
+      parsed
+    } else {
+      httr::content(res)
+    }
   }, error = function(err) {
     comet_stop("Error parsing Comet API response: ", err$message)
   })

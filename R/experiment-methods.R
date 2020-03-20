@@ -31,10 +31,6 @@ get_html <- function(experiment_key, api_key = NULL) {
 }
 
 set_html <- function(experiment_key, html, override = NULL, api_key = NULL) {
-  if (missing(html) || is.null(html)) {
-    comet_stop("`html` parameter must be provided.")
-  }
-
   endpoint <- "/write/experiment/html"
   method <- "POST"
   params <- list(
@@ -46,13 +42,31 @@ set_html <- function(experiment_key, html, override = NULL, api_key = NULL) {
   call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
 }
 
+get_asset_list <- function(experiment_key, type = NULL, api_key = NULL) {
+  type <- type %||% "all"
+
+  endpoint <- "/experiment/asset/list"
+  method <- "GET"
+  params <- list(
+    experimentKey = experiment_key,
+    type = type
+  )
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}
+
+get_asset <- function(experiment_key, assetId, api_key = NULL) {
+  endpoint <- "/experiment/asset/get-asset"
+  method <- "GET"
+  params <- list(
+    experimentKey = experiment_key,
+    assetId = assetId
+  )
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key, response_json = FALSE)
+}
+
 upload_asset <- function(experiment_key, file, step = NULL, overwrite = NULL,
                          context = NULL, type = NULL, name = NULL, metadata = NULL,
                          api_key = NULL) {
-  if (missing(file) || is.null(file)) {
-    comet_stop("`file` parameter must be provided.")
-  }
-
   endpoint <- "/write/experiment/upload-asset"
   method <- "POST"
   params <- list(

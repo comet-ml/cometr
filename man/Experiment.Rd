@@ -15,6 +15,8 @@ pp
 \item \href{#method-get_experiment_key}{\code{Experiment$get_experiment_key()}}
 \item \href{#method-get_html}{\code{Experiment$get_html()}}
 \item \href{#method-set_html}{\code{Experiment$set_html()}}
+\item \href{#method-get_asset_list}{\code{Experiment$get_asset_list()}}
+\item \href{#method-get_asset}{\code{Experiment$get_asset()}}
 \item \href{#method-upload_asset}{\code{Experiment$upload_asset()}}
 }
 }
@@ -97,6 +99,40 @@ Set (or append onto) an experiment's HTML.
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_asset_list"></a>}}
+\if{latex}{\out{\hypertarget{method-get_asset_list}{}}}
+\subsection{Method \code{get_asset_list()}}{
+Get an experiment's asset list.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_asset_list(type = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{type}}{The type of assets to retrieve (by default, all assets are returned).}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_asset"></a>}}
+\if{latex}{\out{\hypertarget{method-get_asset}{}}}
+\subsection{Method \code{get_asset()}}{
+Get an asset.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_asset(assetId)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{assetId}}{(Required) The asset ID to retrieve.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-upload_asset"></a>}}
 \if{latex}{\out{\hypertarget{method-upload_asset}{}}}
 \subsection{Method \code{upload_asset()}}{
@@ -124,7 +160,7 @@ Upload a file to the experiment.
 
 \item{\code{context}}{The context.}
 
-\item{\code{type}}{The type.}
+\item{\code{type}}{The type of asset.}
 
 \item{\code{name}}{Name of the file on comet. By default the name of the file will
 match the file that you upload, but you can use this parameter to use a
