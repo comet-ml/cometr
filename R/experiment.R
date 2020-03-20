@@ -61,7 +61,8 @@ Experiment <- R6::R6Class(
 
   public = list(
 
-    #' @description sdfds
+    #' @description
+    #' Do not call this function directly. Use `create_experiment()` instead.
     #' @param experiment_key Experiment key.
     #' @param api_key API key.
     initialize = function(experiment_key, api_key) {
@@ -69,6 +70,7 @@ Experiment <- R6::R6Class(
         comet_stop("Do not call this function directly. Use `create_experiment()` instead.")
         return()
       }
+      LOG_DEBUG("Creating experiment ", experiment_key)
       .cometrenv$cancreate <- FALSE
       private$experiment_key <- experiment_key
       private$api_key <- api_key
@@ -89,17 +91,40 @@ Experiment <- R6::R6Class(
       )
     },
 
-    #' @description Stop an experiment
+    #' @description
+    #' Print the experiment.
+    print = function() {
+      cat("Comet experiment", private$experiment_key, "\n")
+    },
+
+    #' @description
+    #' Stop an experiment.
     stop = function() {
       private$finalize()
       invisible(self)
     },
 
-    #' @description haha
-    #' @return the key
+    #' @description
+    #' Get the experiment key of an experiment.
     #' @export
     get_experiment_key = function() {
       private$experiment_key
+    },
+
+    #' @description
+    #' Get an experiment's HTML.
+    get_html = function() {
+      get_html(experiment_key = private$experiment_key, api_key = private$api_key)
+    },
+
+    #' @description
+    #' Set (or append onto) an experiment's HTML.
+    #' @param html An HTML string to add to the experiment.
+    #' @param override If `TRUE`, override the previous HTML. If `FALSE`, append to it.
+    set_html = function(html, override = NULL) {
+      set_html(experiment_key = private$experiment_key, api_key = private$api_key,
+               html = html, override = override)
+      invisible(self)
     }
 
   ),
@@ -110,6 +135,7 @@ Experiment <- R6::R6Class(
     keepalive_process = NULL,
 
     finalize = function() {
+      LOG_DEBUG("Stopping experiment ", private$experiment_key)
       if (!is.null(.cometrenv$curexp) && self$get_experiment_key() == .cometrenv$curexp$get_experiment_key()) {
         .cometrenv$curexp <- NULL
       }

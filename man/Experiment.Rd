@@ -10,15 +10,18 @@ pp
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{Experiment$new()}}
+\item \href{#method-print}{\code{Experiment$print()}}
 \item \href{#method-stop}{\code{Experiment$stop()}}
 \item \href{#method-get_experiment_key}{\code{Experiment$get_experiment_key()}}
+\item \href{#method-get_html}{\code{Experiment$get_html()}}
+\item \href{#method-set_html}{\code{Experiment$set_html()}}
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
-sdfds
+Do not call this function directly. Use \code{create_experiment()} instead.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Experiment$new(experiment_key, api_key)}\if{html}{\out{</div>}}
 }
@@ -34,10 +37,20 @@ sdfds
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-print"></a>}}
+\if{latex}{\out{\hypertarget{method-print}{}}}
+\subsection{Method \code{print()}}{
+Print the experiment.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$print()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-stop"></a>}}
 \if{latex}{\out{\hypertarget{method-stop}{}}}
 \subsection{Method \code{stop()}}{
-Stop an experiment
+Stop an experiment.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Experiment$stop()}\if{html}{\out{</div>}}
 }
@@ -47,13 +60,39 @@ Stop an experiment
 \if{html}{\out{<a id="method-get_experiment_key"></a>}}
 \if{latex}{\out{\hypertarget{method-get_experiment_key}{}}}
 \subsection{Method \code{get_experiment_key()}}{
-haha
+Get the experiment key of an experiment.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Experiment$get_experiment_key()}\if{html}{\out{</div>}}
 }
 
-\subsection{Returns}{
-the key
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_html"></a>}}
+\if{latex}{\out{\hypertarget{method-get_html}{}}}
+\subsection{Method \code{get_html()}}{
+Get an experiment's HTML.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_html()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-set_html"></a>}}
+\if{latex}{\out{\hypertarget{method-set_html}{}}}
+\subsection{Method \code{set_html()}}{
+Set (or append onto) an experiment's HTML.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$set_html(html, override = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{html}}{An HTML string to add to the experiment.}
+
+\item{\code{override}}{If \code{TRUE}, override the previous HTML. If \code{FALSE}, append to it.}
+}
+\if{html}{\out{</div>}}
 }
 }
 }
