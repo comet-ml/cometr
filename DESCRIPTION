@@ -6,7 +6,9 @@ Authors@R:
            family = "Attali",
            role = c("aut", "cre"),
            email = "daattali@gmail.com")
-Description: TODO
+Description: A convenient 'R' wrapper to the 'Comet' API, which is a cloud 
+    platform allowing you to track, compare, explain and optimize machine
+    learning experiments and models.
 URL: https://github.com/daattali/cometr
 BugReports: https://github.com/daattali/cometr/issues
 Imports:
