@@ -12,13 +12,6 @@ create_experiment <- function(
   experiment_name = NULL, project_name = NULL, workspace_name = NULL,
   api_key = NULL, log_errors = FALSE
 ) {
-
-  if (!is.null(.cometrenv$curexp)) {
-    LOG_INFO("Existing experiment ", .cometrenv$curexp$get_experiment_key(), " will be stopped ",
-             "because a new experiment is being created.", echo = TRUE)
-    .cometrenv$curexp$stop()
-  }
-
   api_key <- api_key %||% get_config_api_key(must_work = TRUE)
   resp <- new_experiment(
     experiment_name = experiment_name,
@@ -26,7 +19,6 @@ create_experiment <- function(
     workspace_name = workspace_name,
     api_key = api_key
   )
-
   experiment_key <- resp[["experimentKey"]]
   experiment_link <- resp[["link"]]
   if (is.null(experiment_key) || is.null(experiment_link)) {
@@ -42,7 +34,6 @@ create_experiment <- function(
 
   .cometrenv$cancreate <- TRUE
   experiment <- Experiment$new(experiment_key = experiment_key, api_key = api_key)
-  .cometrenv$curexp <- experiment
 
   #TODO set up stdout/stderr logging
   invisible(experiment)
@@ -67,10 +58,18 @@ Experiment <- R6::R6Class(
         return()
       }
       LOG_DEBUG("Creating experiment ", experiment_key)
+
+      if (!is.null(.cometrenv$curexp)) {
+        LOG_INFO("Existing experiment ", .cometrenv$curexp$get_experiment_key(), " will be stopped ",
+                 "because a new experiment is active.", echo = TRUE)
+        .cometrenv$curexp$stop()
+      }
+
       .cometrenv$cancreate <- FALSE
       private$experiment_key <- experiment_key
       private$api_key <- api_key
       private$keepalive_process <- create_keepalive_process(exp_key = experiment_key, api_key = api_key)
+      .cometrenv$curexp <- self
     },
 
     #' @description
