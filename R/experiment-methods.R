@@ -109,6 +109,13 @@ upload_asset <- function(experiment_key, file, step = NULL, overwrite = NULL,
   call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
 }
 
+get_output <- function(experiment_key, api_key = NULL) {
+  endpoint <- "/experiment/output"
+  method <- "GET"
+  params <- list(experimentKey = experiment_key)
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}
+
 # This is the function that should be called when `lines` has the correct format
 # with each message having an offset
 log_output <- function(experiment_key, lines, context = NULL, api_key = NULL) {

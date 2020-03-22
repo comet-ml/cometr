@@ -219,6 +219,12 @@ Experiment <- R6::R6Class(
     },
 
     #' @description
+    #' Get an experiment's standard output and error.
+    get_output = function() {
+      get_output(experiment_key = private$experiment_key, api_key = private$api_key)
+    },
+
+    #' @description
     #' Archive an experiment.
     archive = function() {
       private$check_active()

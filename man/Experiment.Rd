@@ -20,6 +20,7 @@ experiment. Use \code{\link[=create_experiment]{create_experiment()}} to create 
 \item \href{#method-get_asset_list}{\code{Experiment$get_asset_list()}}
 \item \href{#method-get_asset}{\code{Experiment$get_asset()}}
 \item \href{#method-upload_asset}{\code{Experiment$upload_asset()}}
+\item \href{#method-get_output}{\code{Experiment$get_output()}}
 \item \href{#method-archive}{\code{Experiment$archive()}}
 \item \href{#method-restore}{\code{Experiment$restore()}}
 \item \href{#method-delete}{\code{Experiment$delete()}}
@@ -192,6 +193,16 @@ different name.}
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_output"></a>}}
+\if{latex}{\out{\hypertarget{method-get_output}{}}}
+\subsection{Method \code{get_output()}}{
+Get an experiment's standard output and error.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_output()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-archive"></a>}}
