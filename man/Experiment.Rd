@@ -13,6 +13,7 @@ pp
 \item \href{#method-print}{\code{Experiment$print()}}
 \item \href{#method-stop}{\code{Experiment$stop()}}
 \item \href{#method-get_experiment_key}{\code{Experiment$get_experiment_key()}}
+\item \href{#method-get_experiment_url}{\code{Experiment$get_experiment_url()}}
 \item \href{#method-get_html}{\code{Experiment$get_html()}}
 \item \href{#method-set_html}{\code{Experiment$set_html()}}
 \item \href{#method-get_asset_list}{\code{Experiment$get_asset_list()}}
@@ -26,17 +27,24 @@ pp
 \subsection{Method \code{new()}}{
 Do not call this function directly. Use \code{create_experiment()} instead.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$new(experiment_key, log_stderr = FALSE, api_key = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$new(
+  experiment_key,
+  experiment_url = NULL,
+  log_stderr = FALSE,
+  api_key = NULL
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{experiment_key}}{.}
+\item{\code{experiment_key}}{N/A}
 
-\item{\code{log_stderr}}{.}
+\item{\code{experiment_url}}{N/A}
 
-\item{\code{api_key}}{.}
+\item{\code{log_stderr}}{N/A}
+
+\item{\code{api_key}}{N/A}
 }
 \if{html}{\out{</div>}}
 }
@@ -68,6 +76,16 @@ Stop an experiment.
 Get the experiment key of an experiment.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Experiment$get_experiment_key()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_experiment_url"></a>}}
+\if{latex}{\out{\hypertarget{method-get_experiment_url}{}}}
+\subsection{Method \code{get_experiment_url()}}{
+Get the URL to view an experiment in the browser.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_experiment_url()}\if{html}{\out{</div>}}
 }
 
 }

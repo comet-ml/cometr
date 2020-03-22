@@ -37,6 +37,7 @@ create_experiment <- function(
   .cometrenv$cancreate <- TRUE
   experiment <- Experiment$new(
     experiment_key = experiment_key,
+    experiment_url = experiment_link,
     log_stderr = log_stderr,
     api_key = api_key
   )
@@ -56,9 +57,11 @@ Experiment <- R6::R6Class(
     #' @description
     #' Do not call this function directly. Use `create_experiment()` instead.
     #' @param experiment_key N/A
+    #' @param experiment_url N/A
     #' @param log_stderr N/A
     #' @param api_key N/A
-    initialize = function(experiment_key, log_stderr = FALSE, api_key = NULL) {
+    initialize = function(experiment_key, experiment_url = NULL,
+                          log_stderr = FALSE, api_key = NULL) {
       if (!isTRUE(.cometrenv$cancreate)) {
         comet_stop("Do not call this function directly. Use `create_experiment()` instead.")
         return()
@@ -74,6 +77,7 @@ Experiment <- R6::R6Class(
       .cometrenv$cancreate <- FALSE
       api_key <- api_key %||% get_config_api_key(must_work = TRUE)
       private$experiment_key <- experiment_key
+      private$experiment_url <- experiment_url
       private$log_stderr <- log_stderr
       private$api_key <- api_key
       .cometrenv$curexp <- self
@@ -109,6 +113,13 @@ Experiment <- R6::R6Class(
     #' @export
     get_experiment_key = function() {
       private$experiment_key
+    },
+
+    #' @description
+    #' Get the URL to view an experiment in the browser.
+    #' @export
+    get_experiment_url = function() {
+      private$experiment_url
     },
 
     #' @description
@@ -169,6 +180,7 @@ Experiment <- R6::R6Class(
 
     experiment_key = NULL,
     api_key = NULL,
+    experiment_url = NULL,
     keepalive_process = NULL,
     log_stderr = NULL,
     logfile = NULL,
@@ -252,7 +264,7 @@ create_logging_process <- function(experiment_key, logfile_path, api_key) {
       tryCatch({
         while(TRUE) {
           log_new_messages()
-          Sys.sleep(30)
+          Sys.sleep(10)
         }
       }, finally = log_new_messages())
     },
