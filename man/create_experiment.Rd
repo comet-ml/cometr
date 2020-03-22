@@ -9,7 +9,10 @@ create_experiment(
   project_name = NULL,
   workspace_name = NULL,
   api_key = NULL,
-  log_stderr = FALSE
+  keep_active = TRUE,
+  log_output = TRUE,
+  log_error = FALSE,
+  send_system_details = TRUE
 )
 }
 \arguments{
@@ -24,10 +27,23 @@ parameter as an environment variable or in a comet config file).}
 \item{api_key}{Comet API key (can also be specified using the \code{COMET_API_KEY}
 parameter as an environment variable or in a comet config file).}
 
-\item{log_stderr}{If \code{TRUE}, all output from 'stderr' (which includes errors,
+\item{keep_active}{If \code{TRUE}, automatically send Comet a status update every
+few seconds until the experiment is stopped to mark the experiment as active on the
+Comet web dashboard.}
+
+\item{log_output}{If \code{TRUE}, all standard output will automatically be sent to
+the Comet servers to display as message logs for the experiment. The output will still
+be shown in the console as well.}
+
+\item{log_error}{If \code{TRUE}, all output from 'stderr' (which includes errors,
 warnings, and messages) will be redirected to the Comet servers to display as message
-logs for the experiment. If \code{FALSE}, 'stderr' will be directed to its default handler
-but its output will not be logged with the experiment.}
+logs for the experiment. Note that unlike \code{auto_log_output}, if this option is on then
+these messages will not be shown in the console and instead they will only be logged
+to the Comet experiment. This option is set to \code{FALSE} by default because of this
+behaviour.}
+
+\item{send_system_details}{If \code{TRUE}, automatically send the system details to
+Comet when the experiment is created.}
 }
 \value{
 An \code{\link{Experiment}} object.

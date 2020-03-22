@@ -11,16 +11,34 @@
 #' parameter as an environment variable or in a comet config file).
 #' @param api_key Comet API key (can also be specified using the `COMET_API_KEY`
 #' parameter as an environment variable or in a comet config file).
-#' @param log_stderr If `TRUE`, all output from 'stderr' (which includes errors,
+#' @param keep_active If `TRUE`, automatically send Comet a status update every
+#' few seconds until the experiment is stopped to mark the experiment as active on the
+#' Comet web dashboard.
+#' @param log_output If `TRUE`, all standard output will automatically be sent to
+#' the Comet servers to display as message logs for the experiment. The output will still
+#' be shown in the console as well.
+#' @param log_error If `TRUE`, all output from 'stderr' (which includes errors,
 #' warnings, and messages) will be redirected to the Comet servers to display as message
-#' logs for the experiment. If `FALSE`, 'stderr' will be directed to its default handler
-#' but its output will not be logged with the experiment.
+#' logs for the experiment. Note that unlike `auto_log_output`, if this option is on then
+#' these messages will not be shown in the console and instead they will only be logged
+#' to the Comet experiment. This option is set to `FALSE` by default because of this
+#' behaviour.
+#' @param send_system_details If `TRUE`, automatically send the system details to
+#' Comet when the experiment is created.
 #' @return An [`Experiment`] object.
 #' @export
 create_experiment <- function(
-  experiment_name = NULL, project_name = NULL, workspace_name = NULL,
-  api_key = NULL, log_stderr = FALSE
+  experiment_name = NULL, project_name = NULL, workspace_name = NULL, api_key = NULL,
+  keep_active = TRUE, log_output = TRUE, log_error = FALSE, send_system_details = TRUE
 ) {
+
+  if (!is.null(.cometrenv$curexp)) {
+    LOG_INFO("Existing experiment ", .cometrenv$curexp$get_experiment_key(), " will be stopped ",
+             "because a new experiment is being created.", echo = TRUE)
+    .cometrenv$curexp$stop()
+  }
+
+
   resp <- new_experiment(
     experiment_name = experiment_name,
     project_name = project_name,
@@ -34,18 +52,22 @@ create_experiment <- function(
   }
   LOG_INFO("Experiment created: ", experiment_link, echo = TRUE)
 
-  LOG_DEBUG("Sending system details to the newly created experiment")
-  try(
-    set_system_details(experiment_key = experiment_key, api_key = api_key),
-    silent = TRUE
-  )
+  if (send_system_details) {
+    LOG_DEBUG("Sending system details to the newly created experiment")
+    try(
+      set_system_details(experiment_key = experiment_key, api_key = api_key),
+      silent = TRUE
+    )
+  }
 
   .cometrenv$cancreate <- TRUE
   experiment <- Experiment$new(
     experiment_key = experiment_key,
     experiment_url = experiment_link,
-    log_stderr = log_stderr,
-    api_key = api_key
+    api_key = api_key,
+    keep_active = keep_active,
+    log_output = log_output,
+    log_error = log_error
   )
 
   invisible(experiment)
@@ -68,43 +90,48 @@ Experiment <- R6::R6Class(
     #' Do not call this function directly. Use `create_experiment()` instead.
     #' @param experiment_key N/A
     #' @param experiment_url N/A
-    #' @param log_stderr N/A
     #' @param api_key N/A
-    initialize = function(experiment_key, experiment_url = NULL,
-                          log_stderr = FALSE, api_key = NULL) {
+    #' @param keep_active N/A
+    #' @param log_output N/A
+    #' @param log_error N/A
+    initialize = function(experiment_key, experiment_url = NULL, api_key = NULL,
+                          keep_active = TRUE, log_output = TRUE, log_error = FALSE) {
       if (!isTRUE(.cometrenv$cancreate)) {
         comet_stop("Do not call this function directly. Use `create_experiment()` instead.")
         return()
       }
       LOG_DEBUG("Creating experiment ", experiment_key)
 
-      if (!is.null(.cometrenv$curexp)) {
-        LOG_INFO("Existing experiment ", .cometrenv$curexp$get_experiment_key(), " will be stopped ",
-                 "because a new experiment is active.", echo = TRUE)
-        .cometrenv$curexp$stop()
-      }
-
       .cometrenv$cancreate <- FALSE
       api_key <- api_key %||% get_config_api_key(must_work = TRUE)
       private$experiment_key <- experiment_key
       private$experiment_url <- experiment_url
-      private$log_stderr <- log_stderr
       private$api_key <- api_key
+      private$log_error <- log_error
+      private$log_output <- log_output
       .cometrenv$curexp <- self
-      private$keepalive_process <- create_keepalive_process(exp_key = experiment_key, api_key = api_key)
 
-      private$logfile_path <- tempfile()
-      private$logfile <- file(private$logfile_path, open = "w")
-      private$log_offset_path <- paste0(private$logfile_path, ".offset")
-
-      if (private$log_stderr) {
-        sink(private$logfile, type = "message")
+      if (keep_active) {
+        private$keepalive_process <- create_keepalive_process(exp_key = experiment_key, api_key = api_key)
       }
-      sink(private$logfile, type = "output", split = TRUE)
-      private$logging_process <- create_logging_process(
-        experiment_key = experiment_key, logfile_path = private$logfile_path,
-        log_offset_path = private$log_offset_path, api_key = api_key
-      )
+
+      if (log_output || log_error) {
+        private$logfile_path <- tempfile()
+        private$logfile <- file(private$logfile_path, open = "w")
+        private$log_offset_path <- paste0(private$logfile_path, ".offset")
+
+        if (log_error) {
+          sink(private$logfile, type = "message")
+        }
+        if (log_output) {
+          sink(private$logfile, type = "output", split = TRUE)
+        }
+
+        private$logging_process <- create_logging_process(
+          experiment_key = experiment_key, logfile_path = private$logfile_path,
+          log_offset_path = private$log_offset_path, api_key = api_key
+        )
+      }
     },
 
     #' @description
@@ -188,7 +215,7 @@ Experiment <- R6::R6Class(
     #' @description
     #' Print the experiment.
     print = function() {
-      cat("Comet experiment", private$experiment_key, "\n")
+      cat("Comet experiment", private$experiment_url, "\n")
     }
   ),
   private = list(
@@ -198,7 +225,8 @@ Experiment <- R6::R6Class(
     experiment_url = NULL,
     keepalive_process = NULL,
 
-    log_stderr = NULL,
+    log_output = NULL,
+    log_error = NULL,
     logfile_path = NULL,
     logfile = NULL,
     log_offset_path = NULL,
@@ -212,53 +240,58 @@ Experiment <- R6::R6Class(
     },
 
     finalize = function() {
-      # If this is the active experiment, unset the active experiment
-      if (!is.null(.cometrenv$curexp) && self$get_experiment_key() == .cometrenv$curexp$get_experiment_key()) {
-        .cometrenv$curexp <- NULL
-      }
-
-      # Stop sending the keepalive signal
-      if (!is.null(private$keepalive_process) && private$keepalive_process$is_alive()) {
-        LOG_DEBUG("Stopping experiment ", private$experiment_key)
-        private$keepalive_process$interrupt()
-      }
-
-      # Stop sending output logs
-      if (!is.null(private$logging_process) && private$logging_process$is_alive()) {
-        private$logging_process$interrupt()
-      }
-
-      # Stop redirecting output to log files
       suppressWarnings({
-        sink(NULL, type = "output")
-        if (private$log_stderr) {
+        # If this is the active experiment, unset the active experiment
+        if (!is.null(.cometrenv$curexp) && self$get_experiment_key() == .cometrenv$curexp$get_experiment_key()) {
+          .cometrenv$curexp <- NULL
+        }
+
+        # Stop sending the keepalive signal
+        if (!is.null(private$keepalive_process) && private$keepalive_process$is_alive()) {
+          LOG_DEBUG("Stopping experiment ", private$experiment_key)
+          private$keepalive_process$interrupt()
+        }
+
+        # Stop sending output logs
+        if (!is.null(private$logging_process) && private$logging_process$is_alive()) {
+          private$logging_process$interrupt()
+        }
+
+        # Stop redirecting output to log files
+        if (private$log_output) {
+          sink(NULL, type = "output")
+        }
+        if (private$log_error) {
           sink(NULL, type = "message")
         }
-      })
 
-      # Close output log file
-      try(close(private$logfile), silent = TRUE)
+        if (private$log_output || private$log_error) {
 
-      # Send the last output logs that haven't had a chance to be sent to Comet yet
-      try({
-        offset <- as.integer(readLines(private$log_offset_path))
-        logfile <- file(private$logfile_path, open = "r")
-        readLines(logfile, n = offset)
-        new_messages <- readLines(logfile)
-        close(logfile)
-        if (length(new_messages) > 0) {
-          log_output_lines(
-            experiment_key = private$experiment_key,
-            lines = new_messages,
-            offset = offset,
-            api_key = private$api_key
-          )
+          # Close output log file
+          try(close(private$logfile), silent = TRUE)
+
+          # Send the last output logs that haven't had a chance to be sent to Comet yet
+          try({
+            offset <- as.integer(readLines(private$log_offset_path))
+            logfile <- file(private$logfile_path, open = "r")
+            readLines(logfile, n = offset)
+            new_messages <- readLines(logfile)
+            close(logfile)
+            if (length(new_messages) > 0) {
+              log_output_lines(
+                experiment_key = private$experiment_key,
+                lines = new_messages,
+                offset = offset,
+                api_key = private$api_key
+              )
+            }
+          }, silent = TRUE)
+
+          # Remove the log files
+          try(file.remove(private$logfile_path), silent = TRUE)
+          try(file.remove(private$log_offset_path), silent = TRUE)
         }
-      }, silent = TRUE)
-
-      # Remove the log files
-      try(suppressWarnings(file.remove(private$logfile_path)), silent = TRUE)
-      try(suppressWarnings(file.remove(private$log_offset_path)), silent = TRUE)
+      })
     }
 
   )

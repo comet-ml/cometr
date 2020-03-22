@@ -33,8 +33,10 @@ Do not call this function directly. Use \code{create_experiment()} instead.
 \if{html}{\out{<div class="r">}}\preformatted{Experiment$new(
   experiment_key,
   experiment_url = NULL,
-  log_stderr = FALSE,
-  api_key = NULL
+  api_key = NULL,
+  keep_active = TRUE,
+  log_output = TRUE,
+  log_error = FALSE
 )}\if{html}{\out{</div>}}
 }
 
@@ -45,9 +47,13 @@ Do not call this function directly. Use \code{create_experiment()} instead.
 
 \item{\code{experiment_url}}{N/A}
 
-\item{\code{log_stderr}}{N/A}
-
 \item{\code{api_key}}{N/A}
+
+\item{\code{keep_active}}{N/A}
+
+\item{\code{log_output}}{N/A}
+
+\item{\code{log_error}}{N/A}
 }
 \if{html}{\out{</div>}}
 }
