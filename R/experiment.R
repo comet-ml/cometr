@@ -219,10 +219,26 @@ Experiment <- R6::R6Class(
     },
 
     #' @description
-    #' Archive an experiment
+    #' Archive an experiment.
     archive = function() {
       private$check_active()
       archive_experiment(experiment_key = private$experiment_key, api_key = private$api_key)
+      invisible(self)
+    },
+
+    #' @description
+    #' Restore an archived experiment.
+    restore = function() {
+      private$check_active()
+      restore_experiment(experiment_key = private$experiment_key, api_key = private$api_key)
+      invisible(self)
+    },
+
+    #' @description
+    #' Delete an experiment.
+    delete = function() {
+      private$check_active()
+      delete_experiment(experiment_key = private$experiment_key, api_key = private$api_key)
       invisible(self)
     },
 

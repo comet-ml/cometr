@@ -21,6 +21,8 @@ experiment. Use \code{\link[=create_experiment]{create_experiment()}} to create 
 \item \href{#method-get_asset}{\code{Experiment$get_asset()}}
 \item \href{#method-upload_asset}{\code{Experiment$upload_asset()}}
 \item \href{#method-archive}{\code{Experiment$archive()}}
+\item \href{#method-restore}{\code{Experiment$restore()}}
+\item \href{#method-delete}{\code{Experiment$delete()}}
 \item \href{#method-stop}{\code{Experiment$stop()}}
 \item \href{#method-print}{\code{Experiment$print()}}
 }
@@ -195,9 +197,29 @@ different name.}
 \if{html}{\out{<a id="method-archive"></a>}}
 \if{latex}{\out{\hypertarget{method-archive}{}}}
 \subsection{Method \code{archive()}}{
-Archive an experiment
+Archive an experiment.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Experiment$archive()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-restore"></a>}}
+\if{latex}{\out{\hypertarget{method-restore}{}}}
+\subsection{Method \code{restore()}}{
+Restore an archived experiment.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$restore()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-delete"></a>}}
+\if{latex}{\out{\hypertarget{method-delete}{}}}
+\subsection{Method \code{delete()}}{
+Delete an experiment.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$delete()}\if{html}{\out{</div>}}
 }
 
 }

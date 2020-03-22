@@ -136,3 +136,17 @@ archive_experiment <- function(experiment_key, api_key = NULL) {
   params <- list(experimentKey = experiment_key)
   call_api(endpoint = endpoint, method = method, params = params, api_key = api_key, response_json = FALSE)
 }
+
+restore_experiment <- function(experiment_key, api_key = NULL) {
+  endpoint <- "/write/experiment/restore"
+  method <- "GET"
+  params <- list(experimentKey = experiment_key)
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key, response_json = FALSE)
+}
+
+delete_experiment <- function(experiment_key, api_key = NULL) {
+  endpoint <- "/write/experiment/delete"
+  method <- "GET"
+  params <- list(experimentKey = experiment_key)
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key, response_json = FALSE)
+}
