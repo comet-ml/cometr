@@ -32,6 +32,19 @@ create_experiment <- function(
   keep_active = TRUE, log_output = TRUE, log_error = FALSE, send_system_details = TRUE
 ) {
 
+  if (!isBool(keep_active)) {
+    comet_stop("keep_active must be either TRUE or FALSE.")
+  }
+  if (!isBool(log_output)) {
+    comet_stop("log_output must be either TRUE or FALSE.")
+  }
+  if (!isBool(log_error)) {
+    comet_stop("log_error must be either TRUE or FALSE.")
+  }
+  if (!isBool(send_system_details)) {
+    comet_stop("send_system_details must be either TRUE or FALSE.")
+  }
+
   if (!is.null(.cometrenv$curexp)) {
     LOG_INFO("Existing experiment ", .cometrenv$curexp$get_experiment_key(), " will be stopped ",
              "because a new experiment is being created.", echo = TRUE)
