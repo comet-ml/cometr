@@ -1,23 +1,3 @@
-write_sysdetails <- function(experiment_key, api_key = NULL) {
-  params <- list(
-    experimentKey = experiment_key,
-    command = get_system_command(),
-    executable = get_system_executable(),
-    hostname = get_system_hostname(),
-    installedPackages = get_system_packages(),
-    os = get_system_os(),
-    osType = get_system_osType(),
-    pid = get_system_pid(),
-    user = get_system_user(),
-    pythonVersion = get_system_pythonVersion(),
-    pythonVersionVerbose = get_system_pythonVersionVerbose()
-  )
-
-  endpoint <- "/write/experiment/system-details"
-  method <- "POST"
-  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
-}
-
 get_system_command <- function() {
   command <- c(get_system_script(), get_system_args())
   if (is.null(command)) {

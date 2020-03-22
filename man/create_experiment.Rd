@@ -29,6 +29,12 @@ warnings, and messages) will be redirected to the Comet servers to display as me
 logs for the experiment. If \code{FALSE}, 'stderr' will be directed to its default handler
 but its output will not be logged with the experiment.}
 }
+\value{
+An \code{\link{Experiment}} object.
+}
 \description{
-Create a new experiment
+Create a new experiment on Comet's servers. The return value is an \code{\link{Experiment}}
+object that can be used to modify or get information about the experiment. Only one
+experiment can be active at a time, so make sure to stop an experiment before creating
+a new one (by calling the \code{stop()} method on the \code{\link{Experiment}} object).
 }

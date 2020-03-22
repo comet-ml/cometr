@@ -1,4 +1,9 @@
 #' Create a new experiment
+#'
+#' Create a new experiment on Comet's servers. The return value is an [`Experiment`]
+#' object that can be used to modify or get information about the experiment. Only one
+#' experiment can be active at a time, so make sure to stop an experiment before creating
+#' a new one (by calling the `stop()` method on the [`Experiment`] object).
 #' @param experiment_name Experiment name.
 #' @param project_name Project name (can also be specified using the `COMET_PROJECT_NAME`
 #' parameter as an environment variable or in a comet config file).
@@ -10,6 +15,7 @@
 #' warnings, and messages) will be redirected to the Comet servers to display as message
 #' logs for the experiment. If `FALSE`, 'stderr' will be directed to its default handler
 #' but its output will not be logged with the experiment.
+#' @return An [`Experiment`] object.
 #' @export
 create_experiment <- function(
   experiment_name = NULL, project_name = NULL, workspace_name = NULL,
@@ -30,7 +36,7 @@ create_experiment <- function(
 
   LOG_DEBUG("Sending system details to the newly created experiment")
   try(
-    write_sysdetails(experiment_key = experiment_key, api_key = api_key),
+    set_system_details(experiment_key = experiment_key, api_key = api_key),
     silent = TRUE
   )
 
@@ -45,8 +51,12 @@ create_experiment <- function(
   invisible(experiment)
 }
 
-#' @title vv
-#' @description pp
+#' @title A Comet Experiment object
+#' @description
+#' A comet experiment object can be used to modify or get information about an active
+#' experiment. All methods documented here are the different ways to interact with an
+#' experiment. Use [`create_experiment()`] to create a Comet experiment object.
+#' @export
 Experiment <- R6::R6Class(
   cloneable = FALSE,
 
@@ -98,30 +108,21 @@ Experiment <- R6::R6Class(
     },
 
     #' @description
-    #' Print the experiment.
-    print = function() {
-      cat("Comet experiment", private$experiment_key, "\n")
-    },
-
-    #' @description
-    #' Stop an experiment.
-    stop = function() {
-      private$finalize()
-      invisible(self)
-    },
-
-    #' @description
     #' Get the experiment key of an experiment.
-    #' @export
     get_experiment_key = function() {
       private$experiment_key
     },
 
     #' @description
     #' Get the URL to view an experiment in the browser.
-    #' @export
     get_experiment_url = function() {
       private$experiment_url
+    },
+
+    #' @description
+    #' Get an experiment's system details.
+    get_system_details = function() {
+      get_system_details(experiment_key = private$experiment_key, api_key = private$api_key)
     },
 
     #' @description
@@ -175,8 +176,20 @@ Experiment <- R6::R6Class(
                    file = file, step = step, overwrite = overwrite,
                    context = context, type = type, name = name, metadata = metadata)
       invisible(self)
-    }
+    },
 
+    #' @description
+    #' Stop an experiment. Always call this method before creating a new experiment.
+    stop = function() {
+      private$finalize()
+      invisible(self)
+    },
+
+    #' @description
+    #' Print the experiment.
+    print = function() {
+      cat("Comet experiment", private$experiment_key, "\n")
+    }
   ),
   private = list(
 

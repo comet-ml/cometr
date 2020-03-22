@@ -2,23 +2,26 @@
 % Please edit documentation in R/experiment.R
 \name{Experiment}
 \alias{Experiment}
-\title{vv}
+\title{A Comet Experiment object}
 \description{
-pp
+A comet experiment object can be used to modify or get information about an active
+experiment. All methods documented here are the different ways to interact with an
+experiment. Use \code{\link[=create_experiment]{create_experiment()}} to create a Comet experiment object.
 }
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{Experiment$new()}}
-\item \href{#method-print}{\code{Experiment$print()}}
-\item \href{#method-stop}{\code{Experiment$stop()}}
 \item \href{#method-get_experiment_key}{\code{Experiment$get_experiment_key()}}
 \item \href{#method-get_experiment_url}{\code{Experiment$get_experiment_url()}}
+\item \href{#method-get_system_details}{\code{Experiment$get_system_details()}}
 \item \href{#method-get_html}{\code{Experiment$get_html()}}
 \item \href{#method-set_html}{\code{Experiment$set_html()}}
 \item \href{#method-get_asset_list}{\code{Experiment$get_asset_list()}}
 \item \href{#method-get_asset}{\code{Experiment$get_asset()}}
 \item \href{#method-upload_asset}{\code{Experiment$upload_asset()}}
+\item \href{#method-stop}{\code{Experiment$stop()}}
+\item \href{#method-print}{\code{Experiment$print()}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -50,26 +53,6 @@ Do not call this function directly. Use \code{create_experiment()} instead.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-print"></a>}}
-\if{latex}{\out{\hypertarget{method-print}{}}}
-\subsection{Method \code{print()}}{
-Print the experiment.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$print()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-stop"></a>}}
-\if{latex}{\out{\hypertarget{method-stop}{}}}
-\subsection{Method \code{stop()}}{
-Stop an experiment.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$stop()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_experiment_key"></a>}}
 \if{latex}{\out{\hypertarget{method-get_experiment_key}{}}}
 \subsection{Method \code{get_experiment_key()}}{
@@ -86,6 +69,16 @@ Get the experiment key of an experiment.
 Get the URL to view an experiment in the browser.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Experiment$get_experiment_url()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_system_details"></a>}}
+\if{latex}{\out{\hypertarget{method-get_system_details}{}}}
+\subsection{Method \code{get_system_details()}}{
+Get an experiment's system details.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_system_details()}\if{html}{\out{</div>}}
 }
 
 }
@@ -190,5 +183,25 @@ different name.}
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-stop"></a>}}
+\if{latex}{\out{\hypertarget{method-stop}{}}}
+\subsection{Method \code{stop()}}{
+Stop an experiment. Always call this method before creating a new experiment.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$stop()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-print"></a>}}
+\if{latex}{\out{\hypertarget{method-print}{}}}
+\subsection{Method \code{print()}}{
+Print the experiment.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$print()}\if{html}{\out{</div>}}
+}
+
 }
 }
