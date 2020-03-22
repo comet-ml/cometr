@@ -129,3 +129,10 @@ log_output_lines <- function(experiment_key, lines, offset = 0, context = NULL, 
   })
   log_output(experiment_key = experiment_key, lines = lines, context = context, api_key = api_key)
 }
+
+archive_experiment <- function(experiment_key, api_key = NULL) {
+  endpoint <- "/write/experiment/archive"
+  method <- "GET"
+  params <- list(experimentKey = experiment_key)
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key, response_json = FALSE)
+}

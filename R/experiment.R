@@ -219,6 +219,14 @@ Experiment <- R6::R6Class(
     },
 
     #' @description
+    #' Archive an experiment
+    archive = function() {
+      private$check_active()
+      archive_experiment(experiment_key = private$experiment_key, api_key = private$api_key)
+      invisible(self)
+    },
+
+    #' @description
     #' Stop an experiment. Always call this method before creating a new experiment.
     stop = function() {
       private$finalize()
