@@ -83,15 +83,17 @@ Experiment <- R6::R6Class(
       .cometrenv$curexp <- self
       private$keepalive_process <- create_keepalive_process(exp_key = experiment_key, api_key = api_key)
 
-      logfile_path <- tempfile()
-      private$logfile <- file(logfile_path, open = "w")
+      private$logfile_path <- tempfile()
+      private$logfile <- file(private$logfile_path, open = "w")
+      private$log_offset_path <- paste0(private$logfile_path, ".offset")
 
       if (private$log_stderr) {
         sink(private$logfile, type = "message")
       }
       sink(private$logfile, type = "output", split = TRUE)
       private$logging_process <- create_logging_process(
-        experiment_key = experiment_key, logfile_path = logfile_path, api_key = api_key
+        experiment_key = experiment_key, logfile_path = private$logfile_path,
+        log_offset_path = private$log_offset_path, api_key = api_key
       )
     },
 
@@ -182,8 +184,11 @@ Experiment <- R6::R6Class(
     api_key = NULL,
     experiment_url = NULL,
     keepalive_process = NULL,
+
     log_stderr = NULL,
+    logfile_path = NULL,
     logfile = NULL,
+    log_offset_path = NULL,
     logging_process = NULL,
 
     check_active = function() {
@@ -194,26 +199,53 @@ Experiment <- R6::R6Class(
     },
 
     finalize = function() {
+      # If this is the active experiment, unset the active experiment
       if (!is.null(.cometrenv$curexp) && self$get_experiment_key() == .cometrenv$curexp$get_experiment_key()) {
         .cometrenv$curexp <- NULL
       }
 
+      # Stop sending the keepalive signal
       if (!is.null(private$keepalive_process) && private$keepalive_process$is_alive()) {
         LOG_DEBUG("Stopping experiment ", private$experiment_key)
         private$keepalive_process$interrupt()
       }
 
+      # Stop sending output logs
       if (!is.null(private$logging_process) && private$logging_process$is_alive()) {
         private$logging_process$interrupt()
       }
 
+      # Stop redirecting output to log files
       suppressWarnings({
         sink(NULL, type = "output")
         if (private$log_stderr) {
           sink(NULL, type = "message")
         }
       })
+
+      # Close output log file
       try(close(private$logfile), silent = TRUE)
+
+      # Send the last output logs that haven't had a chance to be sent to Comet yet
+      try({
+        offset <- as.integer(readLines(private$log_offset_path))
+        logfile <- file(private$logfile_path, open = "r")
+        readLines(logfile, n = offset)
+        new_messages <- readLines(logfile)
+        close(logfile)
+        if (length(new_messages) > 0) {
+          log_output_lines(
+            experiment_key = private$experiment_key,
+            lines = new_messages,
+            offset = offset,
+            api_key = private$api_key
+          )
+        }
+      }, silent = TRUE)
+
+      # Remove the log files
+      try(suppressWarnings(file.remove(private$logfile_path)), silent = TRUE)
+      try(suppressWarnings(file.remove(private$log_offset_path)), silent = TRUE)
     }
 
   )
@@ -236,38 +268,36 @@ create_keepalive_process <- function(exp_key, api_key) {
   )
 }
 
-create_logging_process <- function(experiment_key, logfile_path, api_key) {
+create_logging_process <- function(experiment_key, logfile_path, log_offset_path, api_key) {
   callr::r_bg(
-    function(experiment_key, logfile_path, api_key) {
+    function(experiment_key, logfile_path, log_offset_path, api_key) {
       if (!file.exists(logfile_path)) {
         return()
       }
       cometr::disable_logging()
       logfile <- file(logfile_path, open = "r")
       offset <- 0
+      writeLines(as.character(offset), log_offset_path)
       log_new_messages <- function() {
         new_messages <- readLines(logfile)
         if (length(new_messages) > 0) {
-          lines <- lapply(new_messages, function(message) {
-            offset <<- offset + 1
-            list(offset = offset, output = message)
-          })
-          asNamespace("cometr")$log_output(
+          asNamespace("cometr")$log_output_lines(
             experiment_key = experiment_key,
-            lines = lines,
+            lines = new_messages,
+            offset = offset,
             api_key = api_key
           )
+          offset <<- offset + length(new_messages)
+          writeLines(as.character(offset), log_offset_path)
         }
       }
 
-      #TODO make sure last messages get sent
-      tryCatch({
-        while(TRUE) {
-          log_new_messages()
-          Sys.sleep(10)
-        }
-      }, finally = log_new_messages())
+      while(TRUE) {
+        log_new_messages()
+        Sys.sleep(10)
+      }
     },
-    args = list(experiment_key = experiment_key, logfile_path = logfile_path, api_key = api_key)
+    args = list(experiment_key = experiment_key, logfile_path = logfile_path,
+                log_offset_path = log_offset_path, api_key = api_key)
   )
 }
