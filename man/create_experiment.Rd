@@ -9,7 +9,7 @@ create_experiment(
   project_name = NULL,
   workspace_name = NULL,
   api_key = NULL,
-  log_errors = FALSE
+  log_stderr = FALSE
 )
 }
 \arguments{
@@ -24,7 +24,10 @@ parameter as an environment variable or in a comet config file).}
 \item{api_key}{Comet API key (can also be specified using the \code{COMET_API_KEY}
 parameter as an environment variable or in a comet config file).}
 
-\item{log_errors}{Whether or not to log errors.}
+\item{log_stderr}{If \code{TRUE}, all output from 'stderr' (which includes errors,
+warnings, and messages) will be redirected to the Comet servers to display as message
+logs for the experiment. If \code{FALSE}, 'stderr' will be directed to its default handler
+but its output will not be logged with the experiment.}
 }
 \description{
 Create a new experiment

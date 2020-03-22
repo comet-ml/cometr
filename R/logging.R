@@ -24,7 +24,7 @@ LOG_ERROR <- function(..., echo = FALSE) {
 comet_log <- function(..., level, echo = FALSE) {
   text <- paste(list(...), collapse = "")
   if (echo) {
-    message(text)
+    cat(text, "\n")
   }
 
   comet_log_helper(text = text, level = level)

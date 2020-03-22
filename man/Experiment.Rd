@@ -26,15 +26,17 @@ pp
 \subsection{Method \code{new()}}{
 Do not call this function directly. Use \code{create_experiment()} instead.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$new(experiment_key, api_key)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$new(experiment_key, log_stderr = FALSE, api_key = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{experiment_key}}{Experiment key.}
+\item{\code{experiment_key}}{.}
 
-\item{\code{api_key}}{API key.}
+\item{\code{log_stderr}}{.}
+
+\item{\code{api_key}}{.}
 }
 \if{html}{\out{</div>}}
 }

@@ -1,4 +1,4 @@
-write_sysdetails <- function(experiment_key, api_key) {
+write_sysdetails <- function(experiment_key, api_key = NULL) {
   params <- list(
     experimentKey = experiment_key,
     command = get_system_command(),

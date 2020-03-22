@@ -6,13 +6,15 @@
 #' parameter as an environment variable or in a comet config file).
 #' @param api_key Comet API key (can also be specified using the `COMET_API_KEY`
 #' parameter as an environment variable or in a comet config file).
-#' @param log_errors Whether or not to log errors.
+#' @param log_stderr If `TRUE`, all output from 'stderr' (which includes errors,
+#' warnings, and messages) will be redirected to the Comet servers to display as message
+#' logs for the experiment. If `FALSE`, 'stderr' will be directed to its default handler
+#' but its output will not be logged with the experiment.
 #' @export
 create_experiment <- function(
   experiment_name = NULL, project_name = NULL, workspace_name = NULL,
-  api_key = NULL, log_errors = FALSE
+  api_key = NULL, log_stderr = FALSE
 ) {
-  api_key <- api_key %||% get_config_api_key(must_work = TRUE)
   resp <- new_experiment(
     experiment_name = experiment_name,
     project_name = project_name,
@@ -33,9 +35,12 @@ create_experiment <- function(
   )
 
   .cometrenv$cancreate <- TRUE
-  experiment <- Experiment$new(experiment_key = experiment_key, api_key = api_key)
+  experiment <- Experiment$new(
+    experiment_key = experiment_key,
+    log_stderr = log_stderr,
+    api_key = api_key
+  )
 
-  #TODO set up stdout/stderr logging
   invisible(experiment)
 }
 
@@ -50,9 +55,10 @@ Experiment <- R6::R6Class(
 
     #' @description
     #' Do not call this function directly. Use `create_experiment()` instead.
-    #' @param experiment_key Experiment key.
-    #' @param api_key API key.
-    initialize = function(experiment_key, api_key) {
+    #' @param experiment_key N/A
+    #' @param log_stderr N/A
+    #' @param api_key N/A
+    initialize = function(experiment_key, log_stderr = FALSE, api_key = NULL) {
       if (!isTRUE(.cometrenv$cancreate)) {
         comet_stop("Do not call this function directly. Use `create_experiment()` instead.")
         return()
@@ -66,10 +72,23 @@ Experiment <- R6::R6Class(
       }
 
       .cometrenv$cancreate <- FALSE
+      api_key <- api_key %||% get_config_api_key(must_work = TRUE)
       private$experiment_key <- experiment_key
+      private$log_stderr <- log_stderr
       private$api_key <- api_key
-      private$keepalive_process <- create_keepalive_process(exp_key = experiment_key, api_key = api_key)
       .cometrenv$curexp <- self
+      private$keepalive_process <- create_keepalive_process(exp_key = experiment_key, api_key = api_key)
+
+      logfile_path <- tempfile()
+      private$logfile <- file(logfile_path, open = "w")
+
+      if (private$log_stderr) {
+        sink(private$logfile, type = "message")
+      }
+      sink(private$logfile, type = "output", split = TRUE)
+      private$logging_process <- create_logging_process(
+        experiment_key = experiment_key, logfile_path = logfile_path, api_key = api_key
+      )
     },
 
     #' @description
@@ -151,6 +170,9 @@ Experiment <- R6::R6Class(
     experiment_key = NULL,
     api_key = NULL,
     keepalive_process = NULL,
+    log_stderr = NULL,
+    logfile = NULL,
+    logging_process = NULL,
 
     check_active = function() {
       if (is.null(.cometrenv$curexp) ||
@@ -163,10 +185,23 @@ Experiment <- R6::R6Class(
       if (!is.null(.cometrenv$curexp) && self$get_experiment_key() == .cometrenv$curexp$get_experiment_key()) {
         .cometrenv$curexp <- NULL
       }
+
       if (!is.null(private$keepalive_process) && private$keepalive_process$is_alive()) {
         LOG_DEBUG("Stopping experiment ", private$experiment_key)
-        private$keepalive_process$kill()
+        private$keepalive_process$interrupt()
       }
+
+      if (!is.null(private$logging_process) && private$logging_process$is_alive()) {
+        private$logging_process$interrupt()
+      }
+
+      suppressWarnings({
+        sink(NULL, type = "output")
+        if (private$log_stderr) {
+          sink(NULL, type = "message")
+        }
+      })
+      try(close(private$logfile), silent = TRUE)
     }
 
   )
@@ -186,5 +221,41 @@ create_keepalive_process <- function(exp_key, api_key) {
       }
     },
     args = list(exp_key = exp_key, api_key = api_key)
+  )
+}
+
+create_logging_process <- function(experiment_key, logfile_path, api_key) {
+  callr::r_bg(
+    function(experiment_key, logfile_path, api_key) {
+      if (!file.exists(logfile_path)) {
+        return()
+      }
+      cometr::disable_logging()
+      logfile <- file(logfile_path, open = "r")
+      offset <- 0
+      log_new_messages <- function() {
+        new_messages <- readLines(logfile)
+        if (length(new_messages) > 0) {
+          lines <- lapply(new_messages, function(message) {
+            offset <<- offset + 1
+            list(offset = offset, output = message)
+          })
+          asNamespace("cometr")$log_output(
+            experiment_key = experiment_key,
+            lines = lines,
+            api_key = api_key
+          )
+        }
+      }
+
+      #TODO make sure last messages get sent
+      tryCatch({
+        while(TRUE) {
+          log_new_messages()
+          Sys.sleep(30)
+        }
+      }, finally = log_new_messages())
+    },
+    args = list(experiment_key = experiment_key, logfile_path = logfile_path, api_key = api_key)
   )
 }

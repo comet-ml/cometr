@@ -81,3 +81,14 @@ upload_asset <- function(experiment_key, file, step = NULL, overwrite = NULL,
   )
   call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
 }
+
+log_output <- function(experiment_key, lines, context = NULL, api_key = NULL) {
+  endpoint <- "/write/experiment/output"
+  method <- "POST"
+  params <- list(
+    experimentKey = experiment_key,
+    outputLines = lines,
+    context = context
+  )
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}
