@@ -51,3 +51,33 @@ get_experiments <- function(
   )
   call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
 }
+
+#' Get a project's columns
+#'
+#' Either `project_id` should be provided, or both `project_name` and `workspace_name`
+#' should be provided. If `project_id` is provided, then `project_name` and `workspace_name`
+#' are ignored.
+#'
+#' @inheritParams get_experiments
+#' @export
+get_columns <- function(
+  project_id = NULL, project_name = NULL, workspace_name = NULL, api_key = NULL, archived = FALSE
+) {
+  if (is.null(project_id)) {
+    project_name <- project_name %||% get_config_project_name(must_work = TRUE)
+    workspace_name <- workspace_name %||% get_config_workspace(must_work = TRUE)
+  } else {
+    project_name <- NULL
+    workspace_name <- NULL
+  }
+
+  endpoint <- "/project/column-names"
+  method <- "GET"
+  params <- list(
+    projectId = project_id,
+    projectName = project_name,
+    workspaceName = workspace_name,
+    archived = archived
+  )
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}
