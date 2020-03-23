@@ -50,6 +50,20 @@ send_keepalive <- function(experiment_key, api_key = NULL) {
   call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
 }
 
+get_code <- function(experiment_key, api_key = NULL) {
+  endpoint <- "/experiment/code"
+  method <- "GET"
+  params <- list(experimentKey = experiment_key)
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}
+
+set_code <- function(experiment_key, code, api_key = NULL) {
+  endpoint <- "/write/experiment/code"
+  method <- "POST"
+  params <- list(experimentKey = experiment_key, code = code)
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}
+
 get_html <- function(experiment_key, api_key = NULL) {
   endpoint <- "/experiment/html"
   method <- "GET"

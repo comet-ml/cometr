@@ -23,13 +23,17 @@
 #' these messages will not be shown in the console and instead they will only be logged
 #' to the Comet experiment. This option is set to `FALSE` by default because of this
 #' behaviour.
+#' @param send_code If `TRUE`, send the source code of the R script that was called
+#' to Comet as the associated code of this experiment. This only works if the you run
+#' a script using the `Rscript` tool and will not work in interactive sessions.
 #' @param send_system_details If `TRUE`, automatically send the system details to
 #' Comet when the experiment is created.
 #' @return An [`Experiment`] object.
 #' @export
 create_experiment <- function(
   experiment_name = NULL, project_name = NULL, workspace_name = NULL, api_key = NULL,
-  keep_active = TRUE, log_output = TRUE, log_error = FALSE, send_system_details = TRUE
+  keep_active = TRUE, log_output = TRUE, log_error = FALSE,
+  send_code = TRUE, send_system_details = TRUE
 ) {
 
   if (!isBool(keep_active)) {
@@ -41,6 +45,9 @@ create_experiment <- function(
   if (!isBool(log_error)) {
     comet_stop("log_error must be either TRUE or FALSE.")
   }
+  if (!isBool(send_code)) {
+    comet_stop("send_code must be either TRUE or FALSE.")
+  }
   if (!isBool(send_system_details)) {
     comet_stop("send_system_details must be either TRUE or FALSE.")
   }
@@ -50,7 +57,6 @@ create_experiment <- function(
              "because a new experiment is being created.", echo = TRUE)
     .cometrenv$curexp$stop()
   }
-
 
   resp <- new_experiment(
     experiment_name = experiment_name,
@@ -64,6 +70,17 @@ create_experiment <- function(
     comet_stop("Create experiment in Comet failed.")
   }
   LOG_INFO("Experiment created: ", experiment_link, echo = TRUE)
+
+  if (send_code) {
+    source_file <- get_system_script()
+    if (!is.null(source_file) && file.exists(source_file)) {
+      LOG_DEBUG("Sending source code to the newly created experiment from script ", source_file)
+      try({
+        source_code <- paste(readLines(source_file), collapse = "\n")
+        set_code(experiment_key = experiment_key, code = source_code, api_key = api_key)
+      }, silent = TRUE)
+    }
+  }
 
   if (send_system_details) {
     LOG_DEBUG("Sending system details to the newly created experiment")
@@ -160,12 +177,6 @@ Experiment <- R6::R6Class(
     },
 
     #' @description
-    #' Get an experiment's system details.
-    get_system_details = function() {
-      get_system_details(experiment_key = private$experiment_key, api_key = private$api_key)
-    },
-
-    #' @description
     #' Get an experiment's HTML.
     get_html = function() {
       get_html(experiment_key = private$experiment_key, api_key = private$api_key)
@@ -222,6 +233,18 @@ Experiment <- R6::R6Class(
     #' Get an experiment's standard output and error.
     get_output = function() {
       get_output(experiment_key = private$experiment_key, api_key = private$api_key)
+    },
+
+    #' @description
+    #' Get an experiment's source code.
+    get_code = function() {
+      get_code(experiment_key = private$experiment_key, api_key = private$api_key)
+    },
+
+    #' @description
+    #' Get an experiment's system details.
+    get_system_details = function() {
+      get_system_details(experiment_key = private$experiment_key, api_key = private$api_key)
     },
 
     #' @description
