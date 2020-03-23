@@ -230,6 +230,15 @@ Experiment <- R6::R6Class(
     },
 
     #' @description
+    #' Add a symlink to an experiment.
+    #' @param project_name (Required) Project that the experiment to should linked to.
+    create_symlink = function(project_name) {
+      private$check_active()
+      symlink_experiment(experiment_key = private$experiment_key, api_key = private$api_key,
+                         project_name = project_name)
+    },
+
+    #' @description
     #' Get an experiment's standard output and error.
     get_output = function() {
       get_output(experiment_key = private$experiment_key, api_key = private$api_key)

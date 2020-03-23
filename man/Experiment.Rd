@@ -19,6 +19,7 @@ experiment. Use \code{\link[=create_experiment]{create_experiment()}} to create 
 \item \href{#method-get_asset_list}{\code{Experiment$get_asset_list()}}
 \item \href{#method-get_asset}{\code{Experiment$get_asset()}}
 \item \href{#method-upload_asset}{\code{Experiment$upload_asset()}}
+\item \href{#method-create_symlink}{\code{Experiment$create_symlink()}}
 \item \href{#method-get_output}{\code{Experiment$get_output()}}
 \item \href{#method-get_code}{\code{Experiment$get_code()}}
 \item \href{#method-get_system_details}{\code{Experiment$get_system_details()}}
@@ -181,6 +182,23 @@ match the file that you upload, but you can use this parameter to use a
 different name.}
 
 \item{\code{metadata}}{Metadata to upload along with the file.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-create_symlink"></a>}}
+\if{latex}{\out{\hypertarget{method-create_symlink}{}}}
+\subsection{Method \code{create_symlink()}}{
+Add a symlink to an experiment.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$create_symlink(project_name)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{project_name}}{(Required) Project that the experiment to should linked to.}
 }
 \if{html}{\out{</div>}}
 }
