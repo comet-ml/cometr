@@ -306,6 +306,7 @@ Experiment <- R6::R6Class(
     },
 
     finalize = function() {
+      print('KILLING MYSELF')
       suppressWarnings({
         # If this is the active experiment, unset the active experiment
         if (!is.null(.cometrenv$curexp) && self$get_experiment_key() == .cometrenv$curexp$get_experiment_key()) {
