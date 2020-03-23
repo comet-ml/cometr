@@ -338,7 +338,11 @@ Experiment <- R6::R6Class(
 
           # Send the last output logs that haven't had a chance to be sent to Comet yet
           try({
-            offset <- as.integer(readLines(private$log_offset_path))
+            if (file.exists(private$log_offset_path)) {
+              offset <- as.integer(readLines(private$log_offset_path))
+            } else {
+              offset <- 0
+            }
             logfile <- file(private$logfile_path, open = "r")
             readLines(logfile, n = offset)
             new_messages <- readLines(logfile)
