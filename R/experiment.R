@@ -53,7 +53,7 @@ create_experiment <- function(
   }
 
   if (!is.null(.cometrenv$curexp)) {
-    LOG_INFO("Existing experiment ", .cometrenv$curexp$get_experiment_key(), " will be stopped ",
+    LOG_INFO("Existing experiment ", .cometrenv$curexp$get_key(), " will be stopped ",
              "because a new experiment is being created.", echo = TRUE)
     .cometrenv$curexp$stop()
   }
@@ -166,13 +166,13 @@ Experiment <- R6::R6Class(
 
     #' @description
     #' Get the experiment key of an experiment.
-    get_experiment_key = function() {
+    get_key = function() {
       private$experiment_key
     },
 
     #' @description
     #' Get the URL to view an experiment in the browser.
-    get_experiment_url = function() {
+    get_url = function() {
       private$experiment_url
     },
 
@@ -409,7 +409,7 @@ Experiment <- R6::R6Class(
 
     check_active = function() {
       if (is.null(.cometrenv$curexp) ||
-          self$get_experiment_key() != .cometrenv$curexp$get_experiment_key()) {
+          self$get_key() != .cometrenv$curexp$get_key()) {
         comet_stop("This experiment already ended and cannot be modified.")
       }
     },
@@ -417,7 +417,7 @@ Experiment <- R6::R6Class(
     finalize = function() {
       suppressWarnings({
         # If this is the active experiment, unset the active experiment
-        if (!is.null(.cometrenv$curexp) && self$get_experiment_key() == .cometrenv$curexp$get_experiment_key()) {
+        if (!is.null(.cometrenv$curexp) && self$get_key() == .cometrenv$curexp$get_key()) {
           .cometrenv$curexp <- NULL
         }
 
