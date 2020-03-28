@@ -81,3 +81,4 @@ get_columns <- function(
   )
   call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
 }
+

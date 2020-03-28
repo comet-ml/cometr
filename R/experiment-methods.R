@@ -1,30 +1,3 @@
-set_system_details <- function(experiment_key, api_key = NULL) {
-  params <- list(
-    experimentKey = experiment_key,
-    command = get_system_command(),
-    executable = get_system_executable(),
-    hostname = get_system_hostname(),
-    installedPackages = get_system_packages(),
-    os = get_system_os(),
-    osType = get_system_osType(),
-    pid = get_system_pid(),
-    user = get_system_user(),
-    pythonVersion = get_system_pythonVersion(),
-    pythonVersionVerbose = get_system_pythonVersionVerbose()
-  )
-
-  endpoint <- "/write/experiment/system-details"
-  method <- "POST"
-  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
-}
-
-get_system_details <- function(experiment_key, api_key = NULL) {
-  endpoint <- "/experiment/system-details"
-  method <- "GET"
-  params <- list(experimentKey = experiment_key)
-  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
-}
-
 new_experiment <- function(
   experiment_name, project_name = NULL, workspace_name = NULL, api_key = NULL
 ) {
@@ -47,6 +20,20 @@ send_keepalive <- function(experiment_key, api_key = NULL) {
   params <- list(
     experimentKey = experiment_key
   )
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}
+
+set_system_details <- function(experiment_key, api_key = NULL) {
+  endpoint <- "/write/experiment/system-details"
+  method <- "POST"
+  params <- get_all_system_details()
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}
+
+get_system_details <- function(experiment_key, api_key = NULL) {
+  endpoint <- "/experiment/system-details"
+  method <- "GET"
+  params <- list(experimentKey = experiment_key)
   call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
 }
 
