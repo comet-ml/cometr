@@ -177,6 +177,12 @@ Experiment <- R6::R6Class(
     },
 
     #' @description
+    #' Get an experiment's metadata.
+    get_metadata = function() {
+      get_metadata(experiment_key = private$experiment_key, api_key = private$api_key)
+    },
+
+    #' @description
     #' Get an experiment's HTML.
     get_html = function() {
       get_html(experiment_key = private$experiment_key, api_key = private$api_key)

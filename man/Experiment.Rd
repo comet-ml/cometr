@@ -14,6 +14,7 @@ experiment. Use \code{\link[=create_experiment]{create_experiment()}} to create 
 \item \href{#method-new}{\code{Experiment$new()}}
 \item \href{#method-get_key}{\code{Experiment$get_key()}}
 \item \href{#method-get_url}{\code{Experiment$get_url()}}
+\item \href{#method-get_metadata}{\code{Experiment$get_metadata()}}
 \item \href{#method-get_html}{\code{Experiment$get_html()}}
 \item \href{#method-log_html}{\code{Experiment$log_html()}}
 \item \href{#method-get_asset_list}{\code{Experiment$get_asset_list()}}
@@ -92,6 +93,16 @@ Get the experiment key of an experiment.
 Get the URL to view an experiment in the browser.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Experiment$get_url()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_metadata"></a>}}
+\if{latex}{\out{\hypertarget{method-get_metadata}{}}}
+\subsection{Method \code{get_metadata()}}{
+Get an experiment's metadata.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_metadata()}\if{html}{\out{</div>}}
 }
 
 }
