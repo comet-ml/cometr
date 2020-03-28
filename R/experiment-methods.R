@@ -165,3 +165,18 @@ symlink_experiment <- function(experiment_key, project_name, api_key = NULL) {
   params <- list(experimentKey = experiment_key, projectName = project_name)
   call_api(endpoint = endpoint, method = method, params = params, api_key = api_key, response_json = FALSE)
 }
+
+get_graph <- function(experiment_key, api_key = NULL) {
+  endpoint <- "/experiment/graph"
+  method <- "GET"
+  params <- list(experimentKey = experiment_key)
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}
+
+set_graph <- function(experiment_key, graph, api_key = NULL) {
+  endpoint <- "/write/experiment/graph"
+  method <- "POST"
+  params <- list(experimentKey = experiment_key, graph = graph)
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}
+

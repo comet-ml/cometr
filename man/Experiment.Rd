@@ -19,6 +19,8 @@ experiment. Use \code{\link[=create_experiment]{create_experiment()}} to create 
 \item \href{#method-get_asset_list}{\code{Experiment$get_asset_list()}}
 \item \href{#method-get_asset}{\code{Experiment$get_asset()}}
 \item \href{#method-upload_asset}{\code{Experiment$upload_asset()}}
+\item \href{#method-get_graph}{\code{Experiment$get_graph()}}
+\item \href{#method-set_graph}{\code{Experiment$set_graph()}}
 \item \href{#method-create_symlink}{\code{Experiment$create_symlink()}}
 \item \href{#method-get_output}{\code{Experiment$get_output()}}
 \item \href{#method-get_code}{\code{Experiment$get_code()}}
@@ -182,6 +184,33 @@ match the file that you upload, but you can use this parameter to use a
 different name.}
 
 \item{\code{metadata}}{Metadata to upload along with the file.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_graph"></a>}}
+\if{latex}{\out{\hypertarget{method-get_graph}{}}}
+\subsection{Method \code{get_graph()}}{
+Get an experiment's model graph.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_graph()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-set_graph"></a>}}
+\if{latex}{\out{\hypertarget{method-set_graph}{}}}
+\subsection{Method \code{set_graph()}}{
+Set an experiment's associated model graph.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$set_graph(graph)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{graph}}{JSON representation of a graph.}
 }
 \if{html}{\out{</div>}}
 }

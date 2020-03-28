@@ -230,6 +230,22 @@ Experiment <- R6::R6Class(
     },
 
     #' @description
+    #' Get an experiment's model graph.
+    get_graph = function() {
+      get_graph(experiment_key = private$experiment_key, api_key = private$api_key)
+    },
+
+    #' @description
+    #' Set an experiment's associated model graph.
+    #' @param graph JSON representation of a graph.
+    set_graph = function(graph) {
+      private$check_active()
+      set_graph(experiment_key = private$experiment_key, api_key = private$api_key,
+                graph = graph)
+      invisible(self)
+    },
+
+    #' @description
     #' Add a symlink to an experiment.
     #' @param project_name (Required) Project that the experiment to should linked to.
     create_symlink = function(project_name) {
