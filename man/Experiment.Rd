@@ -15,7 +15,7 @@ experiment. Use \code{\link[=create_experiment]{create_experiment()}} to create 
 \item \href{#method-get_experiment_key}{\code{Experiment$get_experiment_key()}}
 \item \href{#method-get_experiment_url}{\code{Experiment$get_experiment_url()}}
 \item \href{#method-get_html}{\code{Experiment$get_html()}}
-\item \href{#method-set_html}{\code{Experiment$set_html()}}
+\item \href{#method-log_html}{\code{Experiment$log_html()}}
 \item \href{#method-get_asset_list}{\code{Experiment$get_asset_list()}}
 \item \href{#method-get_asset}{\code{Experiment$get_asset()}}
 \item \href{#method-upload_asset}{\code{Experiment$upload_asset()}}
@@ -99,12 +99,12 @@ Get an experiment's HTML.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_html"></a>}}
-\if{latex}{\out{\hypertarget{method-set_html}{}}}
-\subsection{Method \code{set_html()}}{
+\if{html}{\out{<a id="method-log_html"></a>}}
+\if{latex}{\out{\hypertarget{method-log_html}{}}}
+\subsection{Method \code{log_html()}}{
 Set (or append onto) an experiment's HTML.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$set_html(html, override = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$log_html(html, override = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -248,7 +248,7 @@ Add a list of tags to an experiment.
 \if{html}{\out{<a id="method-create_symlink"></a>}}
 \if{latex}{\out{\hypertarget{method-create_symlink}{}}}
 \subsection{Method \code{create_symlink()}}{
-Add a symlink to an experiment.
+Add a symlink to an experiment in another project.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Experiment$create_symlink(project_name)}\if{html}{\out{</div>}}
 }

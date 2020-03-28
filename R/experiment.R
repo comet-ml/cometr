@@ -186,9 +186,9 @@ Experiment <- R6::R6Class(
     #' Set (or append onto) an experiment's HTML.
     #' @param html (Required) An HTML string to add to the experiment.
     #' @param override If `TRUE`, override the previous HTML. If `FALSE`, append to it.
-    set_html = function(html, override = NULL) {
+    log_html = function(html, override = FALSE) {
       private$check_active()
-      set_html(experiment_key = private$experiment_key, api_key = private$api_key,
+      log_html(experiment_key = private$experiment_key, api_key = private$api_key,
                html = html, override = override)
       invisible(self)
     },
@@ -262,7 +262,7 @@ Experiment <- R6::R6Class(
     },
 
     #' @description
-    #' Add a symlink to an experiment.
+    #' Add a symlink to an experiment in another project.
     #' @param project_name (Required) Project that the experiment to should linked to.
     create_symlink = function(project_name) {
       private$check_active()

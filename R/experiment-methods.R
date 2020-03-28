@@ -58,7 +58,7 @@ get_html <- function(experiment_key, api_key = NULL) {
   call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
 }
 
-set_html <- function(experiment_key, html, override = NULL, api_key = NULL) {
+log_html <- function(experiment_key, html, override, api_key = NULL) {
   endpoint <- "/write/experiment/html"
   method <- "POST"
   params <- list(

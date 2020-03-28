@@ -14,7 +14,7 @@ delete_project(
 \arguments{
 \item{project_name}{Project name.}
 
-\item{delete_experiments}{whether to also delete all the experiments in the project.}
+\item{delete_experiments}{If \code{TRUE}, delete all the experiments in the project.}
 
 \item{workspace_name}{Workspace name (can also be specified using the \code{COMET_WORKSPACE}
 parameter as an environment variable or in a comet config file).}

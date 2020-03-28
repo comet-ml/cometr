@@ -24,7 +24,8 @@ parameter as an environment variable or in a comet config file).}
 \item{api_key}{Comet API key (can also be specified using the \code{COMET_API_KEY}
 parameter as an environment variable or in a comet config file).}
 
-\item{archived}{Whether to retrieve archived experiments or active experiments.}
+\item{archived}{If \code{TRUE}, retrieve archived experiments. Otherwise, retrieve
+active experiments.}
 }
 \description{
 Either \code{project_id} should be provided, or both \code{project_name} and \code{workspace_name}

@@ -28,7 +28,8 @@ get_projects <- function(workspace_name = NULL, api_key = NULL) {
 #'
 #' @inheritParams create_experiment
 #' @param project_id Project ID.
-#' @param archived Whether to retrieve archived experiments or active experiments.
+#' @param archived If `TRUE`, retrieve archived experiments. Otherwise, retrieve
+#' active experiments.
 #' @export
 get_experiments <- function(
   project_id = NULL, project_name = NULL, workspace_name = NULL, api_key = NULL, archived = FALSE
@@ -109,7 +110,7 @@ create_project <- function(
 #'
 #' @inheritParams get_experiments
 #' @param project_name Project name.
-#' @param delete_experiments whether to also delete all the experiments in the project.
+#' @param delete_experiments If `TRUE`, delete all the experiments in the project.
 #' @export
 delete_project <- function(
   project_name, delete_experiments = TRUE, workspace_name = NULL, api_key = NULL
