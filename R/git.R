@@ -25,20 +25,17 @@ get_git_metadata_details <- function() {
 }
 
 get_git_patch_file <- function() {
-  file <- try({
+  file <- NULL
+  tryCatch({
     if (git2r::in_repository()) {
-      file <- tempfile(fileext = ".patch")
       repo <- git2r::repository()
-      git2r::diff(repo, as_char = TRUE, filename = file)
-      file
-    } else {
-      NULL
+      diff <- git2r::diff(repo, as_char = TRUE)
+      if (nzchar(diff)) {
+        tmpfile <- tempfile(fileext = ".patch")
+        writeLines(diff, tmpfile)
+        file <- tmpfile
+      }
     }
-  }, silent = TRUE)
-
-  if ("try-error" %in% class(file)) {
-    NULL
-  } else {
-    file
-  }
+  })
+  file
 }
