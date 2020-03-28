@@ -23,6 +23,8 @@ experiment. Use \code{\link[=create_experiment]{create_experiment()}} to create 
 \item \href{#method-set_graph}{\code{Experiment$set_graph()}}
 \item \href{#method-get_tags}{\code{Experiment$get_tags()}}
 \item \href{#method-add_tags}{\code{Experiment$add_tags()}}
+\item \href{#method-get_other}{\code{Experiment$get_other()}}
+\item \href{#method-log_other}{\code{Experiment$log_other()}}
 \item \href{#method-create_symlink}{\code{Experiment$create_symlink()}}
 \item \href{#method-get_output}{\code{Experiment$get_output()}}
 \item \href{#method-get_code}{\code{Experiment$get_code()}}
@@ -240,6 +242,37 @@ Add a list of tags to an experiment.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{tags}}{List of tags.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_other"></a>}}
+\if{latex}{\out{\hypertarget{method-get_other}{}}}
+\subsection{Method \code{get_other()}}{
+Get an experiment's others (logged with \code{log_other()}) summary.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_other()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-log_other"></a>}}
+\if{latex}{\out{\hypertarget{method-log_other}{}}}
+\subsection{Method \code{log_other()}}{
+Log a key/value `other`` data (not a metric or parameter). Note
+that you can only retrieve others summary data (e.g., this is
+not recorded as a full time series).
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$log_other(key, value)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{key}}{The key.}
+
+\item{\code{value}}{The value.}
 }
 \if{html}{\out{</div>}}
 }

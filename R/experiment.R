@@ -262,6 +262,25 @@ Experiment <- R6::R6Class(
     },
 
     #' @description
+    #' Get an experiment's others (logged with `log_other()`) summary.
+    get_other = function() {
+      get_other(experiment_key = private$experiment_key, api_key = private$api_key)
+    },
+
+    #' @description
+    #' Log a key/value `other`` data (not a metric or parameter). Note
+    #' that you can only retrieve others summary data (e.g., this is
+    #' not recorded as a full time series).
+    #' @param key The key.
+    #' @param value The value.
+    log_other = function(key, value) {
+      private$check_active()
+      log_other(experiment_key = private$experiment_key, api_key = private$api_key,
+                key = key, value = value)
+      invisible(self)
+    },
+
+    #' @description
     #' Add a symlink to an experiment in another project.
     #' @param project_name (Required) Project that the experiment to should linked to.
     create_symlink = function(project_name) {

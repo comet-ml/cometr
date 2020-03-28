@@ -193,3 +193,22 @@ add_tags <- function(experiment_key, tags, api_key = NULL) {
   params <- list(experimentKey = experiment_key, addedTags = tags)
   call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
 }
+
+get_other <- function(experiment_key, api_key = NULL) {
+  endpoint <- "/experiment/log-other"
+  method <- "GET"
+  params <- list(experimentKey = experiment_key)
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}
+
+log_other <- function(experiment_key, key, value, api_key = NULL) {
+  endpoint <- "/write/experiment/log-other"
+  method <- "POST"
+  params <- list(
+    experimentKey = experiment_key,
+    key = key,
+    value = value,
+    timestamp = epoch_ms()
+  )
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}
