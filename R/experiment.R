@@ -23,17 +23,17 @@
 #' these messages will not be shown in the console and instead they will only be logged
 #' to the Comet experiment. This option is set to `FALSE` by default because of this
 #' behaviour.
-#' @param send_code If `TRUE`, send the source code of the R script that was called
+#' @param log_code If `TRUE`, log the source code of the R script that was called
 #' to Comet as the associated code of this experiment. This only works if the you run
 #' a script using the `Rscript` tool and will not work in interactive sessions.
-#' @param send_system_details If `TRUE`, automatically send the system details to
+#' @param log_system_details If `TRUE`, automatically log the system details to
 #' Comet when the experiment is created.
 #' @return An [`Experiment`] object.
 #' @export
 create_experiment <- function(
   experiment_name = NULL, project_name = NULL, workspace_name = NULL, api_key = NULL,
   keep_active = TRUE, log_output = TRUE, log_error = FALSE,
-  send_code = TRUE, send_system_details = TRUE
+  log_code = TRUE, log_system_details = TRUE
 ) {
 
   if (!isBool(keep_active)) {
@@ -45,11 +45,11 @@ create_experiment <- function(
   if (!isBool(log_error)) {
     comet_stop("log_error must be either TRUE or FALSE.")
   }
-  if (!isBool(send_code)) {
-    comet_stop("send_code must be either TRUE or FALSE.")
+  if (!isBool(log_code)) {
+    comet_stop("log_code must be either TRUE or FALSE.")
   }
-  if (!isBool(send_system_details)) {
-    comet_stop("send_system_details must be either TRUE or FALSE.")
+  if (!isBool(log_system_details)) {
+    comet_stop("log_system_details must be either TRUE or FALSE.")
   }
 
   if (!is.null(.cometrenv$curexp)) {
@@ -71,10 +71,10 @@ create_experiment <- function(
   }
   LOG_INFO("Experiment created: ", experiment_link, echo = TRUE)
 
-  if (send_code) {
+  if (log_code) {
     source_file <- get_system_script()
     if (!is.null(source_file) && file.exists(source_file)) {
-      LOG_DEBUG("Sending source code to the newly created experiment from script ", source_file)
+      LOG_DEBUG("Logging source code to the newly created experiment from script ", source_file)
       try({
         source_code <- paste(readLines(source_file), collapse = "\n")
         set_code(experiment_key = experiment_key, code = source_code, api_key = api_key)
@@ -82,8 +82,8 @@ create_experiment <- function(
     }
   }
 
-  if (send_system_details) {
-    LOG_DEBUG("Sending system details to the newly created experiment")
+  if (log_system_details) {
+    LOG_DEBUG("Logging system details to the newly created experiment")
     try(
       log_system_details(experiment_key = experiment_key, api_key = api_key),
       silent = TRUE
@@ -433,7 +433,7 @@ Experiment <- R6::R6Class(
           private$keepalive_process$interrupt()
         }
 
-        # Stop sending output logs
+        # Stop logging output logs
         if (!is.null(private$logging_process) && private$logging_process$is_alive()) {
           private$logging_process$interrupt()
         }
@@ -451,7 +451,7 @@ Experiment <- R6::R6Class(
           # Close output log file
           try(close(private$logfile), silent = TRUE)
 
-          # Send the last output logs that haven't had a chance to be sent to Comet yet
+          # Log the last output logs that haven't had a chance to be sent to Comet yet
           try({
             if (file.exists(private$log_offset_path)) {
               offset <- as.integer(readLines(private$log_offset_path))

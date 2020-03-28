@@ -12,8 +12,8 @@ create_experiment(
   keep_active = TRUE,
   log_output = TRUE,
   log_error = FALSE,
-  send_code = TRUE,
-  send_system_details = TRUE
+  log_code = TRUE,
+  log_system_details = TRUE
 )
 }
 \arguments{
@@ -43,11 +43,11 @@ these messages will not be shown in the console and instead they will only be lo
 to the Comet experiment. This option is set to \code{FALSE} by default because of this
 behaviour.}
 
-\item{send_code}{If \code{TRUE}, send the source code of the R script that was called
+\item{log_code}{If \code{TRUE}, log the source code of the R script that was called
 to Comet as the associated code of this experiment. This only works if the you run
 a script using the \code{Rscript} tool and will not work in interactive sessions.}
 
-\item{send_system_details}{If \code{TRUE}, automatically send the system details to
+\item{log_system_details}{If \code{TRUE}, automatically log the system details to
 Comet when the experiment is created.}
 }
 \value{
