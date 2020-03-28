@@ -212,3 +212,54 @@ log_other <- function(experiment_key, key, value, api_key = NULL) {
   )
   call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
 }
+
+get_metric <- function(experiment_key, name, api_key = NULL) {
+  endpoint <- "/experiment/metrics/get-metric"
+  method <- "GET"
+  params <- list(experimentKey = experiment_key, metricName = name)
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}
+
+get_metrics_summary <- function(experiment_key, api_key = NULL) {
+  endpoint <- "/experiment/metrics/summary"
+  method <- "GET"
+  params <- list(experimentKey = experiment_key)
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}
+
+log_metric <- function(
+  experiment_key, name, value, step = NULL, epoch = NULL, context = NULL, api_key = NULL
+) {
+  endpoint <- "/write/experiment/metric"
+  method <- "POST"
+  params <- list(
+    experimentKey = experiment_key,
+    metricName = name,
+    metricValue = value,
+    step = step,
+    epoch = epoch,
+    context = context,
+    timestamp = epoch_ms()
+  )
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}
+
+get_parameters <- function(experiment_key, api_key = NULL) {
+  endpoint <- "/experiment/parameters"
+  method <- "GET"
+  params <- list(experimentKey = experiment_key)
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}
+
+log_parameter <- function(experiment_key, name, value, step = NULL, api_key = NULL) {
+  endpoint <- "/write/experiment/parameter"
+  method <- "POST"
+  params <- list(
+    experimentKey = experiment_key,
+    parameterName = name,
+    parameterValue = value,
+    step = step,
+    timestamp = epoch_ms()
+  )
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}

@@ -237,11 +237,60 @@ Experiment <- R6::R6Class(
 
     #' @description
     #' Log an experiment's associated model graph.
-    #' @param graph JSON representation of a graph.
+    #' @param graph (Required) JSON representation of a graph.
     log_graph = function(graph) {
       private$check_active()
       log_graph(experiment_key = private$experiment_key, api_key = private$api_key,
                 graph = graph)
+      invisible(self)
+    },
+
+    #' @description
+    #' Get All Metrics For Name
+    #' @param name (Required) Name of metric.
+    get_metric = function(name) {
+      get_metric(experiment_key = private$experiment_key, api_key = private$api_key,
+                 name = name)
+    },
+
+    #' @description
+    #' Get an experiment's metrics summary.
+    get_metrics_summary = function() {
+      get_metrics_summary(experiment_key = private$experiment_key, api_key = private$api_key)
+    },
+
+    #' @description
+    #' Log a metric name and value. Metrics are the only items that are logged as
+    #' a full time series. However, even metrics can be throttled if too much data
+    #' (either by rate or by count) is attempted to be logged.
+    #' @param name (Required) Name of the metric.
+    #' @param value (Required) Value of the metric.
+    #' @param step Step number.
+    #' @param epoch Epoch.
+    #' @param context Context.
+    log_metric = function(name, value, step = NULL, epoch = NULL, context = NULL) {
+      private$check_active()
+      log_metric(experiment_key = private$experiment_key, api_key = private$api_key,
+                 name = name, value = value, step = step, epoch = epoch, context = context)
+      invisible(self)
+    },
+
+    #' @description
+    #' Get an experiment's parameters summary.
+    get_parameters = function() {
+      get_parameters(experiment_key = private$experiment_key, api_key = private$api_key)
+    },
+
+    #' @description
+    #' Log a parameter name and value. Note that you can only retrieve parameters
+    #' summary data (e.g., this is not recorded as a full time series).
+    #' @param name (Required) Name of the parameter.
+    #' @param value (Required) Value of the parameter.
+    #' @param step Step number.
+    log_parameter = function(name, value, step = NULL) {
+      private$check_active()
+      log_parameter(experiment_key = private$experiment_key, api_key = private$api_key,
+                    name = name, value = value, step = step)
       invisible(self)
     },
 
@@ -253,7 +302,7 @@ Experiment <- R6::R6Class(
 
     #' @description
     #' Add a list of tags to an experiment.
-    #' @param tags List of tags.
+    #' @param tags (Required) List of tags.
     add_tags = function(tags) {
       private$check_active()
       add_tags(experiment_key = private$experiment_key, api_key = private$api_key,
@@ -271,8 +320,8 @@ Experiment <- R6::R6Class(
     #' Log a key/value `other`` data (not a metric or parameter). Note
     #' that you can only retrieve others summary data (e.g., this is
     #' not recorded as a full time series).
-    #' @param key The key.
-    #' @param value The value.
+    #' @param key (Required) The key.
+    #' @param value (Required) The value.
     log_other = function(key, value) {
       private$check_active()
       log_other(experiment_key = private$experiment_key, api_key = private$api_key,

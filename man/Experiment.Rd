@@ -21,6 +21,11 @@ experiment. Use \code{\link[=create_experiment]{create_experiment()}} to create 
 \item \href{#method-upload_asset}{\code{Experiment$upload_asset()}}
 \item \href{#method-get_graph}{\code{Experiment$get_graph()}}
 \item \href{#method-log_graph}{\code{Experiment$log_graph()}}
+\item \href{#method-get_metric}{\code{Experiment$get_metric()}}
+\item \href{#method-get_metrics_summary}{\code{Experiment$get_metrics_summary()}}
+\item \href{#method-log_metric}{\code{Experiment$log_metric()}}
+\item \href{#method-get_parameters}{\code{Experiment$get_parameters()}}
+\item \href{#method-log_parameter}{\code{Experiment$log_parameter()}}
 \item \href{#method-get_tags}{\code{Experiment$get_tags()}}
 \item \href{#method-add_tags}{\code{Experiment$add_tags()}}
 \item \href{#method-get_other}{\code{Experiment$get_other()}}
@@ -214,7 +219,93 @@ Log an experiment's associated model graph.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{graph}}{JSON representation of a graph.}
+\item{\code{graph}}{(Required) JSON representation of a graph.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_metric"></a>}}
+\if{latex}{\out{\hypertarget{method-get_metric}{}}}
+\subsection{Method \code{get_metric()}}{
+Get All Metrics For Name
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_metric(name)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{name}}{(Required) Name of metric.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_metrics_summary"></a>}}
+\if{latex}{\out{\hypertarget{method-get_metrics_summary}{}}}
+\subsection{Method \code{get_metrics_summary()}}{
+Get an experiment's metrics summary.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_metrics_summary()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-log_metric"></a>}}
+\if{latex}{\out{\hypertarget{method-log_metric}{}}}
+\subsection{Method \code{log_metric()}}{
+Log a metric name and value. Metrics are the only items that are logged as
+a full time series. However, even metrics can be throttled if too much data
+(either by rate or by count) is attempted to be logged.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$log_metric(name, value, step = NULL, epoch = NULL, context = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{name}}{(Required) Name of the metric.}
+
+\item{\code{value}}{(Required) Value of the metric.}
+
+\item{\code{step}}{Step number.}
+
+\item{\code{epoch}}{Epoch.}
+
+\item{\code{context}}{Context.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_parameters"></a>}}
+\if{latex}{\out{\hypertarget{method-get_parameters}{}}}
+\subsection{Method \code{get_parameters()}}{
+Get an experiment's parameters summary.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_parameters()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-log_parameter"></a>}}
+\if{latex}{\out{\hypertarget{method-log_parameter}{}}}
+\subsection{Method \code{log_parameter()}}{
+Log a parameter name and value. Note that you can only retrieve parameters
+summary data (e.g., this is not recorded as a full time series).
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$log_parameter(name, value, step = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{name}}{(Required) Name of the parameter.}
+
+\item{\code{value}}{(Required) Value of the parameter.}
+
+\item{\code{step}}{Step number.}
 }
 \if{html}{\out{</div>}}
 }
@@ -241,7 +332,7 @@ Add a list of tags to an experiment.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{tags}}{List of tags.}
+\item{\code{tags}}{(Required) List of tags.}
 }
 \if{html}{\out{</div>}}
 }
@@ -270,9 +361,9 @@ not recorded as a full time series).
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{key}}{The key.}
+\item{\code{key}}{(Required) The key.}
 
-\item{\code{value}}{The value.}
+\item{\code{value}}{(Required) The value.}
 }
 \if{html}{\out{</div>}}
 }
