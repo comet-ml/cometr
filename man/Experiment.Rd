@@ -21,6 +21,8 @@ experiment. Use \code{\link[=create_experiment]{create_experiment()}} to create 
 \item \href{#method-upload_asset}{\code{Experiment$upload_asset()}}
 \item \href{#method-get_graph}{\code{Experiment$get_graph()}}
 \item \href{#method-set_graph}{\code{Experiment$set_graph()}}
+\item \href{#method-get_tags}{\code{Experiment$get_tags()}}
+\item \href{#method-add_tags}{\code{Experiment$add_tags()}}
 \item \href{#method-create_symlink}{\code{Experiment$create_symlink()}}
 \item \href{#method-get_output}{\code{Experiment$get_output()}}
 \item \href{#method-get_code}{\code{Experiment$get_code()}}
@@ -211,6 +213,33 @@ Set an experiment's associated model graph.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{graph}}{JSON representation of a graph.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_tags"></a>}}
+\if{latex}{\out{\hypertarget{method-get_tags}{}}}
+\subsection{Method \code{get_tags()}}{
+Get an experiment's tags.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_tags()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-add_tags"></a>}}
+\if{latex}{\out{\hypertarget{method-add_tags}{}}}
+\subsection{Method \code{add_tags()}}{
+Add a list of tags to an experiment.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$add_tags(tags)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{tags}}{List of tags.}
 }
 \if{html}{\out{</div>}}
 }

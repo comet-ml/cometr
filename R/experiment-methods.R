@@ -180,3 +180,16 @@ set_graph <- function(experiment_key, graph, api_key = NULL) {
   call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
 }
 
+get_tags <- function(experiment_key, api_key = NULL) {
+  endpoint <- "/experiment/tags"
+  method <- "GET"
+  params <- list(experimentKey = experiment_key)
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}
+
+add_tags <- function(experiment_key, tags, api_key = NULL) {
+  endpoint <- "/write/experiment/tags"
+  method <- "POST"
+  params <- list(experimentKey = experiment_key, addedTags = tags)
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}

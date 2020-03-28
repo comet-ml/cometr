@@ -246,6 +246,22 @@ Experiment <- R6::R6Class(
     },
 
     #' @description
+    #' Get an experiment's tags.
+    get_tags = function() {
+      get_tags(experiment_key = private$experiment_key, api_key = private$api_key)
+    },
+
+    #' @description
+    #' Add a list of tags to an experiment.
+    #' @param tags List of tags.
+    add_tags = function(tags) {
+      private$check_active()
+      add_tags(experiment_key = private$experiment_key, api_key = private$api_key,
+               tags = as.list(tags))
+      invisible(self)
+    },
+
+    #' @description
     #' Add a symlink to an experiment.
     #' @param project_name (Required) Project that the experiment to should linked to.
     create_symlink = function(project_name) {
