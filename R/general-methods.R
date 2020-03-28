@@ -82,3 +82,47 @@ get_columns <- function(
   call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
 }
 
+#' Create a project
+#'
+#' @inheritParams get_experiments
+#' @param project_name Project name.
+#' @param project_description Project description.
+#' @param public Whether the project should be public or private.
+#' @export
+create_project <- function(
+  project_name, project_description, public = FALSE, workspace_name = NULL, api_key = NULL
+) {
+  workspace_name <- workspace_name %||% get_config_workspace(must_work = TRUE)
+
+  endpoint <- "/write/project/create"
+  method <- "POST"
+  params <- list(
+    isPublic = public,
+    projectName = project_name,
+    workspaceName = workspace_name,
+    projectDescription = project_description
+  )
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}
+
+#' Delete a project
+#'
+#' @inheritParams get_experiments
+#' @param project_name Project name.
+#' @param delete_experiments whether to also delete all the experiments in the project.
+#' @export
+delete_project <- function(
+  project_name, delete_experiments = TRUE, workspace_name = NULL, api_key = NULL
+) {
+  workspace_name <- workspace_name %||% get_config_workspace(must_work = TRUE)
+
+  endpoint <- "/write/project/delete"
+  method <- "POST"
+  params <- list(
+    deleteAllExperiments = delete_experiments,
+    projectName = project_name,
+    workspaceName = workspace_name
+  )
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}
+
