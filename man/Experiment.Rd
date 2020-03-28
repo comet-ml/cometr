@@ -20,7 +20,7 @@ experiment. Use \code{\link[=create_experiment]{create_experiment()}} to create 
 \item \href{#method-get_asset}{\code{Experiment$get_asset()}}
 \item \href{#method-upload_asset}{\code{Experiment$upload_asset()}}
 \item \href{#method-get_graph}{\code{Experiment$get_graph()}}
-\item \href{#method-set_graph}{\code{Experiment$set_graph()}}
+\item \href{#method-log_graph}{\code{Experiment$log_graph()}}
 \item \href{#method-get_tags}{\code{Experiment$get_tags()}}
 \item \href{#method-add_tags}{\code{Experiment$add_tags()}}
 \item \href{#method-get_other}{\code{Experiment$get_other()}}
@@ -203,12 +203,12 @@ Get an experiment's model graph.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_graph"></a>}}
-\if{latex}{\out{\hypertarget{method-set_graph}{}}}
-\subsection{Method \code{set_graph()}}{
-Set an experiment's associated model graph.
+\if{html}{\out{<a id="method-log_graph"></a>}}
+\if{latex}{\out{\hypertarget{method-log_graph}{}}}
+\subsection{Method \code{log_graph()}}{
+Log an experiment's associated model graph.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$set_graph(graph)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$log_graph(graph)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

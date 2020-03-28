@@ -85,7 +85,7 @@ create_experiment <- function(
   if (send_system_details) {
     LOG_DEBUG("Sending system details to the newly created experiment")
     try(
-      set_system_details(experiment_key = experiment_key, api_key = api_key),
+      log_system_details(experiment_key = experiment_key, api_key = api_key),
       silent = TRUE
     )
   }
@@ -236,11 +236,11 @@ Experiment <- R6::R6Class(
     },
 
     #' @description
-    #' Set an experiment's associated model graph.
+    #' Log an experiment's associated model graph.
     #' @param graph JSON representation of a graph.
-    set_graph = function(graph) {
+    log_graph = function(graph) {
       private$check_active()
-      set_graph(experiment_key = private$experiment_key, api_key = private$api_key,
+      log_graph(experiment_key = private$experiment_key, api_key = private$api_key,
                 graph = graph)
       invisible(self)
     },

@@ -23,7 +23,7 @@ send_keepalive <- function(experiment_key, api_key = NULL) {
   call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
 }
 
-set_system_details <- function(experiment_key, api_key = NULL) {
+log_system_details <- function(experiment_key, api_key = NULL) {
   endpoint <- "/write/experiment/system-details"
   method <- "POST"
   params <- get_all_system_details()
@@ -173,7 +173,7 @@ get_graph <- function(experiment_key, api_key = NULL) {
   call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
 }
 
-set_graph <- function(experiment_key, graph, api_key = NULL) {
+log_graph <- function(experiment_key, graph, api_key = NULL) {
   endpoint <- "/write/experiment/graph"
   method <- "POST"
   params <- list(experimentKey = experiment_key, graph = graph)
