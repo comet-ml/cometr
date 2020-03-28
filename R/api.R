@@ -31,7 +31,8 @@ call_api <- function(endpoint, method = c("GET", "POST"), params = list(), respo
   url <- sprintf("%s%s%s", get_config_url(), .cometrenv$COMET_API_ENDPOINT_BASE, endpoint)
 
   tryCatch({
-    if (endpoint == "/write/experiment/upload-asset") {
+    if (endpoint == "/write/experiment/upload-asset" ||
+        endpoint == "/write/experiment/git/patch") {
       LOG_INFO("API call: ", endpoint)
       body_params <- list(file = httr::upload_file(params$file))
       params$file <- NULL

@@ -76,6 +76,23 @@ log_git_metadata <- function(experiment_key, details = list(), api_key = NULL) {
   call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
 }
 
+get_git_patch <- function(experiment_key, api_key = NULL) {
+  endpoint <- "/experiment/git/patch"
+  method <- "GET"
+  params <- list(experimentKey = experiment_key)
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key, response_json = FALSE)
+}
+
+log_git_patch <- function(experiment_key, file, api_key = NULL) {
+  endpoint <- "/write/experiment/git/patch"
+  method <- "POST"
+  params <- list(
+    experimentKey = experiment_key,
+    file = file
+  )
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}
+
 get_html <- function(experiment_key, api_key = NULL) {
   endpoint <- "/experiment/html"
   method <- "GET"

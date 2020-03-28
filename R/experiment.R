@@ -96,13 +96,19 @@ create_experiment <- function(
 
   if (log_git_info) {
     LOG_DEBUG("Logging git information")
-    try({
-      git_details <- get_git_metadata_details()
-      LOG_DEBUG(git_details)
-      if (length(git_details) > 0) {
+    git_details <- get_git_metadata_details()
+
+    if (length(git_details) > 0) {
+      try({
+        LOG_DEBUG(git_details)
         log_git_metadata(experiment_key = experiment_key, details = git_details, api_key = api_key)
-      }
-    }, silent = TRUE)
+
+        patchfile <- get_git_patch_file()
+        if (!is.null(patchfile) && file.exists(patchfile)) {
+          log_git_patch(experiment_key = experiment_key, file = patchfile, api_key = api_key)
+        }
+      }, silent = TRUE)
+    }
   }
 
   .cometrenv$cancreate <- TRUE
@@ -195,12 +201,6 @@ Experiment <- R6::R6Class(
     #' Get an experiment's metadata.
     get_metadata = function() {
       get_metadata(experiment_key = private$experiment_key, api_key = private$api_key)
-    },
-
-    #' @description
-    #' Get the git metadata of an experiment.
-    get_git_metadata = function() {
-      get_git_metadata(experiment_key = private$experiment_key, api_key = private$api_key)
     },
 
     #' @description
@@ -363,6 +363,23 @@ Experiment <- R6::R6Class(
       private$check_active()
       symlink_experiment(experiment_key = private$experiment_key, api_key = private$api_key,
                          project_name = project_name)
+    },
+
+    #' @description
+    #' Get the git metadata of an experiment.
+    get_git_metadata = function() {
+      get_git_metadata(experiment_key = private$experiment_key, api_key = private$api_key)
+    },
+
+    #' @description
+    #' Get the git patch of an experiment.
+    get_git_patch = function() {
+      patch <- get_git_patch(experiment_key = private$experiment_key, api_key = private$api_key)
+      if (is.raw(patch)) {
+        rawToChar(patch)
+      } else {
+        patch
+      }
     },
 
     #' @description

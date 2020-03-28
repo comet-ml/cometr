@@ -15,7 +15,6 @@ experiment. Use \code{\link[=create_experiment]{create_experiment()}} to create 
 \item \href{#method-get_key}{\code{Experiment$get_key()}}
 \item \href{#method-get_url}{\code{Experiment$get_url()}}
 \item \href{#method-get_metadata}{\code{Experiment$get_metadata()}}
-\item \href{#method-get_git_metadata}{\code{Experiment$get_git_metadata()}}
 \item \href{#method-get_html}{\code{Experiment$get_html()}}
 \item \href{#method-log_html}{\code{Experiment$log_html()}}
 \item \href{#method-get_asset_list}{\code{Experiment$get_asset_list()}}
@@ -33,6 +32,8 @@ experiment. Use \code{\link[=create_experiment]{create_experiment()}} to create 
 \item \href{#method-get_other}{\code{Experiment$get_other()}}
 \item \href{#method-log_other}{\code{Experiment$log_other()}}
 \item \href{#method-create_symlink}{\code{Experiment$create_symlink()}}
+\item \href{#method-get_git_metadata}{\code{Experiment$get_git_metadata()}}
+\item \href{#method-get_git_patch}{\code{Experiment$get_git_patch()}}
 \item \href{#method-get_output}{\code{Experiment$get_output()}}
 \item \href{#method-get_code}{\code{Experiment$get_code()}}
 \item \href{#method-get_system_details}{\code{Experiment$get_system_details()}}
@@ -104,16 +105,6 @@ Get the URL to view an experiment in the browser.
 Get an experiment's metadata.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Experiment$get_metadata()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_git_metadata"></a>}}
-\if{latex}{\out{\hypertarget{method-get_git_metadata}{}}}
-\subsection{Method \code{get_git_metadata()}}{
-Get the git metadata of an experiment.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_git_metadata()}\if{html}{\out{</div>}}
 }
 
 }
@@ -406,6 +397,26 @@ Add a symlink to an experiment in another project.
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_git_metadata"></a>}}
+\if{latex}{\out{\hypertarget{method-get_git_metadata}{}}}
+\subsection{Method \code{get_git_metadata()}}{
+Get the git metadata of an experiment.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_git_metadata()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_git_patch"></a>}}
+\if{latex}{\out{\hypertarget{method-get_git_patch}{}}}
+\subsection{Method \code{get_git_patch()}}{
+Get the git patch of an experiment.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_git_patch()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_output"></a>}}
