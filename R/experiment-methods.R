@@ -21,17 +21,20 @@ send_keepalive <- function(experiment_key, api_key = NULL) {
   call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
 }
 
-log_system_details <- function(experiment_key, api_key = NULL) {
-  endpoint <- "/write/experiment/system-details"
-  method <- "POST"
-  params <- get_all_system_details()
-  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
-}
-
 get_system_details <- function(experiment_key, api_key = NULL) {
   endpoint <- "/experiment/system-details"
   method <- "GET"
   params <- list(experimentKey = experiment_key)
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}
+
+log_system_details <- function(experiment_key, details = list(), api_key = NULL) {
+  endpoint <- "/write/experiment/system-details"
+  method <- "POST"
+  params <- c(
+    experimentKey = experiment_key,
+    details
+  )
   call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
 }
 
@@ -42,7 +45,7 @@ get_code <- function(experiment_key, api_key = NULL) {
   call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
 }
 
-set_code <- function(experiment_key, code, api_key = NULL) {
+log_code <- function(experiment_key, code, api_key = NULL) {
   endpoint <- "/write/experiment/code"
   method <- "POST"
   params <- list(experimentKey = experiment_key, code = code)
@@ -53,6 +56,23 @@ get_metadata <- function(experiment_key, api_key = NULL) {
   endpoint <- "/experiment/metadata"
   method <- "GET"
   params <- list(experimentKey = experiment_key)
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}
+
+get_git_metadata <- function(experiment_key, api_key = NULL) {
+  endpoint <- "/experiment/git/metadata"
+  method <- "GET"
+  params <- list(experimentKey = experiment_key)
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}
+
+log_git_metadata <- function(experiment_key, details = list(), api_key = NULL) {
+  endpoint <- "/write/experiment/git/metadata"
+  method <- "POST"
+  params <- c(
+    experimentKey = experiment_key,
+    details
+  )
   call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
 }
 

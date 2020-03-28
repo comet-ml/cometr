@@ -1,6 +1,5 @@
 get_all_system_details <- function() {
   list(
-    experimentKey = experiment_key,
     command = get_system_command(),
     executable = get_system_executable(),
     hostname = get_system_hostname(),

@@ -28,12 +28,13 @@
 #' a script using the `Rscript` tool and will not work in interactive sessions.
 #' @param log_system_details If `TRUE`, automatically log the system details to
 #' Comet when the experiment is created.
+#' @param log_git_info If `TRUE`, log information about the active git repository.
 #' @return An [`Experiment`] object.
 #' @export
 create_experiment <- function(
   experiment_name = NULL, project_name = NULL, workspace_name = NULL, api_key = NULL,
   keep_active = TRUE, log_output = TRUE, log_error = FALSE,
-  log_code = TRUE, log_system_details = TRUE
+  log_code = TRUE, log_system_details = TRUE, log_git_info = TRUE
 ) {
 
   if (!isBool(keep_active)) {
@@ -50,6 +51,9 @@ create_experiment <- function(
   }
   if (!isBool(log_system_details)) {
     comet_stop("log_system_details must be either TRUE or FALSE.")
+  }
+  if (!isBool(log_git_info)) {
+    comet_stop("log_git_info must be either TRUE or FALSE.")
   }
 
   if (!is.null(.cometrenv$curexp)) {
@@ -77,17 +81,28 @@ create_experiment <- function(
       LOG_DEBUG("Logging source code to the newly created experiment from script ", source_file)
       try({
         source_code <- paste(readLines(source_file), collapse = "\n")
-        set_code(experiment_key = experiment_key, code = source_code, api_key = api_key)
+        log_code(experiment_key = experiment_key, code = source_code, api_key = api_key)
       }, silent = TRUE)
     }
   }
 
   if (log_system_details) {
     LOG_DEBUG("Logging system details to the newly created experiment")
-    try(
-      log_system_details(experiment_key = experiment_key, api_key = api_key),
-      silent = TRUE
-    )
+    try({
+      system_details <- get_all_system_details()
+      log_system_details(experiment_key = experiment_key, details = system_details, api_key = api_key)
+    }, silent = TRUE)
+  }
+
+  if (log_git_info) {
+    LOG_DEBUG("Logging git information")
+    try({
+      git_details <- get_git_metadata_details()
+      LOG_DEBUG(git_details)
+      if (length(git_details) > 0) {
+        log_git_metadata(experiment_key = experiment_key, details = git_details, api_key = api_key)
+      }
+    }, silent = TRUE)
   }
 
   .cometrenv$cancreate <- TRUE
@@ -180,6 +195,12 @@ Experiment <- R6::R6Class(
     #' Get an experiment's metadata.
     get_metadata = function() {
       get_metadata(experiment_key = private$experiment_key, api_key = private$api_key)
+    },
+
+    #' @description
+    #' Get the git metadata of an experiment.
+    get_git_metadata = function() {
+      get_git_metadata(experiment_key = private$experiment_key, api_key = private$api_key)
     },
 
     #' @description
