@@ -542,7 +542,8 @@ create_keepalive_process <- function(exp_key, api_key) {
         Sys.sleep(sleeptime / 1000)
       }
     },
-    args = list(exp_key = exp_key, api_key = api_key)
+    args = list(exp_key = exp_key, api_key = api_key),
+    supervise = TRUE
   )
 }
 
@@ -576,6 +577,7 @@ create_logging_process <- function(experiment_key, logfile_path, log_offset_path
       }
     },
     args = list(experiment_key = experiment_key, logfile_path = logfile_path,
-                log_offset_path = log_offset_path, api_key = api_key)
+                log_offset_path = log_offset_path, api_key = api_key),
+    supervise = TRUE
   )
 }
