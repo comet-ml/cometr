@@ -372,6 +372,26 @@ Experiment <- R6::R6Class(
     },
 
     #' @description
+    #' Log an experiment's git metadata. This should only be called once and it can be done
+    #' automatically by enabling `log_git_info` in [`create_experiment()`]. This will replace
+    #' any previous git metadata that was logged.
+    #' @param branch Git branch name.
+    #' @param origin Git repository origin.
+    #' @param parent Git commit SHA.
+    #' @param user Git username.
+    #' @param root Git root.
+    log_git_metadata = function(branch = NULL, origin = NULL, parent = NULL, user = NULL, root = NULL) {
+      details <- list(
+        branch = branch,
+        origin = origin,
+        parent = parent,
+        user = user,
+        root = root
+      )
+      log_git_metadata(experiment_key = private$experiment_key, details = details, api_key = private$api_key)
+    },
+
+    #' @description
     #' Get the git metadata of an experiment.
     get_git_metadata = function() {
       get_git_metadata(experiment_key = private$experiment_key, api_key = private$api_key)
@@ -395,9 +415,64 @@ Experiment <- R6::R6Class(
     },
 
     #' @description
+    #' Log an experiment's source code. This should only be called once and it can be done
+    #' automatically by enabling `log_code` in [`create_experiment()`]. This will replace
+    #' any previous code that was logged.
+    #' @param code The code to set as the source code.
+    log_code = function(code) {
+      log_code(experiment_key = private$experiment_key, code = code, api_key = private$api_key)
+    },
+
+    #' @description
     #' Get an experiment's source code.
     get_code = function() {
       get_code(experiment_key = private$experiment_key, api_key = private$api_key)
+    },
+
+    #' @description
+    #' Log system details. This can be done automatically by enabling `log_system_details`
+    #' in [`create_experiment()`].
+    #' @param command Script and optional arguments.
+    #' @param executable Executable.
+    #' @param hostname Hostname.
+    #' @param installed_packages List of installed R packages.
+    #' @param gpu_static_info List of GPU information, where each GPU is a `list()` with
+    #' fields `gpuIndex`, `name`, `powerLimit`, `totalMemory`, `uuid`.
+    #' @param ip IP address.
+    #' @param network_interface_ips List of network interface IPs.
+    #' @param additional_system_info List of additional parameters to log,
+    #' where each parameter is a `list()` with `key` and `value` pairs.
+    #' @param os Full details about operating system.
+    #' @param os_packages List of operating system packages installed.
+    #' @param os_type Operating system type.
+    #' @param pid Process ID.
+    #' @param user User.
+    #' @param r_version Short form R version.
+    #' @param r_version_verbose Long form R version.
+    log_system_details = function(
+      command = NULL, executable = NULL, hostname = NULL, installed_packages = NULL, gpu_static_info = NULL,
+      ip = NULL, network_interface_ips = NULL, additional_system_info = NULL, os = NULL,
+      os_packages = NULL, os_type = NULL, pid = NULL, user = NULL, r_version = NULL,
+      r_version_verbose = NULL
+    ) {
+      details <- list(
+        command = as.list(command),
+        executable = executable,
+        hostname = hostname,
+        installedPackages = as.list(installed_packages),
+        gpuStaticInfoList = gpu_static_info,
+        ip = ip,
+        networkInterfaceIps = as.list(network_interface_ips),
+        logAdditionalSystemInfoList = additional_system_info,
+        os = os,
+        osPackages = as.list(os_packages),
+        osType = os_type,
+        pid = pid,
+        user = user,
+        pythonVersion = r_version,
+        pythonVersionVerbose = r_version_verbose
+      )
+      log_system_details(experiment_key = private$experiment_key, details = details, api_key = private$api_key)
     },
 
     #' @description

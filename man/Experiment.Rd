@@ -32,10 +32,13 @@ experiment. Use \code{\link[=create_experiment]{create_experiment()}} to create 
 \item \href{#method-get_other}{\code{Experiment$get_other()}}
 \item \href{#method-log_other}{\code{Experiment$log_other()}}
 \item \href{#method-create_symlink}{\code{Experiment$create_symlink()}}
+\item \href{#method-log_git_metadata}{\code{Experiment$log_git_metadata()}}
 \item \href{#method-get_git_metadata}{\code{Experiment$get_git_metadata()}}
 \item \href{#method-get_git_patch}{\code{Experiment$get_git_patch()}}
 \item \href{#method-get_output}{\code{Experiment$get_output()}}
+\item \href{#method-log_code}{\code{Experiment$log_code()}}
 \item \href{#method-get_code}{\code{Experiment$get_code()}}
+\item \href{#method-log_system_details}{\code{Experiment$log_system_details()}}
 \item \href{#method-get_system_details}{\code{Experiment$get_system_details()}}
 \item \href{#method-archive}{\code{Experiment$archive()}}
 \item \href{#method-restore}{\code{Experiment$restore()}}
@@ -399,6 +402,39 @@ Add a symlink to an experiment in another project.
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-log_git_metadata"></a>}}
+\if{latex}{\out{\hypertarget{method-log_git_metadata}{}}}
+\subsection{Method \code{log_git_metadata()}}{
+Log an experiment's git metadata. This should only be called once and it can be done
+automatically by enabling \code{log_git_info} in \code{\link[=create_experiment]{create_experiment()}}. This will replace
+any previous git metadata that was logged.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$log_git_metadata(
+  branch = NULL,
+  origin = NULL,
+  parent = NULL,
+  user = NULL,
+  root = NULL
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{branch}}{Git branch name.}
+
+\item{\code{origin}}{Git repository origin.}
+
+\item{\code{parent}}{Git commit SHA.}
+
+\item{\code{user}}{Git username.}
+
+\item{\code{root}}{Git root.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_git_metadata"></a>}}
 \if{latex}{\out{\hypertarget{method-get_git_metadata}{}}}
 \subsection{Method \code{get_git_metadata()}}{
@@ -429,6 +465,25 @@ Get an experiment's standard output and error.
 
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-log_code"></a>}}
+\if{latex}{\out{\hypertarget{method-log_code}{}}}
+\subsection{Method \code{log_code()}}{
+Log an experiment's source code. This should only be called once and it can be done
+automatically by enabling \code{log_code} in \code{\link[=create_experiment]{create_experiment()}}. This will replace
+any previous code that was logged.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$log_code(code)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{code}}{The code to set as the source code.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_code"></a>}}
 \if{latex}{\out{\hypertarget{method-get_code}{}}}
 \subsection{Method \code{get_code()}}{
@@ -437,6 +492,70 @@ Get an experiment's source code.
 \if{html}{\out{<div class="r">}}\preformatted{Experiment$get_code()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-log_system_details"></a>}}
+\if{latex}{\out{\hypertarget{method-log_system_details}{}}}
+\subsection{Method \code{log_system_details()}}{
+Log system details. This can be done automatically by enabling \code{log_system_details}
+in \code{\link[=create_experiment]{create_experiment()}}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$log_system_details(
+  command = NULL,
+  executable = NULL,
+  hostname = NULL,
+  installed_packages = NULL,
+  gpu_static_info = NULL,
+  ip = NULL,
+  network_interface_ips = NULL,
+  additional_system_info = NULL,
+  os = NULL,
+  os_packages = NULL,
+  os_type = NULL,
+  pid = NULL,
+  user = NULL,
+  r_version = NULL,
+  r_version_verbose = NULL
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{command}}{Script and optional arguments.}
+
+\item{\code{executable}}{Executable.}
+
+\item{\code{hostname}}{Hostname.}
+
+\item{\code{installed_packages}}{List of installed R packages.}
+
+\item{\code{gpu_static_info}}{List of GPU information, where each GPU is a \code{list()} with
+fields \code{gpuIndex}, \code{name}, \code{powerLimit}, \code{totalMemory}, \code{uuid}.}
+
+\item{\code{ip}}{IP address.}
+
+\item{\code{network_interface_ips}}{List of network interface IPs.}
+
+\item{\code{additional_system_info}}{List of additional parameters to log,
+where each parameter is a \code{list()} with \code{key} and \code{value} pairs.}
+
+\item{\code{os}}{Full details about operating system.}
+
+\item{\code{os_packages}}{List of operating system packages installed.}
+
+\item{\code{os_type}}{Operating system type.}
+
+\item{\code{pid}}{Process ID.}
+
+\item{\code{user}}{User.}
+
+\item{\code{r_version}}{Short form R version.}
+
+\item{\code{r_version_verbose}}{Long form R version.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_system_details"></a>}}
