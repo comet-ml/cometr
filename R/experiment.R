@@ -168,6 +168,7 @@ Experiment <- R6::R6Class(
 
       if (keep_active) {
         private$keepalive_process <- create_keepalive_process(exp_key = experiment_key, api_key = api_key)
+        LOG_DEBUG("Created process ", private$keepalive_process$get_pid(), " to send keepalive signal.")
       }
 
       if (log_output || log_error) {
@@ -186,6 +187,7 @@ Experiment <- R6::R6Class(
           experiment_key = experiment_key, logfile_path = private$logfile_path,
           log_offset_path = private$log_offset_path, api_key = api_key
         )
+        LOG_DEBUG("Created process ", private$logging_process$get_pid(), " to send output logs.")
       }
     },
 
@@ -463,20 +465,23 @@ Experiment <- R6::R6Class(
     },
 
     finalize = function() {
+      LOG_DEBUG("Experiment finalizer called on experiment ", self$get_key())
       suppressWarnings({
         # If this is the active experiment, unset the active experiment
         if (!is.null(.cometrenv$curexp) && self$get_key() == .cometrenv$curexp$get_key()) {
+          LOG_DEBUG("Clearing cometr current experiment.")
           .cometrenv$curexp <- NULL
         }
 
         # Stop sending the keepalive signal
         if (!is.null(private$keepalive_process) && private$keepalive_process$is_alive()) {
-          LOG_DEBUG("Stopping experiment ", private$experiment_key)
+          LOG_DEBUG("Stopping sendalive signal.")
           private$keepalive_process$interrupt()
         }
 
         # Stop logging output logs
         if (!is.null(private$logging_process) && private$logging_process$is_alive()) {
+          LOG_DEBUG("Stopping output logging.")
           private$logging_process$interrupt()
         }
 
