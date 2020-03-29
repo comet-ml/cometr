@@ -14,7 +14,7 @@ create_experiment(
   log_error = FALSE,
   log_code = TRUE,
   log_system_details = TRUE,
-  log_git_info = TRUE
+  log_git_info = FALSE
 )
 }
 \arguments{
@@ -51,7 +51,8 @@ a script using the \code{Rscript} tool and will not work in interactive sessions
 \item{log_system_details}{If \code{TRUE}, automatically log the system details to
 Comet when the experiment is created.}
 
-\item{log_git_info}{If \code{TRUE}, log information about the active git repository.}
+\item{log_git_info}{If \code{TRUE}, log information about the active git repository.
+Requires the \code{git2r} package to be installed.}
 }
 \value{
 An \code{\link{Experiment}} object.

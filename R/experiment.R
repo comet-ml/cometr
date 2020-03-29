@@ -29,12 +29,13 @@
 #' @param log_system_details If `TRUE`, automatically log the system details to
 #' Comet when the experiment is created.
 #' @param log_git_info If `TRUE`, log information about the active git repository.
+#' Requires the `git2r` package to be installed.
 #' @return An [`Experiment`] object.
 #' @export
 create_experiment <- function(
   experiment_name = NULL, project_name = NULL, workspace_name = NULL, api_key = NULL,
   keep_active = TRUE, log_output = TRUE, log_error = FALSE,
-  log_code = TRUE, log_system_details = TRUE, log_git_info = TRUE
+  log_code = TRUE, log_system_details = TRUE, log_git_info = FALSE
 ) {
 
   if (!isBool(keep_active)) {
@@ -54,6 +55,9 @@ create_experiment <- function(
   }
   if (!isBool(log_git_info)) {
     comet_stop("log_git_info must be either TRUE or FALSE.")
+  }
+  if (log_git_info && (!requireNamespace("git2r", quietly = TRUE) || packageVersion("git2r") < "0.22.1")) {
+    comet_stop("log_git_info requires you to have `git2r` version 0.22.1 or later.")
   }
 
   if (!is.null(.cometrenv$curexp)) {
