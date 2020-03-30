@@ -210,86 +210,34 @@ Experiment <- R6::R6Class(
     },
 
     #' @description
-    #' Get an experiment's HTML.
-    get_html = function() {
-      get_html(experiment_key = private$experiment_key, api_key = private$api_key)
-    },
-
-    #' @description
-    #' Set (or append onto) an experiment's HTML.
-    #' @param html (Required) An HTML string to add to the experiment.
-    #' @param override If `TRUE`, override the previous HTML. If `FALSE`, append to it.
-    log_html = function(html, override = FALSE) {
+    #' Archive an experiment.
+    archive = function() {
       private$check_active()
-      log_html(experiment_key = private$experiment_key, api_key = private$api_key,
-               html = html, override = override)
+      archive_experiment(experiment_key = private$experiment_key, api_key = private$api_key)
       invisible(self)
     },
 
     #' @description
-    #' Get an experiment's asset list.
-    #' @param type The type of assets to retrieve (by default, all assets are returned).
-    get_asset_list = function(type = NULL) {
-      get_asset_list(experiment_key = private$experiment_key, api_key = private$api_key,
-                     type = type)
-    },
-
-    #' @description
-    #' Get an asset.
-    #' @param assetId (Required) The asset ID to retrieve.
-    get_asset = function(assetId) {
-      get_asset(experiment_key = private$experiment_key, api_key = private$api_key,
-                assetId = assetId)
-    },
-
-    #' @description
-    #' Upload a file to the experiment.
-    #' @param file (Required) Path to the file to upload.
-    #' @param step Step number.
-    #' @param overwrite If `TRUE`, overwrite any uploaded file with the same name.
-    #' @param context The context.
-    #' @param type The type of asset.
-    #' @param name Name of the file on comet. By default the name of the file will
-    #' match the file that you upload, but you can use this parameter to use a
-    #' different name.
-    #' @param metadata Metadata to upload along with the file.
-    upload_asset = function(file, step = NULL, overwrite = NULL, context = NULL,
-                           type = NULL, name = NULL, metadata = NULL) {
+    #' Restore an archived experiment.
+    restore = function() {
       private$check_active()
-      upload_asset(experiment_key = private$experiment_key, api_key = private$api_key,
-                   file = file, step = step, overwrite = overwrite,
-                   context = context, type = type, name = name, metadata = metadata)
+      restore_experiment(experiment_key = private$experiment_key, api_key = private$api_key)
       invisible(self)
     },
 
     #' @description
-    #' Get an experiment's model graph.
-    get_graph = function() {
-      get_graph(experiment_key = private$experiment_key, api_key = private$api_key)
-    },
-
-    #' @description
-    #' Log an experiment's associated model graph.
-    #' @param graph (Required) JSON representation of a graph.
-    log_graph = function(graph) {
+    #' Delete an experiment.
+    delete = function() {
       private$check_active()
-      log_graph(experiment_key = private$experiment_key, api_key = private$api_key,
-                graph = graph)
+      delete_experiment(experiment_key = private$experiment_key, api_key = private$api_key)
       invisible(self)
     },
 
     #' @description
-    #' Get All Metrics For Name
-    #' @param name (Required) Name of metric.
-    get_metric = function(name) {
-      get_metric(experiment_key = private$experiment_key, api_key = private$api_key,
-                 name = name)
-    },
-
-    #' @description
-    #' Get an experiment's metrics summary.
-    get_metrics_summary = function() {
-      get_metrics_summary(experiment_key = private$experiment_key, api_key = private$api_key)
+    #' Stop an experiment. Always call this method before creating a new experiment.
+    stop = function() {
+      private$finalize()
+      invisible(self)
     },
 
     #' @description
@@ -309,9 +257,33 @@ Experiment <- R6::R6Class(
     },
 
     #' @description
-    #' Get an experiment's parameters summary.
-    get_parameters = function() {
-      get_parameters(experiment_key = private$experiment_key, api_key = private$api_key)
+    #' Get All Metrics For Name
+    #' @param name (Required) Name of metric.
+    get_metric = function(name) {
+      get_metric(experiment_key = private$experiment_key, api_key = private$api_key,
+                 name = name)
+    },
+
+    #' @description
+    #' Get an experiment's metrics summary.
+    get_metrics_summary = function() {
+      get_metrics_summary(experiment_key = private$experiment_key, api_key = private$api_key)
+    },
+
+    #' @description
+    #' Log an experiment's associated model graph.
+    #' @param graph (Required) JSON representation of a graph.
+    log_graph = function(graph) {
+      private$check_active()
+      log_graph(experiment_key = private$experiment_key, api_key = private$api_key,
+                graph = graph)
+      invisible(self)
+    },
+
+    #' @description
+    #' Get an experiment's model graph.
+    get_graph = function() {
+      get_graph(experiment_key = private$experiment_key, api_key = private$api_key)
     },
 
     #' @description
@@ -328,25 +300,9 @@ Experiment <- R6::R6Class(
     },
 
     #' @description
-    #' Get an experiment's tags.
-    get_tags = function() {
-      get_tags(experiment_key = private$experiment_key, api_key = private$api_key)
-    },
-
-    #' @description
-    #' Add a list of tags to an experiment.
-    #' @param tags (Required) List of tags.
-    add_tags = function(tags) {
-      private$check_active()
-      add_tags(experiment_key = private$experiment_key, api_key = private$api_key,
-               tags = as.list(tags))
-      invisible(self)
-    },
-
-    #' @description
-    #' Get an experiment's others (logged with `log_other()`) summary.
-    get_other = function() {
-      get_other(experiment_key = private$experiment_key, api_key = private$api_key)
+    #' Get an experiment's parameters summary.
+    get_parameters = function() {
+      get_parameters(experiment_key = private$experiment_key, api_key = private$api_key)
     },
 
     #' @description
@@ -363,6 +319,81 @@ Experiment <- R6::R6Class(
     },
 
     #' @description
+    #' Get an experiment's others (logged with `log_other()`) summary.
+    get_other = function() {
+      get_other(experiment_key = private$experiment_key, api_key = private$api_key)
+    },
+
+    #' @description
+    #' Add a list of tags to an experiment.
+    #' @param tags (Required) List of tags.
+    add_tags = function(tags) {
+      private$check_active()
+      add_tags(experiment_key = private$experiment_key, api_key = private$api_key,
+               tags = as.list(tags))
+      invisible(self)
+    },
+
+    #' @description
+    #' Get an experiment's tags.
+    get_tags = function() {
+      get_tags(experiment_key = private$experiment_key, api_key = private$api_key)
+    },
+
+    #' @description
+    #' Set (or append onto) an experiment's HTML.
+    #' @param html (Required) An HTML string to add to the experiment.
+    #' @param override If `TRUE`, override the previous HTML. If `FALSE`, append to it.
+    log_html = function(html, override = FALSE) {
+      private$check_active()
+      log_html(experiment_key = private$experiment_key, api_key = private$api_key,
+               html = html, override = override)
+      invisible(self)
+    },
+
+    #' @description
+    #' Get an experiment's HTML.
+    get_html = function() {
+      get_html(experiment_key = private$experiment_key, api_key = private$api_key)
+    },
+
+    #' @description
+    #' Upload a file to the experiment.
+    #' @param file (Required) Path to the file to upload.
+    #' @param step Step number.
+    #' @param overwrite If `TRUE`, overwrite any uploaded file with the same name.
+    #' @param context The context.
+    #' @param type The type of asset.
+    #' @param name Name of the file on comet. By default the name of the file will
+    #' match the file that you upload, but you can use this parameter to use a
+    #' different name.
+    #' @param metadata Metadata to upload along with the file.
+    upload_asset = function(file, step = NULL, overwrite = NULL, context = NULL,
+                            type = NULL, name = NULL, metadata = NULL) {
+      private$check_active()
+      upload_asset(experiment_key = private$experiment_key, api_key = private$api_key,
+                   file = file, step = step, overwrite = overwrite,
+                   context = context, type = type, name = name, metadata = metadata)
+      invisible(self)
+    },
+
+    #' @description
+    #' Get an experiment's asset list.
+    #' @param type The type of assets to retrieve (by default, all assets are returned).
+    get_asset_list = function(type = NULL) {
+      get_asset_list(experiment_key = private$experiment_key, api_key = private$api_key,
+                     type = type)
+    },
+
+    #' @description
+    #' Get an asset.
+    #' @param assetId (Required) The asset ID to retrieve.
+    get_asset = function(assetId) {
+      get_asset(experiment_key = private$experiment_key, api_key = private$api_key,
+                assetId = assetId)
+    },
+
+     #' @description
     #' Add a symlink to an experiment in another project.
     #' @param project_name (Required) Project that the experiment to should linked to.
     create_symlink = function(project_name) {
@@ -482,42 +513,12 @@ Experiment <- R6::R6Class(
     },
 
     #' @description
-    #' Archive an experiment.
-    archive = function() {
-      private$check_active()
-      archive_experiment(experiment_key = private$experiment_key, api_key = private$api_key)
-      invisible(self)
-    },
-
-    #' @description
-    #' Restore an archived experiment.
-    restore = function() {
-      private$check_active()
-      restore_experiment(experiment_key = private$experiment_key, api_key = private$api_key)
-      invisible(self)
-    },
-
-    #' @description
-    #' Delete an experiment.
-    delete = function() {
-      private$check_active()
-      delete_experiment(experiment_key = private$experiment_key, api_key = private$api_key)
-      invisible(self)
-    },
-
-    #' @description
-    #' Stop an experiment. Always call this method before creating a new experiment.
-    stop = function() {
-      private$finalize()
-      invisible(self)
-    },
-
-    #' @description
     #' Print the experiment.
     print = function() {
       cat("Comet experiment", private$experiment_url, "\n")
     }
   ),
+
   private = list(
 
     experiment_key = NULL,

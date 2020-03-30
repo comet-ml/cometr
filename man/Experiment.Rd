@@ -15,22 +15,26 @@ experiment. Use \code{\link[=create_experiment]{create_experiment()}} to create 
 \item \href{#method-get_key}{\code{Experiment$get_key()}}
 \item \href{#method-get_url}{\code{Experiment$get_url()}}
 \item \href{#method-get_metadata}{\code{Experiment$get_metadata()}}
-\item \href{#method-get_html}{\code{Experiment$get_html()}}
-\item \href{#method-log_html}{\code{Experiment$log_html()}}
-\item \href{#method-get_asset_list}{\code{Experiment$get_asset_list()}}
-\item \href{#method-get_asset}{\code{Experiment$get_asset()}}
-\item \href{#method-upload_asset}{\code{Experiment$upload_asset()}}
-\item \href{#method-get_graph}{\code{Experiment$get_graph()}}
-\item \href{#method-log_graph}{\code{Experiment$log_graph()}}
+\item \href{#method-archive}{\code{Experiment$archive()}}
+\item \href{#method-restore}{\code{Experiment$restore()}}
+\item \href{#method-delete}{\code{Experiment$delete()}}
+\item \href{#method-stop}{\code{Experiment$stop()}}
+\item \href{#method-log_metric}{\code{Experiment$log_metric()}}
 \item \href{#method-get_metric}{\code{Experiment$get_metric()}}
 \item \href{#method-get_metrics_summary}{\code{Experiment$get_metrics_summary()}}
-\item \href{#method-log_metric}{\code{Experiment$log_metric()}}
-\item \href{#method-get_parameters}{\code{Experiment$get_parameters()}}
+\item \href{#method-log_graph}{\code{Experiment$log_graph()}}
+\item \href{#method-get_graph}{\code{Experiment$get_graph()}}
 \item \href{#method-log_parameter}{\code{Experiment$log_parameter()}}
-\item \href{#method-get_tags}{\code{Experiment$get_tags()}}
-\item \href{#method-add_tags}{\code{Experiment$add_tags()}}
-\item \href{#method-get_other}{\code{Experiment$get_other()}}
+\item \href{#method-get_parameters}{\code{Experiment$get_parameters()}}
 \item \href{#method-log_other}{\code{Experiment$log_other()}}
+\item \href{#method-get_other}{\code{Experiment$get_other()}}
+\item \href{#method-add_tags}{\code{Experiment$add_tags()}}
+\item \href{#method-get_tags}{\code{Experiment$get_tags()}}
+\item \href{#method-log_html}{\code{Experiment$log_html()}}
+\item \href{#method-get_html}{\code{Experiment$get_html()}}
+\item \href{#method-upload_asset}{\code{Experiment$upload_asset()}}
+\item \href{#method-get_asset_list}{\code{Experiment$get_asset_list()}}
+\item \href{#method-get_asset}{\code{Experiment$get_asset()}}
 \item \href{#method-create_symlink}{\code{Experiment$create_symlink()}}
 \item \href{#method-log_git_metadata}{\code{Experiment$log_git_metadata()}}
 \item \href{#method-get_git_metadata}{\code{Experiment$get_git_metadata()}}
@@ -40,10 +44,6 @@ experiment. Use \code{\link[=create_experiment]{create_experiment()}} to create 
 \item \href{#method-get_code}{\code{Experiment$get_code()}}
 \item \href{#method-log_system_details}{\code{Experiment$log_system_details()}}
 \item \href{#method-get_system_details}{\code{Experiment$get_system_details()}}
-\item \href{#method-archive}{\code{Experiment$archive()}}
-\item \href{#method-restore}{\code{Experiment$restore()}}
-\item \href{#method-delete}{\code{Experiment$delete()}}
-\item \href{#method-stop}{\code{Experiment$stop()}}
 \item \href{#method-print}{\code{Experiment$print()}}
 }
 }
@@ -112,12 +112,213 @@ Get an experiment's metadata.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_html"></a>}}
-\if{latex}{\out{\hypertarget{method-get_html}{}}}
-\subsection{Method \code{get_html()}}{
-Get an experiment's HTML.
+\if{html}{\out{<a id="method-archive"></a>}}
+\if{latex}{\out{\hypertarget{method-archive}{}}}
+\subsection{Method \code{archive()}}{
+Archive an experiment.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_html()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$archive()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-restore"></a>}}
+\if{latex}{\out{\hypertarget{method-restore}{}}}
+\subsection{Method \code{restore()}}{
+Restore an archived experiment.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$restore()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-delete"></a>}}
+\if{latex}{\out{\hypertarget{method-delete}{}}}
+\subsection{Method \code{delete()}}{
+Delete an experiment.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$delete()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-stop"></a>}}
+\if{latex}{\out{\hypertarget{method-stop}{}}}
+\subsection{Method \code{stop()}}{
+Stop an experiment. Always call this method before creating a new experiment.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$stop()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-log_metric"></a>}}
+\if{latex}{\out{\hypertarget{method-log_metric}{}}}
+\subsection{Method \code{log_metric()}}{
+Log a metric name and value. Metrics are the only items that are logged as
+a full time series. However, even metrics can be throttled if too much data
+(either by rate or by count) is attempted to be logged.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$log_metric(name, value, step = NULL, epoch = NULL, context = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{name}}{(Required) Name of the metric.}
+
+\item{\code{value}}{(Required) Value of the metric.}
+
+\item{\code{step}}{Step number.}
+
+\item{\code{epoch}}{Epoch.}
+
+\item{\code{context}}{Context.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_metric"></a>}}
+\if{latex}{\out{\hypertarget{method-get_metric}{}}}
+\subsection{Method \code{get_metric()}}{
+Get All Metrics For Name
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_metric(name)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{name}}{(Required) Name of metric.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_metrics_summary"></a>}}
+\if{latex}{\out{\hypertarget{method-get_metrics_summary}{}}}
+\subsection{Method \code{get_metrics_summary()}}{
+Get an experiment's metrics summary.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_metrics_summary()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-log_graph"></a>}}
+\if{latex}{\out{\hypertarget{method-log_graph}{}}}
+\subsection{Method \code{log_graph()}}{
+Log an experiment's associated model graph.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$log_graph(graph)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{graph}}{(Required) JSON representation of a graph.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_graph"></a>}}
+\if{latex}{\out{\hypertarget{method-get_graph}{}}}
+\subsection{Method \code{get_graph()}}{
+Get an experiment's model graph.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_graph()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-log_parameter"></a>}}
+\if{latex}{\out{\hypertarget{method-log_parameter}{}}}
+\subsection{Method \code{log_parameter()}}{
+Log a parameter name and value. Note that you can only retrieve parameters
+summary data (e.g., this is not recorded as a full time series).
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$log_parameter(name, value, step = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{name}}{(Required) Name of the parameter.}
+
+\item{\code{value}}{(Required) Value of the parameter.}
+
+\item{\code{step}}{Step number.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_parameters"></a>}}
+\if{latex}{\out{\hypertarget{method-get_parameters}{}}}
+\subsection{Method \code{get_parameters()}}{
+Get an experiment's parameters summary.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_parameters()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-log_other"></a>}}
+\if{latex}{\out{\hypertarget{method-log_other}{}}}
+\subsection{Method \code{log_other()}}{
+Log a key/value `other`` data (not a metric or parameter). Note
+that you can only retrieve others summary data (e.g., this is
+not recorded as a full time series).
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$log_other(key, value)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{key}}{(Required) The key.}
+
+\item{\code{value}}{(Required) The value.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_other"></a>}}
+\if{latex}{\out{\hypertarget{method-get_other}{}}}
+\subsection{Method \code{get_other()}}{
+Get an experiment's others (logged with \code{log_other()}) summary.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_other()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-add_tags"></a>}}
+\if{latex}{\out{\hypertarget{method-add_tags}{}}}
+\subsection{Method \code{add_tags()}}{
+Add a list of tags to an experiment.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$add_tags(tags)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{tags}}{(Required) List of tags.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_tags"></a>}}
+\if{latex}{\out{\hypertarget{method-get_tags}{}}}
+\subsection{Method \code{get_tags()}}{
+Get an experiment's tags.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_tags()}\if{html}{\out{</div>}}
 }
 
 }
@@ -141,38 +342,14 @@ Set (or append onto) an experiment's HTML.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_asset_list"></a>}}
-\if{latex}{\out{\hypertarget{method-get_asset_list}{}}}
-\subsection{Method \code{get_asset_list()}}{
-Get an experiment's asset list.
+\if{html}{\out{<a id="method-get_html"></a>}}
+\if{latex}{\out{\hypertarget{method-get_html}{}}}
+\subsection{Method \code{get_html()}}{
+Get an experiment's HTML.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_asset_list(type = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_html()}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{type}}{The type of assets to retrieve (by default, all assets are returned).}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_asset"></a>}}
-\if{latex}{\out{\hypertarget{method-get_asset}{}}}
-\subsection{Method \code{get_asset()}}{
-Get an asset.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_asset(assetId)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{assetId}}{(Required) The asset ID to retrieve.}
-}
-\if{html}{\out{</div>}}
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-upload_asset"></a>}}
@@ -214,172 +391,35 @@ different name.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_graph"></a>}}
-\if{latex}{\out{\hypertarget{method-get_graph}{}}}
-\subsection{Method \code{get_graph()}}{
-Get an experiment's model graph.
+\if{html}{\out{<a id="method-get_asset_list"></a>}}
+\if{latex}{\out{\hypertarget{method-get_asset_list}{}}}
+\subsection{Method \code{get_asset_list()}}{
+Get an experiment's asset list.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_graph()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-log_graph"></a>}}
-\if{latex}{\out{\hypertarget{method-log_graph}{}}}
-\subsection{Method \code{log_graph()}}{
-Log an experiment's associated model graph.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$log_graph(graph)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_asset_list(type = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{graph}}{(Required) JSON representation of a graph.}
+\item{\code{type}}{The type of assets to retrieve (by default, all assets are returned).}
 }
 \if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_metric"></a>}}
-\if{latex}{\out{\hypertarget{method-get_metric}{}}}
-\subsection{Method \code{get_metric()}}{
-Get All Metrics For Name
+\if{html}{\out{<a id="method-get_asset"></a>}}
+\if{latex}{\out{\hypertarget{method-get_asset}{}}}
+\subsection{Method \code{get_asset()}}{
+Get an asset.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_metric(name)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_asset(assetId)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{name}}{(Required) Name of metric.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_metrics_summary"></a>}}
-\if{latex}{\out{\hypertarget{method-get_metrics_summary}{}}}
-\subsection{Method \code{get_metrics_summary()}}{
-Get an experiment's metrics summary.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_metrics_summary()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-log_metric"></a>}}
-\if{latex}{\out{\hypertarget{method-log_metric}{}}}
-\subsection{Method \code{log_metric()}}{
-Log a metric name and value. Metrics are the only items that are logged as
-a full time series. However, even metrics can be throttled if too much data
-(either by rate or by count) is attempted to be logged.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$log_metric(name, value, step = NULL, epoch = NULL, context = NULL)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{name}}{(Required) Name of the metric.}
-
-\item{\code{value}}{(Required) Value of the metric.}
-
-\item{\code{step}}{Step number.}
-
-\item{\code{epoch}}{Epoch.}
-
-\item{\code{context}}{Context.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_parameters"></a>}}
-\if{latex}{\out{\hypertarget{method-get_parameters}{}}}
-\subsection{Method \code{get_parameters()}}{
-Get an experiment's parameters summary.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_parameters()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-log_parameter"></a>}}
-\if{latex}{\out{\hypertarget{method-log_parameter}{}}}
-\subsection{Method \code{log_parameter()}}{
-Log a parameter name and value. Note that you can only retrieve parameters
-summary data (e.g., this is not recorded as a full time series).
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$log_parameter(name, value, step = NULL)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{name}}{(Required) Name of the parameter.}
-
-\item{\code{value}}{(Required) Value of the parameter.}
-
-\item{\code{step}}{Step number.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_tags"></a>}}
-\if{latex}{\out{\hypertarget{method-get_tags}{}}}
-\subsection{Method \code{get_tags()}}{
-Get an experiment's tags.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_tags()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-add_tags"></a>}}
-\if{latex}{\out{\hypertarget{method-add_tags}{}}}
-\subsection{Method \code{add_tags()}}{
-Add a list of tags to an experiment.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$add_tags(tags)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{tags}}{(Required) List of tags.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_other"></a>}}
-\if{latex}{\out{\hypertarget{method-get_other}{}}}
-\subsection{Method \code{get_other()}}{
-Get an experiment's others (logged with \code{log_other()}) summary.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_other()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-log_other"></a>}}
-\if{latex}{\out{\hypertarget{method-log_other}{}}}
-\subsection{Method \code{log_other()}}{
-Log a key/value `other`` data (not a metric or parameter). Note
-that you can only retrieve others summary data (e.g., this is
-not recorded as a full time series).
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$log_other(key, value)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{key}}{(Required) The key.}
-
-\item{\code{value}}{(Required) The value.}
+\item{\code{assetId}}{(Required) The asset ID to retrieve.}
 }
 \if{html}{\out{</div>}}
 }
@@ -564,46 +604,6 @@ where each parameter is a \code{list()} with \code{key} and \code{value} pairs.}
 Get an experiment's system details.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Experiment$get_system_details()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-archive"></a>}}
-\if{latex}{\out{\hypertarget{method-archive}{}}}
-\subsection{Method \code{archive()}}{
-Archive an experiment.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$archive()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-restore"></a>}}
-\if{latex}{\out{\hypertarget{method-restore}{}}}
-\subsection{Method \code{restore()}}{
-Restore an archived experiment.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$restore()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-delete"></a>}}
-\if{latex}{\out{\hypertarget{method-delete}{}}}
-\subsection{Method \code{delete()}}{
-Delete an experiment.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$delete()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-stop"></a>}}
-\if{latex}{\out{\hypertarget{method-stop}{}}}
-\subsection{Method \code{stop()}}{
-Stop an experiment. Always call this method before creating a new experiment.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$stop()}\if{html}{\out{</div>}}
 }
 
 }
