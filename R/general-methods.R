@@ -127,3 +127,27 @@ delete_project <- function(
   call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
 }
 
+#' Get Multi-Metric Chart
+#'
+#' @inheritParams create_experiment
+#' @param experiment_keys List of experiment keys.
+#' @param metrics List of metric names to retrieve.
+#' @param params List of parameter names to retrieve.
+#' @param full Whether to fetch all values (up to 15,000) or a sampled subset (about 500 points).
+#' @param independent Whether the metrics should be fetched individually or as a correlated whole
+#' (only return values for steps for which you have values for every requested metric name).
+#'
+#' @export
+get_multi_metric_chart <- function(experiment_keys, metrics, params, full = TRUE,
+                                   independent = TRUE, api_key = NULL) {
+  endpoint <- "/experiments/multi-metric-chart"
+  method <- "POST"
+  params <- list(
+    targetedExperiments = as.list(experiment_keys),
+    metrics = as.list(metrics),
+    params = as.list(params),
+    fetchFull = full,
+    independentMetrics = independent
+  )
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}
