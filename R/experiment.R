@@ -412,6 +412,7 @@ Experiment <- R6::R6Class(
     #' @param user Git username.
     #' @param root Git root.
     log_git_metadata = function(branch = NULL, origin = NULL, parent = NULL, user = NULL, root = NULL) {
+      private$check_active()
       details <- list(
         branch = branch,
         origin = origin,
@@ -420,6 +421,7 @@ Experiment <- R6::R6Class(
         root = root
       )
       log_git_metadata(experiment_key = private$experiment_key, details = details, api_key = private$api_key)
+      invisible(self)
     },
 
     #' @description
@@ -451,7 +453,9 @@ Experiment <- R6::R6Class(
     #' any previous code that was logged.
     #' @param code The code to set as the source code.
     log_code = function(code) {
+      private$check_active()
       log_code(experiment_key = private$experiment_key, code = code, api_key = private$api_key)
+      invisible(self)
     },
 
     #' @description
@@ -486,6 +490,7 @@ Experiment <- R6::R6Class(
       os_packages = NULL, os_type = NULL, pid = NULL, user = NULL, r_version = NULL,
       r_version_verbose = NULL
     ) {
+      private$check_active()
       details <- list(
         command = as.list(command),
         executable = executable,
@@ -504,12 +509,27 @@ Experiment <- R6::R6Class(
         pythonVersionVerbose = r_version_verbose
       )
       log_system_details(experiment_key = private$experiment_key, details = details, api_key = private$api_key)
+      invisible(self)
     },
 
     #' @description
     #' Get an experiment's system details.
     get_system_details = function() {
       get_system_details(experiment_key = private$experiment_key, api_key = private$api_key)
+    },
+
+    #' @description
+    #' Set an experiment's start and end time.
+    #' @param start Start time for the experiment (milliseconds since the Epoch)
+    #' @param end End time for the experiment (milliseconds since the Epoch)
+    set_start_end_time = function(start = NULL, end = NULL) {
+      private$check_active()
+      if (is.null(start) && is.null(end)) {
+        comet_stop("Either start or end must be provided.")
+      }
+      set_start_end_time(experiment_key = private$experiment_key, api_key = private$api_key,
+                         start = start, end = end)
+      invisible(self)
     },
 
     #' @description

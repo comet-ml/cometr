@@ -305,3 +305,14 @@ log_parameter <- function(experiment_key, name, value, step = NULL, api_key = NU
   )
   call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
 }
+
+set_start_end_time <- function(experiment_key, start = NULL, end = NULL, api_key = NULL) {
+  endpoint <- "/write/experiment/set-start-end-time"
+  method <- "POST"
+  params <- list(
+    experimentKey = experiment_key,
+    startTimeMillis = start,
+    endTimeMillis = end
+  )
+  call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
+}

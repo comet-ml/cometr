@@ -44,6 +44,7 @@ experiment. Use \code{\link[=create_experiment]{create_experiment()}} to create 
 \item \href{#method-get_code}{\code{Experiment$get_code()}}
 \item \href{#method-log_system_details}{\code{Experiment$log_system_details()}}
 \item \href{#method-get_system_details}{\code{Experiment$get_system_details()}}
+\item \href{#method-set_start_end_time}{\code{Experiment$set_start_end_time()}}
 \item \href{#method-print}{\code{Experiment$print()}}
 }
 }
@@ -606,6 +607,25 @@ Get an experiment's system details.
 \if{html}{\out{<div class="r">}}\preformatted{Experiment$get_system_details()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-set_start_end_time"></a>}}
+\if{latex}{\out{\hypertarget{method-set_start_end_time}{}}}
+\subsection{Method \code{set_start_end_time()}}{
+Set an experiment's start and end time.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$set_start_end_time(start = NULL, end = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{start}}{Start time for the experiment (milliseconds since the Epoch)}
+
+\item{\code{end}}{End time for the experiment (milliseconds since the Epoch)}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-print"></a>}}
