@@ -138,7 +138,7 @@ delete_project <- function(
 #' (only return values for steps for which you have values for every requested metric name).
 #'
 #' @export
-get_multi_metric_chart <- function(experiment_keys, metrics, params, full = TRUE,
+get_multi_metric_chart <- function(experiment_keys, metrics = list(), params = list(), full = TRUE,
                                    independent = TRUE, api_key = NULL) {
   endpoint <- "/experiments/multi-metric-chart"
   method <- "POST"

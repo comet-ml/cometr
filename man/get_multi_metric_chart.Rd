@@ -6,8 +6,8 @@
 \usage{
 get_multi_metric_chart(
   experiment_keys,
-  metrics,
-  params,
+  metrics = list(),
+  params = list(),
   full = TRUE,
   independent = TRUE,
   api_key = NULL
