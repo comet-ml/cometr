@@ -228,6 +228,7 @@ Experiment <- R6::R6Class(
     #' @description
     #' Delete an experiment.
     delete = function() {
+      private$finalize()
       delete_experiment(experiment_key = private$experiment_key, api_key = private$api_key)
     },
 
