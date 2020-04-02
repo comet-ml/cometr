@@ -9,3 +9,7 @@ epoch_ms <- function() {
 isBool <- function(x) {
   isTRUE(x) || isFALSE(x)
 }
+
+get_values_from_list <- function(list, key) {
+  unlist(lapply(list, function(element) element[[key]]))
+}

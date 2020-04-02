@@ -15,3 +15,10 @@ test_that("isBool works", {
   expect_false(isBool(0))
   expect_false(isBool(""))
 })
+
+test_that("get_values_from_list works", {
+  nested_list <- list(list(a="a", b="b"), list(a="A", b="B"))
+  expect_identical(get_values_from_list(nested_list, "a"), c("a", "A"))
+  expect_identical(get_values_from_list(nested_list, "b"), c("b", "B"))
+  expect_null(get_values_from_list(nested_list, "c"))
+})
