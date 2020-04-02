@@ -56,7 +56,7 @@ create_experiment <- function(
   if (!isBool(log_git_info)) {
     comet_stop("log_git_info must be either TRUE or FALSE.")
   }
-  if (log_git_info && (!requireNamespace("git2r", quietly = TRUE) || packageVersion("git2r") < "0.22.1")) {
+  if (log_git_info && (!requireNamespace("git2r", quietly = TRUE) || utils::packageVersion("git2r") < "0.22.1")) {
     comet_stop("log_git_info requires you to have `git2r` version 0.22.1 or later.")
   }
 
@@ -177,10 +177,14 @@ Experiment <- R6::R6Class(
         private$log_offset_path <- paste0(private$logfile_path, ".offset")
 
         if (log_error) {
-          sink(private$logfile, type = "message")
+          suppressWarnings(
+            sink(private$logfile, type = "message")
+          )
         }
         if (log_output) {
-          sink(private$logfile, type = "output", split = TRUE)
+          suppressWarnings(
+            sink(private$logfile, type = "output", split = TRUE)
+          )
         }
 
         private$logging_process <- create_logging_process(

@@ -46,7 +46,7 @@ get_system_args <- function() {
 }
 
 get_system_packages <- function() {
-  packages <- installed.packages(noCache = TRUE, priority = "NA")
+  packages <- utils::installed.packages(noCache = TRUE, priority = "NA")
   packages <- as.data.frame(packages, stringsAsFactors = FALSE)
   rownames(packages) <- NULL
   packages <- packages[, c("Package", "Version")]
