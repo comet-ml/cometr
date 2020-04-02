@@ -86,7 +86,7 @@ test_that("create an experiment, add tags and HTML and a metric, retrieve them a
   expect_identical(exp$get_metadata()[["experimentName"]], new_exp_name)
   expect_identical(exp$get_tags()[["tags"]], as.list(tags))
   expect_identical(exp$get_html()[["html"]], html)
-  expect_identical(exp$get_metric("metric1")[["metrics"]][[1]][["metricValue"]], "6")
+  expect_identical(exp$get_metric("metric1")[["metrics"]][[1]][["metricValue"]], "5")
   expect_identical(exp$get_output()[["output"]], html)
 
   exp$delete()
