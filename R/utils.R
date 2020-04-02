@@ -3,7 +3,7 @@
 }
 
 epoch_ms <- function() {
-  as.integer(Sys.time()) * 1000
+  round(as.numeric(Sys.time()) * 1000)
 }
 
 isBool <- function(x) {
