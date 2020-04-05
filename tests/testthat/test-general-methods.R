@@ -81,5 +81,5 @@ test_that("getting multi metric chart returns successfully completes an API call
   skip_if_offline()
   on.exit(reset_comet_cache())
 
-  expect_error(get_multi_metric_chart(exp_id), NA)
+  expect_error(get_multi_metric_chart(exp_id, api_key = test_api_key), NA)
 })
