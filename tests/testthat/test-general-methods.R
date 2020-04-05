@@ -3,6 +3,7 @@ if (test_api_key == "") test_api_key <- get_config_api_key(must_work = TRUE)
 ws <- "cometrtestws"
 proj <- "cometrtestproject"
 proj_id <- "de6244b389c947699b84e11d82d4b338"
+exp_id <- "c169df5d59a1425c9d31743af744efc0"
 
 test_that("able to retrieve workspaces", {
   skip_on_cran()
@@ -73,4 +74,12 @@ test_that("create a project, verify it exists, delete it", {
   projects_end_num <- length(projects_end)
   expect_equal(projects_end_num, projects_init_num)
   expect_false(new_proj_name %in% get_values_from_list(projects_end, "projectName"))
+})
+
+test_that("getting multi metric chart returns successfully completes an API call", {
+  skip_on_cran()
+  skip_if_offline()
+  on.exit(reset_comet_cache())
+
+  expect_error(get_multi_metric_chart(exp_id), NA)
 })
