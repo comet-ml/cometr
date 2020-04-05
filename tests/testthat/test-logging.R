@@ -115,6 +115,18 @@ test_that("logging gets canceled and errors correctly when appropriate", {
     }
   )
 
+  with_mock(
+    `cometr:::get_config_logging_file` = function() logfile,
+    `cometr:::get_config_logging_file_level` = function() "DEBUG", {
+      cleanup()
+      expect_true(can_write_log_helper())
+      Sys.chmod(logfile, mode = "0000")
+      expect_warning(value <- can_write_log_helper())
+      expect_false(value)
+      Sys.chmod(logfile, mode = "0777")
+      expect_true(can_write_log_helper())
+  })
+
 })
 
 with_mock(
