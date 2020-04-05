@@ -95,7 +95,7 @@ test_that("logging process is alive until the experiment stops", {
   expect_null(exp$.__enclos_env__$private$logging_process)
   exp$stop()
 
-  exp <- mock_experiment_full(experiment_key = exp_id, keep_active = TRUE)
+  exp <- mock_experiment_full(experiment_key = exp_id, log_output = TRUE)
   Sys.sleep(1)
   sub_pid <- exp$.__enclos_env__$private$logging_process$get_pid()
   expect_equal(nrow(get_subp(sub_pid)), 1)
