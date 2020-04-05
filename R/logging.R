@@ -101,8 +101,3 @@ comet_stop <- function(...) {
   LOG_ERROR(...)
   stop(..., call. = FALSE)
 }
-
-comet_warning <- function(...) {
-  LOG_ERROR(...)
-  warning(..., call. = FALSE)
-}
