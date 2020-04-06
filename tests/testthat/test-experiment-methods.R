@@ -19,11 +19,15 @@ test_that("archive and restore work", {
 })
 
 test_that("set_start_end_time works", {
+  # Set the time on the sample experiment that was used in the keepalive
+  # test because that test causes the end time to get pushed back every
+  # so we can use this test to "reset" it
   start <- epoch_ms()
   end <- epoch_ms() + 20000
-  test_exp$set_start_end_time(start = start, end = end)
-  expect_equal(start, test_exp$get_metadata()$startTimeMillis)
-  expect_equal(start, test_exp$get_metadata()$endTimeMillis)
+  exp <- mock_experiment_by_id(experiment_key = exp_id)
+  exp$set_start_end_time(start = start, end = end)
+  expect_equal(start, exp$get_metadata()$startTimeMillis)
+  expect_equal(start, exp$get_metadata()$endTimeMillis)
 })
 
 test_that("common user getter/setter functions on Experiment work", {
