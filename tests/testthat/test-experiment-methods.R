@@ -2,6 +2,19 @@ hasInternet <- function() !is.null(curl::nslookup("r-project.org", error = FALSE
 onCRAN <- function() !identical(Sys.getenv("NOT_CRAN"), "true")
 if (!hasInternet() || onCRAN()) return()
 
+test_that("set_start_end_time works", {
+  # Set the time on the sample experiment that was used in the keepalive
+  # test because that test causes the end time to get pushed back every
+  # so we can use this test to "reset" it
+  start <- epoch_ms()
+  end <- epoch_ms() + 20000
+  exp <- mock_experiment_by_id(experiment_key = exp_id)
+  exp$set_start_end_time(start = start, end = end)
+  expect_equal(start, exp$get_metadata()$startTimeMillis)
+  expect_equal(start, exp$get_metadata()$endTimeMillis)
+  exp$stop()
+})
+
 new_exp_name <- paste0("exp-", generate_random_id())
 test_exp <- create_experiment(experiment_name = new_exp_name, project_name = proj,
                               workspace_name = ws, api_key = test_api_key, keep_active = FALSE,
@@ -16,18 +29,6 @@ test_that("archive and restore work", {
   test_exp$restore()
   Sys.sleep(2)
   expect_false(test_exp$get_metadata()$archived)
-})
-
-test_that("set_start_end_time works", {
-  # Set the time on the sample experiment that was used in the keepalive
-  # test because that test causes the end time to get pushed back every
-  # so we can use this test to "reset" it
-  start <- epoch_ms()
-  end <- epoch_ms() + 20000
-  exp <- mock_experiment_by_id(experiment_key = exp_id)
-  exp$set_start_end_time(start = start, end = end)
-  expect_equal(start, exp$get_metadata()$startTimeMillis)
-  expect_equal(start, exp$get_metadata()$endTimeMillis)
 })
 
 test_that("common user getter/setter functions on Experiment work", {
