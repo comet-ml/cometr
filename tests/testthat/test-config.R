@@ -12,6 +12,8 @@ test_that("config utils work", {
 with_mock(
   `cometr:::get_config_filename` = function() "comet.yml", {
     test_that("get_config_from_configfile works", {
+      on.exit(reset_comet_cache())
+
       expect_identical(get_config_from_configfile("COMET_WORKSPACE", "config/simple"), "workspace_simple")
       expect_identical(get_config_from_configfile("COMET_PROJECT_NAME", "config/simple"), "project_simple")
 
@@ -21,52 +23,48 @@ with_mock(
 
       expect_warning(value <- get_config_from_configfile("COMET_WORKSPACE", "config/error"))
       expect_null(value)
-
-      reset_comet_cache()
     })
 
     test_that("retrieving all parameters work", {
+      on.exit(reset_comet_cache())
       owd <- setwd("config/full")
-      on.exit(setwd(owd))
-      reset_comet_cache()
+      on.exit(setwd(owd), add = TRUE)
+
       expect_identical(get_config_api_key(), "key_full")
       expect_identical(get_config_workspace(), "workspace_full")
       expect_identical(get_config_project_name(), "project_full")
       expect_identical(get_config_url(), "cometrtest.com")
       expect_identical(get_config_logging_file(), R.utils::getAbsolutePath("cometr.log", expandTilde = TRUE))
       expect_identical(get_config_logging_file_level(), "ERROR")
-
-      reset_comet_cache()
     })
 
     test_that("retrieving a parameter with must_work works", {
+      on.exit(reset_comet_cache())
       owd <- setwd("config/simple")
-      on.exit(setwd(owd))
-      reset_comet_cache()
+      on.exit(setwd(owd), add = TRUE)
+
       expect_null(get_config_api_key())
       expect_error(get_config_api_key(must_work = TRUE))
       expect_identical(get_config_workspace(), "workspace_simple")
       expect_identical(get_config_workspace(must_work = TRUE), "workspace_simple")
-
-      reset_comet_cache()
     })
 
     test_that("retrieving URL uses a default when not provided", {
+      on.exit(reset_comet_cache())
       owd <- setwd("config/simple")
-      on.exit(setwd(owd))
-      reset_comet_cache()
-      expect_identical(get_config_url(), modify_config_url(.cometrenv$COMET_API_DEFAULT_URL))
+      on.exit(setwd(owd), add = TRUE)
 
-      reset_comet_cache()
+      expect_identical(get_config_url(), modify_config_url(.cometrenv$COMET_API_DEFAULT_URL))
     })
 
     test_that("config priority is correct: envvar -> working dir config file -> home dir config file", {
       config_home_dir <- R.utils::getAbsolutePath("config/homedir", expandTilde = TRUE)
       with_mock(
         `cometr:::get_home_dir` = function() config_home_dir, {
+          on.exit(reset_comet_cache())
           owd <- setwd("config/homedir")
-          on.exit(setwd(owd))
-          reset_comet_cache()
+          on.exit(setwd(owd), add = TRUE)
+
           expect_identical(get_config_workspace(), "workspace_home")
           expect_identical(get_config_api_key(), "key_home")
           expect_null(get_config_project_name())
@@ -84,8 +82,6 @@ with_mock(
           expect_identical(get_config_workspace(), "workspace_envvar")
           expect_identical(get_config_project_name(), "project_simple")
           expect_identical(get_config_api_key(), "key_home")
-
-          reset_comet_cache()
         }
       )
     })
