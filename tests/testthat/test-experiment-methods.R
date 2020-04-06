@@ -1,16 +1,14 @@
 hasInternet <- function() !is.null(curl::nslookup("r-project.org", error = FALSE))
-
-if (!hasInternet()) return()
+onCRAN <- function() !identical(Sys.getenv("NOT_CRAN"), "true")
+if (!hasInternet() || onCRAN()) return()
 
 new_exp_name <- paste0("exp-", generate_random_id())
 test_exp <- create_experiment(experiment_name = new_exp_name, project_name = proj,
                               workspace_name = ws, api_key = test_api_key, keep_active = FALSE,
-                              log_output = FALSE, log_error = FALSE, log_code = FALSE,
+                              log_output = TRUE, log_error = FALSE, log_code = FALSE,
                               log_system_details = FALSE, log_git_info = FALSE)
 
 test_that("archive and restore work", {
-  skip_on_cran()
-
   expect_false(test_exp$get_metadata()$archived)
   test_exp$archive()
   Sys.sleep(2)
@@ -20,9 +18,15 @@ test_that("archive and restore work", {
   expect_false(test_exp$get_metadata()$archived)
 })
 
-test_that("common user getter/setter functions on Experiment work", {
-  skip_on_cran()
+teset_that("set_start_end_time works", {
+  start <- epoch_ms()
+  end <- epoch_ms() + 20000
+  test_exp$set_start_end_time(start = start, end = end)
+  expect_equal(start, test_exp$get_metadata()$startTimeMillis)
+  expect_equal(start, test_exp$get_metadata()$endTimeMillis)
+})
 
+test_that("common user getter/setter functions on Experiment work", {
   metric <- 5
   graph <- jsonlite::toJSON(list(nodes = list("a", "b", "c"), edges = list("a,b", "c,a")))
   param <- 10
@@ -75,6 +79,30 @@ test_that("common user getter/setter functions on Experiment work", {
 test_that("create_symlink works", {
   symlink <- test_exp$create_symlink(project_name = "cometrtestproject2")
   expect_true(!is.null(symlink$link))
+})
+
+test_that("automatic getter/setter functions on Experiment work", {
+  file <- "sample-script.R"
+
+  test_exp$
+    log_git_metadata(branch = "dev", user = "daattali")$
+    log_code(readLines(file, warn = FALSE))$
+    log_system_details(pid = Sys.getpid())
+
+  Sys.sleep(5)
+
+  git_r <- test_exp$get_git_metadata()
+  expect_equal(git_r$branch, "dev")
+  expect_equal(git_r$user, "daattali")
+
+  output_r <- test_exp$get_output()$output
+  expect_equal(output_r, "")
+
+  code_r <- test_exp$get_code()$code
+  expect_equal(code_r, readLines(file, warn = FALSE))
+
+  system_r <- test_exp$get_system_details()
+  expect_equal(system_r$pid, Sys.getpid())
 })
 
 test_exp$delete()
