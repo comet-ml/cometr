@@ -73,7 +73,7 @@ test_that("logging process is alive until the experiment stops", {
   expect_equal(nrow(get_subp(sub_pid)), 0)
 })
 
-test_that("create experiment fails when the API doesn't return new experiment details", {
+test_that("create_experiment fails when the API doesn't return new experiment details", {
   with_mock(
     `cometr:::new_experiment` = function(...) list(), {
       expect_error(create_experiment(), "Create experiment in Comet failed")
@@ -81,7 +81,7 @@ test_that("create experiment fails when the API doesn't return new experiment de
   )
 })
 
-test_that("create experiment fails with wrong parameters", {
+test_that("create_experiment fails when given wrong parameters", {
   on.exit(cleanup())
   expect_error(mock_experiment_full(keep_active = 5), " must be either TRUE or FALSE")
   expect_error(mock_experiment_full(log_output = 5), " must be either TRUE or FALSE")
@@ -95,7 +95,7 @@ with_mock(
   `cometr:::get_config_logging_file` = function() logfile,
   `cometr:::get_config_logging_file_level` = function() "DEBUG", {
 
-    test_that("create experiment log code works", {
+    test_that("create_experiment log_code works", {
       with_mock(
         `cometr:::get_system_script` = function(...) "sample-script.R",
         `cometr:::log_code` = function(...) NULL, {
@@ -111,7 +111,7 @@ with_mock(
       )
     })
 
-    test_that("create experiment log system details works", {
+    test_that("create_experiment log_system_details works", {
       with_mock(
         `cometr:::log_system_details` = function(...) NULL, {
           on.exit(cleanup())
@@ -126,7 +126,7 @@ with_mock(
       )
     })
 
-    test_that("create experiment log git info works", {
+    test_that("create_experiment log_git_info works", {
       with_mock(
         `cometr:::log_system_details` = function(...) NULL, {
           on.exit(cleanup())
@@ -143,3 +143,37 @@ with_mock(
 
   }
 )
+
+test_that("create and delete work", {
+  skip_on_cran()
+  skip_if_offline()
+  on.exit(reset_comet_cache())
+
+  experiments_init <- get_experiments(project_name = proj, workspace_name = ws, api_key = test_api_key)[["experiments"]]
+  experiments_init_num <- length(experiments_init)
+  exp <- create_experiment(experiment_name = experiment, project_name = proj, workspace_name = ws,
+                           api_key = test_api_key, keep_active = FALSE, log_output = FALSE,
+                           log_error = FALSE, log_code = FALSE, log_system_details = FALSE,
+                           log_git_info = FALSE)
+  Sys.sleep(2)
+
+  experiments_post <- get_experiments(project_name = proj, workspace_name = ws, api_key = test_api_key)[["experiments"]]
+  experiments_post_num <- length(experiments_post)
+  expect_equal(experiments_post_num, experiments_init_num + 1)
+  expect_true(experiment %in% get_values_from_list(experiments_post, "experimentName"))
+  exp$delete()
+  Sys.sleep(2)
+
+  experiments_end <- get_experiments(project_name = proj, workspace_name = ws, api_key = test_api_key)[["experiments"]]
+  experiments_end_num <- length(experiments_end)
+  expect_equal(experiments_end_num, experiments_init_num)
+  expect_false(experiment %in% get_values_from_list(experiments_end, "experimentName"))
+})
+
+test_that("get_key and get_url and get_metadata work", {
+  on.exit(reset_comet_cache())
+
+  exp <- mock_experiment_full(experiment_key = "testkey")
+  expect_identical(exp$get_key(), "testkey")
+  expect_identical(exp$get_url(), "https://www.comet.ml/cometrtestws/cometrtestproject/testkey")
+})

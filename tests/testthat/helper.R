@@ -8,6 +8,7 @@ if (test_api_key == "") test_api_key <- get_config_api_key(must_work = TRUE)
 reset_comet_cache()
 ws <- "cometrtestws"
 proj <- "cometrtestproject"
+experiment <- "cometrtestexp"
 proj_id <- "de6244b389c947699b84e11d82d4b338"
 exp_id <- "c169df5d59a1425c9d31743af744efc0"
 

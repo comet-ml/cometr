@@ -150,7 +150,7 @@ Experiment <- R6::R6Class(
     #' @param log_output N/A
     #' @param log_error N/A
     initialize = function(experiment_key, experiment_url = NULL, api_key = NULL,
-                          keep_active = TRUE, log_output = TRUE, log_error = FALSE) {
+                          keep_active = FALSE, log_output = FALSE, log_error = FALSE) {
       if (!isTRUE(.cometrenv$cancreate)) {
         comet_stop("Do not call this function directly. Use `create_experiment()` instead.")
         return()
