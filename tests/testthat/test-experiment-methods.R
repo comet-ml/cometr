@@ -18,7 +18,7 @@ test_that("archive and restore work", {
   expect_false(test_exp$get_metadata()$archived)
 })
 
-teset_that("set_start_end_time works", {
+test_that("set_start_end_time works", {
   start <- epoch_ms()
   end <- epoch_ms() + 20000
   test_exp$set_start_end_time(start = start, end = end)
