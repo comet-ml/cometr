@@ -29,9 +29,15 @@ get_subp <- function(sub_pid) {
   subset(ps::ps(), pid == sub_pid, ppid = Sys.getpid())
 }
 
+### Tests begin below
+
+
+test_that("cannot create an Experiment object directly", {
+  expect_error(Experiment$new(), "Do not call this function directly.")
+})
+
 test_that("creating a second experiment causes the first to stop", {
   skip_on_cran()
-  skip_if_offline()
   on.exit(reset_comet_cache())
 
   expect_output(
@@ -58,7 +64,6 @@ test_that("creating a second experiment causes the first to stop", {
 
 test_that("a stopped experiment cannot be modified", {
   skip_on_cran()
-  skip_if_offline()
   on.exit(reset_comet_cache())
 
   with_mock(
@@ -75,6 +80,8 @@ test_that("a stopped experiment cannot be modified", {
 })
 
 test_that("keepalive process is alive until the experiment stops", {
+  skip_if_offline()
+
   exp <- mock_experiment_full(experiment_key = exp_id, keep_active = FALSE)
   Sys.sleep(1)
   expect_null(exp$.__enclos_env__$private$keepalive_process)
@@ -104,87 +111,83 @@ test_that("logging process is alive until the experiment stops", {
   expect_equal(nrow(get_subp(sub_pid)), 0)
 })
 
-
-test_that("create an experiment, add tags and HTML and a metric, retrieve them and the output", {
-  # skip_on_cran()
-  # skip_if_offline()
-  # on.exit(reset_comet_cache())
-  #
-  # new_exp_name <- paste0("exp-", generate_random_id())
-  #
-  # tags <- c("tag1", "tag2")
-  # html <- "<em>italics</em>"
-  #
-  # exp <- create_experiment(
-  #   experiment_name = new_exp_name,
-  #   project_name = proj,
-  #   workspace_name = ws,
-  #   api_key = api_key,
-  #   keep_active = FALSE,
-  #   log_output = FALSE,
-  #   log_error = FALSE,
-  #   log_code = FALSE,  # skip_on_cran()
-  # skip_if_offline()
-  # on.exit(reset_comet_cache())
-  #
-  # new_exp_name <- paste0("exp-", generate_random_id())
-  #
-  # tags <- c("tag1", "tag2")
-  # html <- "<em>italics</em>"
-  #
-  # exp <- create_experiment(
-  #   experiment_name = new_exp_name,
-  #   project_name = proj,
-  #   workspace_name = ws,
-  #   api_key = api_key,
-  #   keep_active = FALSE,
-  #   log_output = FALSE,
-  #   log_error = FALSE,
-  #   log_code = FALSE,
-  #   log_system_details = FALSE,
-  #   log_git_info = FALSE
-  # )
-  #
-  # exp$add_tags(tags)
-  # exp$log_html(html)
-  # exp$log_metric("metric1", 5)
-  #
-  # Sys.sleep(3)
-  #
-  # cat(exp$get_html()[["html"]])
-  # exp$stop()
-  #
-  # Sys.sleep(3)
-  #
-  # expect_identical(exp$get_metadata()[["experimentName"]], new_exp_name)
-  # expect_identical(exp$get_tags()[["tags"]], as.list(tags))
-  # expect_identical(exp$get_html()[["html"]], html)
-  # expect_identical(exp$get_metric("metric1")[["metrics"]][[1]][["metricValue"]], "5")
-  # expect_identical(exp$get_output()[["output"]], html)
-  #
-  # exp$delete()
-  #   log_system_details = FALSE,
-  #   log_git_info = FALSE
-  # )
-  #
-  # exp$add_tags(tags)
-  # exp$log_html(html)
-  # exp$log_metric("metric1", 5)
-  #
-  # Sys.sleep(3)
-  #
-  # cat(exp$get_html()[["html"]])
-  # exp$stop()
-  #
-  # Sys.sleep(3)
-  #
-  # expect_identical(exp$get_metadata()[["experimentName"]], new_exp_name)
-  # expect_identical(exp$get_tags()[["tags"]], as.list(tags))
-  # expect_identical(exp$get_html()[["html"]], html)
-  # expect_identical(exp$get_metric("metric1")[["metrics"]][[1]][["metricValue"]], "5")
-  # expect_identical(exp$get_output()[["output"]], html)
-  #
-  # exp$delete()
+test_that("create experiment fails when the API doesn't return new experiment details", {
+  with_mock(
+    `cometr:::new_experiment` = function(...) list(), {
+      expect_error(create_experiment(), "Create experiment in Comet failed")
+    }
+  )
 })
 
+test_that("create experiment fails with wrong parameters", {
+  expect_error(mock_experiment_full(keep_active = 5), " must be either TRUE or FALSE")
+  expect_error(mock_experiment_full(log_output = 5), " must be either TRUE or FALSE")
+  expect_error(mock_experiment_full(log_error = 5), " must be either TRUE or FALSE")
+  expect_error(mock_experiment_full(log_code = 5), " must be either TRUE or FALSE")
+  expect_error(mock_experiment_full(log_system_details = 5), " must be either TRUE or FALSE")
+  expect_error(mock_experiment_full(log_git_info = 5), " must be either TRUE or FALSE")
+})
 
+logfile <- R.utils::getAbsolutePath("cometr.log")
+cleanup <- function() {
+  if (file.exists(logfile)) {
+    file.remove(logfile)
+  }
+  reset_comet_cache()
+}
+
+with_mock(
+  `cometr:::get_config_logging_file` = function() logfile,
+  `cometr:::get_config_logging_file_level` = function() "DEBUG", {
+
+    test_that("create experiment log code works", {
+      with_mock(
+        `cometr:::get_system_script` = function(...) "sample-script.R",
+        `cometr:::log_code` = function(...) NULL, {
+          on.exit(cleanup())
+
+          cleanup()
+          mock_experiment_full(log_code = FALSE)
+          expect_equal(length(grep("Logging source code", readLines(logfile))), 0)
+
+          cleanup()
+          mock_experiment_full(log_code = TRUE)
+          expect_equal(length(grep("Logging source code", readLines(logfile))), 1)
+        }
+      )
+    })
+
+    test_that("create experiment log system details works", {
+      with_mock(
+        `cometr:::log_system_details` = function(...) NULL, {
+          on.exit(cleanup())
+
+          cleanup()
+          mock_experiment_full(log_system_details = FALSE)
+          expect_equal(length(grep("Logging system details", readLines(logfile))), 0)
+
+          cleanup()
+          mock_experiment_full(log_system_details = TRUE)
+          expect_equal(length(grep("Logging system details", readLines(logfile))), 1)
+        }
+      )
+    })
+
+    test_that("create experiment log git info works", {
+      with_mock(
+        `cometr:::log_system_details` = function(...) NULL, {
+          on.exit(cleanup())
+
+          cleanup()
+          mock_experiment_full(log_system_details = FALSE)
+          expect_equal(length(grep("Logging system details", readLines(logfile))), 0)
+
+          cleanup()
+          mock_experiment_full(log_system_details = TRUE)
+          expect_equal(length(grep("Logging system details", readLines(logfile))), 1)
+        }
+      )
+    })
+
+  }
+)
