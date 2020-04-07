@@ -1,4 +1,4 @@
-# cometr - Comet SDK for R
+# cometr - Comet API for R
 
 [![CRAN version](https://www.r-pkg.org/badges/version/cometr)](https://cran.r-project.org/package=cometr)
 [![Travis build status](https://travis-ci.org/daattali/cometr.svg?branch=master)](https://travis-ci.org/daattali/cometr)

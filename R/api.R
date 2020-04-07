@@ -25,7 +25,7 @@ call_api <- function(endpoint, method = c("GET", "POST"), params = list(), respo
   api_key <- api_key %||% get_config_api_key(must_work = TRUE)
 
   auth <- httr::add_headers("Authorization" = api_key)
-  agent <- httr::user_agent(sprintf("Comet SDK for R cometr/%s", utils::packageVersion(PACKAGE_NAME)))
+  agent <- httr::user_agent(sprintf("Comet API for R cometr/%s", utils::packageVersion(PACKAGE_NAME)))
   timeout <- httr::timeout(20)
   params <- Filter(Negate(is.null), params)
   url <- sprintf("%s%s%s", get_config_url(), .cometrenv$COMET_API_ENDPOINT_BASE, endpoint)
