@@ -25,11 +25,11 @@ remotes::install_github("daattali/cometr")
 
 ## One-time setup
 
-To use `cometr`, you must first have a [Comet](https://www.comet.ml/) (you can sign up for a free account). All functions in `cometr` require the use of a personal API key, which you can retrieve from the 'Settings' page on Comet's website. The API key can either be passed into every `cometr` function call as an argument, or it can be defined as a configuration variable as described late in the 'Configuration variables' section.
+To use `cometr`, you must first have a [Comet](https://www.comet.ml/) account (you can sign up for a free account) and obtain your personal API key from the 'Settings' page on Comet's website. The API key can either be passed into every `cometr` function call as an argument, or it can be defined as a configuration variable as described later in the 'Configuration variables' section.
 
 ## How to use
 
-`cometr` is most useful when used inside an R script that is run using the `Rscript` tool. It can also be used in interactive environments (such as the R shell or RStudio). To use Comet in your R script, you need to first load `cometr` and create a Comet Experiment by calling `create_experiment()`.
+`cometr` is most useful when used in an R script that is run using the `Rscript` tool. It can also be used in interactive environments (such as the R shell or RStudio). To use Comet in your R script, you need to first load `cometr` and create a Comet Experiment by calling `create_experiment()`.
 
 ```
 library(cometr)
@@ -40,7 +40,7 @@ exp <- create_experiment(experiment_name = "my-first-experiment",
                          api_key = API_KEY)
 ```
 
-You will see a message displayed that gives you a URL where you can view this newly created Experiment online.
+You'll see a message displayed with a URL where you can view this newly created Experiment online.
 
 ```
 Experiment created: https://www.comet.ml/daattali/project1/46d53bbce4e14fb692585b6e73da6e0c
@@ -48,9 +48,9 @@ Experiment created: https://www.comet.ml/daattali/project1/46d53bbce4e14fb692585
 
 By default, creating an experiment will log your system's details to Comet's servers, keep track of how long your experiment is running for, log any output that gets generated, and perform a few more house-keeping tasks automatically. You can run `?cometr::create_experiment` to see all the supported features and turn them on or off. 
 
-Now that an Experiment object has been created, you can run your machine learning code as usual. The `exp` variable you created is an Experiment object (technically it's an R6 object, if you don't know what that means then don't worry about it!), and we can use it to set parameters of the experiment and to retrieve information from it. To see all the methods that are supported on Experiment objects, run `?cometr::Experiment`.
+Now that an Experiment object has been created, you can run your machine learning code as usual. The `exp` variable you created is an Experiment object (which is an R6 object--if you don't know what that means then don't worry about it!), and we can use it to set parameters of the experiment and to retrieve information from it. To see all the methods that are supported on Experiment objects, run `?cometr::Experiment`.
 
-Here is an example of how you can use the `exp` object to set or retrieve information:
+Here is an example of how you can use the `exp` object to set or retrieve experiment information:
 
 ```
 > exp$get_key()
@@ -98,7 +98,7 @@ Since it can get tedious to repeat the `api_key` in different function calls, an
 The following table lists all the configuration variables that `cometr` uses. All of these variables are optional.
 
 | Variable | Description |
-|---|---|---|
+|---|---|
 | `COMET_API_KEY` | Personal Comet API key to use in every function that accepts an `api_key` parameter. \*\*\* |
 | `COMET_WORKSPACE` | Default workspace to use in every function that accepts a `workspace_name` parameter. \*\*\* |
 | `COMET_PROJECT_NAME` | Default project to use in every function that accepts a `project_name` parameter. \*\*\* |
