@@ -58,8 +58,8 @@ Do not call this function directly. Use \code{create_experiment()} instead.
   experiment_key,
   experiment_url = NULL,
   api_key = NULL,
-  keep_active = TRUE,
-  log_output = TRUE,
+  keep_active = FALSE,
+  log_output = FALSE,
   log_error = FALSE
 )}\if{html}{\out{</div>}}
 }

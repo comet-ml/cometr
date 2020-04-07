@@ -153,7 +153,6 @@ Experiment <- R6::R6Class(
                           keep_active = FALSE, log_output = FALSE, log_error = FALSE) {
       if (!isTRUE(.cometrenv$cancreate)) {
         comet_stop("Do not call this function directly. Use `create_experiment()` instead.")
-        return()
       }
       LOG_DEBUG("Creating experiment ", experiment_key)
 
