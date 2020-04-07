@@ -93,7 +93,7 @@ $workspaceNames[[2]]
 
 ## Configuration variables
 
-Since it can get tedious to repeat the `api_key` in different function calls, and it can also be a security concern to include the API key in the code, you can set the API key and a few other variables as `cometr` configuration variables.
+Since it can get tedious to repeat the `api_key` in different function calls, and it can also be a security concern to include the API key in your code, you can set the API key and a few other variables as `cometr` configuration variables.
 
 The following table lists all the configuration variables that `cometr` uses. All of these variables are optional.
 
@@ -104,7 +104,7 @@ The following table lists all the configuration variables that `cometr` uses. Al
 | `COMET_PROJECT_NAME` | Default project to use in every function that accepts a `project_name` parameter. \*\*\* |
 | `COMET_LOGGING_FILE` | File to store detailed logs poduced by `cometr`. This is mostly useful for troubleshooting. |
 | `COMET_LOGGING_FILE_LEVEL` | If a logging file is provided, set the level of infomation to log. Must be one of "DEBUG", "INFO", "ERROR". |
-| `COMET_API_URL` | Custom Comet API URL, if you have one |
+| `COMET_API_URL` | Custom Comet API URL, if you have one. |
 
 _\*\*\* If this value is not provided as a configuration variable, it must be provided as an argument to the relevant functions. If a value is provided as an argument directly to the function, that argument takes precedence and the configuration value is ignored._
 
@@ -119,7 +119,7 @@ COMET_PROJECT_NAME: my_project
 
 If a configuration variable is defined in multiple places, then the order of precedence is as follows:
 
-1. A function parameter, if relevant (for API keys, workspace name, project name)
+1. Function argument, if relevant (for API keys, workspace name, project name)
 2. Environment variable
 3. `.comet.yml` config file in the local working directory
 4. `.comet.yml` config file in the home directory
