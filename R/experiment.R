@@ -84,7 +84,7 @@ create_experiment <- function(
     if (!is.null(source_file) && file.exists(source_file)) {
       LOG_DEBUG("Logging source code to the newly created experiment from script ", source_file)
       try({
-        source_code <- paste(readLines(source_file), collapse = "\n")
+        source_code <- paste(readLines(source_file, warn = FALSE), collapse = "\n")
         log_code(experiment_key = experiment_key, code = source_code, api_key = api_key)
       }, silent = TRUE)
     }

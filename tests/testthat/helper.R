@@ -12,7 +12,7 @@ experiment <- "cometrtestexp"
 proj_id <- "de6244b389c947699b84e11d82d4b338"
 exp_id <- "c169df5d59a1425c9d31743af744efc0"
 
-logfile <- R.utils::getAbsolutePath("cometr.log")
+logfile <- "cometr.log"
 cleanup <- function() {
   if (file.exists(logfile)) {
     file.remove(logfile)
@@ -35,7 +35,7 @@ mock_experiment_full <- function(experiment_key = generate_random_id(), keep_act
     `cometr:::new_experiment` = function(...) list(experimentKey = experiment_key, link = link), {
       create_experiment(api_key = test_api_key, keep_active = keep_active, log_output = log_output,
                         log_error = log_error, log_code = log_code,
-                        log_system_details= log_system_details, log_git_info = log_git_info)
+                        log_system_details = log_system_details, log_git_info = log_git_info)
     }
   )
 }
