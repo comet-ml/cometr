@@ -32,3 +32,11 @@ Either \code{project_id} should be provided, or both \code{project_name} and \co
 should be provided. If \code{project_id} is provided, then \code{project_name} and \code{workspace_name}
 are ignored.
 }
+\examples{
+\dontrun{
+library(cometr)
+# Assuming you have COMET_API_KEY, COMET_WORKSPACE, COMET_PROJECT_NAME variables defined
+get_experiments()
+}
+
+}

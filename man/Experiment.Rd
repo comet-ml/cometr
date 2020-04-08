@@ -8,6 +8,22 @@ A comet experiment object can be used to modify or get information about an acti
 experiment. All methods documented here are the different ways to interact with an
 experiment. Use \code{\link[=create_experiment]{create_experiment()}} to create a Comet experiment object.
 }
+\examples{
+\dontrun{
+library(cometr)
+# Assuming you have COMET_API_KEY, COMET_WORKSPACE, COMET_PROJECT_NAME variables define
+exp <- create_experiment()
+exp$get_key()
+exp$get_metadata()
+exp$add_tags(c("test", "tag2"))
+exp$get_tags()
+exp$log_metric("metric1", 5)
+exp$get_metric("metric1")
+exp$get_metrics_summary()
+exp$stop()
+}
+
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -64,23 +80,6 @@ Do not call this function directly. Use \code{create_experiment()} instead.
 )}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{experiment_key}}{N/A}
-
-\item{\code{experiment_url}}{N/A}
-
-\item{\code{api_key}}{N/A}
-
-\item{\code{keep_active}}{N/A}
-
-\item{\code{log_output}}{N/A}
-
-\item{\code{log_error}}{N/A}
-}
-\if{html}{\out{</div>}}
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_key"></a>}}

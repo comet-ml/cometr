@@ -13,3 +13,11 @@ parameter as an environment variable or in a comet config file).}
 \description{
 Get a user's workspaces
 }
+\examples{
+\dontrun{
+library(cometr)
+# Assuming you have COMET_API_KEY variable defined
+get_workspaces()
+}
+
+}

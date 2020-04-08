@@ -63,3 +63,19 @@ object that can be used to modify or get information about the experiment. Only 
 experiment can be active at a time, so make sure to stop an experiment before creating
 a new one (by calling the \code{stop()} method on the \code{\link{Experiment}} object).
 }
+\examples{
+\dontrun{
+library(cometr)
+# Assuming you have COMET_API_KEY, COMET_WORKSPACE, COMET_PROJECT_NAME variables defined
+exp <- create_experiment()
+exp$get_key()
+exp$get_metadata()
+exp$add_tags(c("test", "tag2"))
+exp$get_tags()
+exp$log_metric("metric1", 5)
+exp$get_metric("metric1")
+exp$get_metrics_summary()
+exp$stop()
+}
+
+}

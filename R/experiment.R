@@ -31,6 +31,22 @@
 #' @param log_git_info If `TRUE`, log information about the active git repository.
 #' Requires the `git2r` package to be installed.
 #' @return An [`Experiment`] object.
+#'
+#' @examples
+#' \dontrun{
+#' library(cometr)
+#' # Assuming you have COMET_API_KEY, COMET_WORKSPACE, COMET_PROJECT_NAME variables defined
+#' exp <- create_experiment()
+#' exp$get_key()
+#' exp$get_metadata()
+#' exp$add_tags(c("test", "tag2"))
+#' exp$get_tags()
+#' exp$log_metric("metric1", 5)
+#' exp$get_metric("metric1")
+#' exp$get_metrics_summary()
+#' exp$stop()
+#' }
+#'
 #' @export
 create_experiment <- function(
   experiment_name = NULL, project_name = NULL, workspace_name = NULL, api_key = NULL,
@@ -133,6 +149,22 @@ create_experiment <- function(
 #' A comet experiment object can be used to modify or get information about an active
 #' experiment. All methods documented here are the different ways to interact with an
 #' experiment. Use [`create_experiment()`] to create a Comet experiment object.
+#'
+#' @examples
+#' \dontrun{
+#' library(cometr)
+#' # Assuming you have COMET_API_KEY, COMET_WORKSPACE, COMET_PROJECT_NAME variables define
+#' exp <- create_experiment()
+#' exp$get_key()
+#' exp$get_metadata()
+#' exp$add_tags(c("test", "tag2"))
+#' exp$get_tags()
+#' exp$log_metric("metric1", 5)
+#' exp$get_metric("metric1")
+#' exp$get_metrics_summary()
+#' exp$stop()
+#' }
+#'
 #' @export
 Experiment <- R6::R6Class(
   cloneable = FALSE,
@@ -143,12 +175,6 @@ Experiment <- R6::R6Class(
 
     #' @description
     #' Do not call this function directly. Use `create_experiment()` instead.
-    #' @param experiment_key N/A
-    #' @param experiment_url N/A
-    #' @param api_key N/A
-    #' @param keep_active N/A
-    #' @param log_output N/A
-    #' @param log_error N/A
     initialize = function(experiment_key, experiment_url = NULL, api_key = NULL,
                           keep_active = FALSE, log_output = FALSE, log_error = FALSE) {
       if (!isTRUE(.cometrenv$cancreate)) {

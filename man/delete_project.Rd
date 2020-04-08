@@ -25,3 +25,11 @@ parameter as an environment variable or in a comet config file).}
 \description{
 Delete a project
 }
+\examples{
+\dontrun{
+library(cometr)
+# Assuming you have COMET_API_KEY, COMET_WORKSPACE variables defined
+delete_project(project_name = "project1")
+}
+
+}

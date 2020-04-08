@@ -31,3 +31,13 @@ parameter as an environment variable or in a comet config file).}
 \description{
 Get Multi-Metric Chart
 }
+\examples{
+\dontrun{
+library(cometr)
+# Assuming you have COMET_API_KEY variable defined
+experiment <- "<your experiment key>"
+metrics <- c(<metric1>, <metric2>)
+get_multi_metric_chart(experiment_keys = experiment, metrics = metrics)
+}
+
+}

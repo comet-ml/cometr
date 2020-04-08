@@ -28,3 +28,11 @@ parameter as an environment variable or in a comet config file).}
 \description{
 Create a project
 }
+\examples{
+\dontrun{
+library(cometr)
+# Assuming you have COMET_API_KEY, COMET_WORKSPACE variables defined
+create_project(project_name = "project1", project_description = "My first project")
+}
+
+}
