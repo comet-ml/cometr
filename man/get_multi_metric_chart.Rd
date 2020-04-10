@@ -36,7 +36,7 @@ Get Multi-Metric Chart
 library(cometr)
 # Assuming you have COMET_API_KEY variable defined
 experiment <- "<your experiment key>"
-metrics <- c(<metric1>, <metric2>)
+metrics <- c("<metric1>", "<metric2>")
 get_multi_metric_chart(experiment_keys = experiment, metrics = metrics)
 }
 
