@@ -104,7 +104,7 @@ The following table lists all the configuration variables that `cometr` uses. Al
 | `COMET_PROJECT_NAME` | Default project to use in every function that accepts a `project_name` parameter. \*\*\* |
 | `COMET_LOGGING_FILE` | File to store detailed logs poduced by `cometr`. This is mostly useful for troubleshooting. |
 | `COMET_LOGGING_FILE_LEVEL` | If a logging file is provided, set the level of infomation to log. Must be one of "DEBUG", "INFO", "ERROR". |
-| `COMET_API_URL` | Custom Comet API URL, if you have one. |
+| `COMET_URL_OVERRIDE` | Custom Comet API URL, if you have one. |
 
 _\*\*\* If this value is not provided as a configuration variable, it must be provided as an argument to the relevant functions. If a value is provided as an argument directly to the function, that argument takes precedence and the configuration value is ignored._
 
