@@ -16,7 +16,7 @@ get_config_project_name <- function(must_work = FALSE) {
 }
 
 get_config_url <- function() {
-  get_config_param("COMET_API_URL", default = .cometrenv$COMET_API_DEFAULT_URL)
+  get_config_param("COMET_URL_OVERRIDE", default = .cometrenv$COMET_API_DEFAULT_URL)
 }
 
 get_config_logging_file <- function() {
@@ -38,7 +38,7 @@ get_config_param <- function(param, default = NULL, must_work = FALSE) {
         value <- modify_config_logging_file(value)
       }
 
-      if (param == "COMET_API_URL") {
+      if (param == "COMET_URL_OVERRIDE") {
         value <- modify_config_url(value)
       }
 

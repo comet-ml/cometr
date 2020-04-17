@@ -1,6 +1,6 @@
 COMET_API_KEY: key_full
 COMET_WORKSPACE: workspace_full
 COMET_PROJECT_NAME: project_full
-COMET_API_URL: cometrtest.com/clientlib/
+COMET_URL_OVERRIDE: cometrtest.com/clientlib/
 COMET_LOGGING_FILE: cometr.log
 COMET_LOGGING_FILE_LEVEL: ERROR
