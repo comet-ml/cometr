@@ -20,7 +20,7 @@ To install the latest development version from GitHub:
 
 ```
 install.packages("remotes")
-remotes::install_github("daattali/cometr")
+remotes::install_github("comet-ml/cometr")
 ```
 
 ## One-time setup

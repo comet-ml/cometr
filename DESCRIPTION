@@ -10,8 +10,8 @@ Description: A convenient 'R' wrapper to the 'Comet' API, which is a cloud
     platform allowing you to track, compare, explain and optimize machine
     learning experiments and models. Experiments can be viewed on the 'Comet' 
     online dashboard at <https://www.comet.ml>.
-URL: https://github.com/daattali/cometr
-BugReports: https://github.com/daattali/cometr/issues
+URL: https://github.com/comet-ml/cometr
+BugReports: https://github.com/comet-ml/cometr/issues
 Imports:
     callr,
     httr,
