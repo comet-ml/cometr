@@ -1,5 +1,5 @@
 Package: cometr
-Title: Comet API for R
+Title: 'Comet' API for R
 Version: 0.1
 Authors@R: 
     person(given = "Dean",
