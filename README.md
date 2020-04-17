@@ -1,8 +1,8 @@
 # cometr - Comet API for R
 
 [![CRAN version](https://www.r-pkg.org/badges/version/cometr)](https://cran.r-project.org/package=cometr)
-[![Travis build status](https://travis-ci.org/daattali/cometr.svg?branch=master)](https://travis-ci.org/daattali/cometr)
-[![Codecov test coverage](https://codecov.io/gh/daattali/cometr/branch/master/graph/badge.svg)](https://codecov.io/gh/daattali/cometr?branch=master)
+[![Travis build status](https://travis-ci.org/comet-ml/cometr.svg?branch=master)](https://travis-ci.org/comet-ml/cometr)
+[![Codecov test coverage](https://codecov.io/gh/comet-ml/cometr/branch/master/graph/badge.svg)](https://codecov.io/gh/comet-ml/cometr?branch=master)
 
 [Comet](https://www.comet.ml/) is a cloud platform allowing you to track, compare, explain and optimize machine learning experiments and models. If you perform any machine learning in R, you can use the `cometr` R package to create and track Comet experiments. All experiment data is available for retrieval through `cometr` or can be viewed on the [Comet dashboard](https://www.comet.ml/).
 
