@@ -8,6 +8,11 @@
 
 You can read more about Comet to see its full capabilities on [Comet's website](https://www.comet.ml/). The package curently supports Comet's REST API v2.
 
+## Requirements
+
+* R, version [3.5 or higher](https://support.rstudio.com/hc/en-us/articles/218004217-Building-R-from-source)
+* A [Comet.ML api key](https://www.comet.ml/comet-panels/settings/account)
+
 ## Installation
 
 To install the stable CRAN version:
