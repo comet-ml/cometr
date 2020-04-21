@@ -1,15 +1,20 @@
 Package: cometr
 Title: 'Comet' API for R
-Version: 0.1
+Version: 0.2
 Authors@R: 
     person(given = "Dean",
            family = "Attali",
-           role = c("aut", "cre"),
+           role = c("aut"),
            email = "daattali@gmail.com")
+    person(given = "Doug",
+           family = "Blank",
+           role = c("cre"),
+           email = "doug@comet.ml")
 Description: A convenient 'R' wrapper to the 'Comet' API, which is a cloud 
     platform allowing you to track, compare, explain and optimize machine
     learning experiments and models. Experiments can be viewed on the 'Comet' 
-    online dashboard at <https://www.comet.ml>.
+    online dashboard at <https://www.comet.ml>. You can find a place for
+    discussions at <https://chat.comet.ml>.
 URL: https://github.com/comet-ml/cometr
 BugReports: https://github.com/comet-ml/cometr/issues
 Imports:
