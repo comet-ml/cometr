@@ -3,6 +3,7 @@
 export(Experiment)
 export(call_api)
 export(create_experiment)
+export(get_experiment)
 export(create_project)
 export(delete_project)
 export(disable_logging)
