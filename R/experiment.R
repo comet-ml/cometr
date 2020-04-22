@@ -254,6 +254,14 @@ Experiment <- R6::R6Class(
 
     #' @description
     #' Do not call this function directly. Use `create_experiment()` or `get_experiment()` instead.
+    #' @param experiment_key The experiment key
+    #' @param experiment_url The experiment URL
+    #' @param api_key The Comet API Key
+    #' @param keep_active Boolean to signal keep experiment active
+    #' @param log_output Boolean to signal whether to log the standard output
+    #' @param log_error Boolean to signal whether to log the standard error
+    #' @param archived Boolean indicating the archive state
+    #' @param online Boolean indicating whether this is a live experiment or not
     initialize = function(experiment_key, experiment_url = NULL, api_key = NULL,
                           keep_active = FALSE, log_output = FALSE, log_error = FALSE, archived = FALSE,
 			  online = TRUE) {
@@ -306,8 +314,12 @@ Experiment <- R6::R6Class(
       }
 
       if (online) {
-	log_other(experiment_key = private$experiment_key, api_key = private$api_key,
-	  key = "Created from", value = "cometr")
+        log_other(
+          experiment_key = private$experiment_key,
+          api_key = private$api_key,
+          key = "Created from",
+          value = "cometr"
+        )
       }
     },
 
