@@ -162,10 +162,10 @@ base_experiment = function(
     experiment_name <- resp[["experimentName"]]
     archived <- resp[["archived"]]
     if (archived) {
-      experiment_link <- paste("https://", "www.comet.ml", "/",
+      experiment_link <- paste(get_config_url_base(),
         workspace_name, "/", project_name, "/archived/", experiment_key, sep="")
     } else {
-      experiment_link <- paste("https://", "www.comet.ml", "/",
+      experiment_link <- paste(get_config_url_base(),
         workspace_name, "/", project_name, "/", experiment_key, sep="")
     }
     LOG_INFO("Experiment retrieved: ", experiment_link, echo = TRUE)
