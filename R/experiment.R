@@ -229,7 +229,8 @@ base_experiment <- function(
 #' @description
 #' A comet experiment object can be used to modify or get information about an active
 #' experiment. All methods documented here are the different ways to interact with an
-#' experiment. Use [`create_experiment()`] to create a Comet experiment object.
+#' experiment. Use [`create_experiment()`] to create or [`get_experiment()`] to
+#' retrieve a Comet experiment object.
 #'
 #' @examples
 #' \dontrun{
@@ -255,7 +256,7 @@ Experiment <- R6::R6Class(
   public = list(
 
     #' @description
-    #' Do not call this function directly. Use `create_experiment()` instead.
+    #' Do not call this function directly. Use `create_experiment()` or `get_experiment()` instead.
     #' @param experiment_key The experiment key
     #' @param experiment_url The experiment URL
     #' @param api_key The Comet API Key
@@ -538,7 +539,7 @@ Experiment <- R6::R6Class(
 
     #' @description
     #' Log an experiment's git metadata. This should only be called once and it can be done
-    #' automatically by enabling `log_git_info` in [`create_experiment()`].
+    #' automatically by enabling `log_git_info` in [`create_experiment()`] or [`get_experiment()`].
     #' This will replace any previous git metadata that was logged.
     #' @param branch Git branch name.
     #' @param origin Git repository origin.
@@ -583,7 +584,7 @@ Experiment <- R6::R6Class(
 
     #' @description
     #' Log an experiment's source code. This should only be called once and it can be done
-    #' automatically by enabling `log_code` in [`create_experiment()`].
+    #' automatically by enabling `log_code` in [`create_experiment()`] or [`get_experiment()`].
     #' This will replace any previous code that was logged.
     #' @param code The code to set as the source code.
     log_code = function(code) {
@@ -600,7 +601,7 @@ Experiment <- R6::R6Class(
 
     #' @description
     #' Log system details. This can be done automatically by enabling `log_system_details`
-    #' in [`create_experiment()`].
+    #' in [`create_experiment()`] or [`get_experiment()`].
     #' @param command Script and optional arguments.
     #' @param executable Executable.
     #' @param hostname Hostname.
