@@ -23,7 +23,7 @@ Imports:
     R.utils,
     R6 (>= 2.4.0),
     yaml
-Suggests: 
+Suggests:
     covr,
     curl,
     git2r (>= 0.22.1),

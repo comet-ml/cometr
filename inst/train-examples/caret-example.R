@@ -8,7 +8,6 @@
 #   Step-By-Step (tutorial and template for future projects)"
 #    http://machinelearningmastery.com/machine-learning-in-r-step-by-step/
 
-#install.packages("caret")
 #install.packages("caret", dependencies=c("Depends", "Suggests"))
 #install.packages("ellipse", dependencies = TRUE)
 
