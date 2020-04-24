@@ -123,4 +123,3 @@ If a configuration variable is defined in multiple places, then the order of pre
 2. Environment variable
 3. `.comet.yml` config file in the local working directory
 4. `.comet.yml` config file in the home directory
-
