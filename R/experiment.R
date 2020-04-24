@@ -64,6 +64,7 @@ create_experiment <- function(
 #' @param experiment_key Experiment key.
 #' @param api_key Comet API key (can also be specified using the `COMET_API_KEY`
 #' parameter as an environment variable or in a comet config file).
+#' @param keep_active if `TRUE` keeps a communication channel open with comet.ml
 #' @param log_output If `TRUE`, all standard output will automatically be sent to
 #' the Comet servers to display as message logs for the experiment. The output will still
 #' be shown in the console as well.
@@ -313,14 +314,14 @@ Experiment <- R6::R6Class(
         LOG_DEBUG("Created process ", private$logging_process$get_pid(), " to send output logs.")
       }
 
-      if (online) {
-        log_other(
-          experiment_key = private$experiment_key,
-          api_key = private$api_key,
-          key = "Created from",
-          value = "cometr"
-        )
-      }
+      #if (online) {
+      #  log_other(
+      #    experiment_key = private$experiment_key,
+      #    api_key = private$api_key,
+      #    key = "Created from",
+      #    value = "cometr"
+      #  )
+      #}
     },
 
     #' @description

@@ -21,6 +21,8 @@ get_experiment(
 \item{api_key}{Comet API key (can also be specified using the \code{COMET_API_KEY}
 parameter as an environment variable or in a comet config file).}
 
+\item{keep_active}{if \code{TRUE} keeps a communication channel open with comet.ml}
+
 \item{log_output}{If \code{TRUE}, all standard output will automatically be sent to
 the Comet servers to display as message logs for the experiment. The output will still
 be shown in the console as well.}
