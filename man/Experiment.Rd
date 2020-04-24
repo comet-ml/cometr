@@ -6,7 +6,8 @@
 \description{
 A comet experiment object can be used to modify or get information about an active
 experiment. All methods documented here are the different ways to interact with an
-experiment. Use \code{\link[=create_experiment]{create_experiment()}} to create a Comet experiment object.
+experiment. Use \code{\link[=create_experiment]{create_experiment()}} to create or \code{\link[=get_experiment]{get_experiment()}} to
+retrieve a Comet experiment object.
 }
 \examples{
 \dontrun{
@@ -29,6 +30,7 @@ exp$stop()
 \itemize{
 \item \href{#method-new}{\code{Experiment$new()}}
 \item \href{#method-get_key}{\code{Experiment$get_key()}}
+\item \href{#method-get_online}{\code{Experiment$get_online()}}
 \item \href{#method-get_url}{\code{Experiment$get_url()}}
 \item \href{#method-get_metadata}{\code{Experiment$get_metadata()}}
 \item \href{#method-archive}{\code{Experiment$archive()}}
@@ -68,7 +70,7 @@ exp$stop()
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
-Do not call this function directly. Use \code{create_experiment()} instead.
+Do not call this function directly. Use \code{create_experiment()} or \code{get_experiment()} instead.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Experiment$new(
   experiment_key,
@@ -76,10 +78,32 @@ Do not call this function directly. Use \code{create_experiment()} instead.
   api_key = NULL,
   keep_active = FALSE,
   log_output = FALSE,
-  log_error = FALSE
+  log_error = FALSE,
+  online = TRUE
 )}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{experiment_key}}{The experiment key}
+
+\item{\code{experiment_url}}{The experiment URL}
+
+\item{\code{api_key}}{The Comet API Key}
+
+\item{\code{keep_active}}{Boolean to signal keep experiment active}
+
+\item{\code{log_output}}{Boolean to signal whether to log the standard output}
+
+\item{\code{log_error}}{Boolean to signal whether to log the standard error}
+
+\item{\code{online}}{Boolean indicating whether this is a live experiment or not}
+
+\item{\code{archived}}{Boolean indicating the archive state}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_key"></a>}}
@@ -88,6 +112,16 @@ Do not call this function directly. Use \code{create_experiment()} instead.
 Get the experiment key of an experiment.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Experiment$get_key()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_online"></a>}}
+\if{latex}{\out{\hypertarget{method-get_online}{}}}
+\subsection{Method \code{get_online()}}{
+Get the online status of an experiment.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_online()}\if{html}{\out{</div>}}
 }
 
 }
@@ -446,8 +480,8 @@ Add a symlink to an experiment in another project.
 \if{latex}{\out{\hypertarget{method-log_git_metadata}{}}}
 \subsection{Method \code{log_git_metadata()}}{
 Log an experiment's git metadata. This should only be called once and it can be done
-automatically by enabling \code{log_git_info} in \code{\link[=create_experiment]{create_experiment()}}. This will replace
-any previous git metadata that was logged.
+automatically by enabling \code{log_git_info} in \code{\link[=create_experiment]{create_experiment()}} or \code{\link[=get_experiment]{get_experiment()}}.
+This will replace any previous git metadata that was logged.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Experiment$log_git_metadata(
   branch = NULL,
@@ -509,8 +543,8 @@ Get an experiment's standard output and error.
 \if{latex}{\out{\hypertarget{method-log_code}{}}}
 \subsection{Method \code{log_code()}}{
 Log an experiment's source code. This should only be called once and it can be done
-automatically by enabling \code{log_code} in \code{\link[=create_experiment]{create_experiment()}}. This will replace
-any previous code that was logged.
+automatically by enabling \code{log_code} in \code{\link[=create_experiment]{create_experiment()}} or \code{\link[=get_experiment]{get_experiment()}}.
+This will replace any previous code that was logged.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Experiment$log_code(code)}\if{html}{\out{</div>}}
 }
@@ -538,7 +572,7 @@ Get an experiment's source code.
 \if{latex}{\out{\hypertarget{method-log_system_details}{}}}
 \subsection{Method \code{log_system_details()}}{
 Log system details. This can be done automatically by enabling \code{log_system_details}
-in \code{\link[=create_experiment]{create_experiment()}}.
+in \code{\link[=create_experiment]{create_experiment()}} or \code{\link[=get_experiment]{get_experiment()}}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Experiment$log_system_details(
   command = NULL,
