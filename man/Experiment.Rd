@@ -76,7 +76,8 @@ Do not call this function directly. Use \code{create_experiment()} instead.
   api_key = NULL,
   keep_active = FALSE,
   log_output = FALSE,
-  log_error = FALSE
+  log_error = FALSE,
+  online = TRUE
 )}\if{html}{\out{</div>}}
 }
 

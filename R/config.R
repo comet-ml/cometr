@@ -19,6 +19,13 @@ get_config_url <- function() {
   get_config_param("COMET_URL_OVERRIDE", default = .cometrenv$COMET_API_DEFAULT_URL)
 }
 
+#' @importFrom utils head
+get_config_url_base <- function() {
+  full_url <- get_config_url()
+  expanded <- strsplit(full_url, "/")[[1]]
+  paste0(head(expanded, length(expanded) - 1), "/", collapse="")
+}
+
 get_config_logging_file <- function() {
   get_config_param("COMET_LOGGING_FILE")
 }
