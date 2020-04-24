@@ -3,10 +3,8 @@ reset_comet_cache <- function() {
   .cometrenv$cache$config <- list()
 }
 
-test_api_key <- Sys.getenv("TRAVIS_COMET_API_KEY")
-if (test_api_key == "") test_api_key <- get_config_api_key(must_work = TRUE)
+test_api_key <- get_config_api_key(must_work = TRUE)
 reset_comet_cache()
-
 test_proj <- "cometrtestproject"
 test_ws <- "testuser-cometr"
 test_experiment <- "testexperiment1"
