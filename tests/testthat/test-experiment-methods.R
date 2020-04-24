@@ -1,22 +1,9 @@
 hasInternet <- function() !is.null(curl::nslookup("r-project.org", error = FALSE))
 if (hasInternet()) {
 
-  test_that("set_start_end_time works", {
-    # Set the time on the sample experiment that was used in the keepalive
-    # test because that test causes the end time to get pushed back every
-    # so we can use this test to "reset" it
-    start <- epoch_ms()
-    end <- epoch_ms() + 20000
-    exp <- mock_experiment_by_id(experiment_key = exp_id)
-    exp$set_start_end_time(start = start, end = end)
-    expect_equal(start, exp$get_metadata()$startTimeMillis)
-    expect_equal(start, exp$get_metadata()$endTimeMillis)
-    exp$stop()
-  })
-
   new_exp_name <- paste0("exp-", generate_random_id())
-  test_exp <- create_experiment(experiment_name = new_exp_name, project_name = proj,
-                                workspace_name = ws, api_key = test_api_key, keep_active = FALSE,
+  test_exp <- create_experiment(experiment_name = new_exp_name, project_name = test_proj,
+                                api_key = test_api_key, keep_active = FALSE,
                                 log_output = TRUE, log_error = FALSE, log_code = FALSE,
                                 log_system_details = FALSE, log_git_info = FALSE)
 
@@ -80,8 +67,17 @@ if (hasInternet()) {
     expect_equal(asset_r, readLines(file, warn = FALSE))
   })
 
+  test_that("set_start_end_time works", {
+    start <- epoch_ms()
+    end <- epoch_ms() + 20000
+    test_exp$set_start_end_time(start = start, end = end)
+    Sys.sleep(2)
+    expect_equal(start, test_exp$get_metadata()$startTimeMillis)
+    expect_equal(start, test_exp$get_metadata()$endTimeMillis)
+  })
+
   test_that("create_symlink works", {
-    symlink <- test_exp$create_symlink(project_name = "cometrtestproject2")
+    symlink <- test_exp$create_symlink(project_name = test_proj)
     expect_true(!is.null(symlink$link))
   })
 

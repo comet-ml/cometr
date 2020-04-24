@@ -1,0 +1,112 @@
+{
+    "columns": [
+        {
+            "name": "runId",
+            "id": "runId--metadata",
+            "type": "string",
+            "source": "metadata"
+        },
+        {
+            "name": "hasNotes",
+            "id": "hasNotes--metadata",
+            "type": "boolean",
+            "source": "metadata"
+        },
+        {
+            "name": "duration",
+            "id": "duration--metadata",
+            "type": "timenumber",
+            "source": "metadata"
+        },
+        {
+            "name": "Name",
+            "id": "Name--log_other",
+            "type": "string",
+            "source": "log_other"
+        },
+        {
+            "name": "throttled",
+            "id": "throttled--log_other",
+            "type": "string",
+            "source": "log_other"
+        },
+        {
+            "name": "codeSHA",
+            "id": "codeSHA--metadata",
+            "type": "string",
+            "source": "metadata"
+        },
+        {
+            "name": "file_name",
+            "id": "file_name--metadata",
+            "type": "string",
+            "source": "metadata"
+        },
+        {
+            "name": "hasHtml",
+            "id": "hasHtml--metadata",
+            "type": "boolean",
+            "source": "metadata"
+        },
+        {
+            "name": "experimentKey",
+            "id": "experimentKey--metadata",
+            "type": "string",
+            "source": "metadata"
+        },
+        {
+            "name": "optimizationId",
+            "id": "optimizationId--metadata",
+            "type": "string",
+            "source": "metadata"
+        },
+        {
+            "name": "end_server_timestamp",
+            "id": "end_server_timestamp--metadata",
+            "type": "datetime",
+            "source": "metadata"
+        },
+        {
+            "name": "installed_packages",
+            "id": "installed_packages--metadata",
+            "type": "string",
+            "source": "metadata"
+        },
+        {
+            "name": "file_path",
+            "id": "file_path--metadata",
+            "type": "string",
+            "source": "metadata"
+        },
+        {
+            "name": "last_message_time",
+            "id": "last_message_time--metadata",
+            "type": "datetime",
+            "source": "metadata"
+        },
+        {
+            "name": "runActive",
+            "id": "runActive--metadata",
+            "type": "boolean",
+            "source": "metadata"
+        },
+        {
+            "name": "hasImages",
+            "id": "hasImages--metadata",
+            "type": "boolean",
+            "source": "metadata"
+        },
+        {
+            "name": "user_name",
+            "id": "user_name--metadata",
+            "type": "string",
+            "source": "metadata"
+        },
+        {
+            "name": "start_server_timestamp",
+            "id": "start_server_timestamp--metadata",
+            "type": "datetime",
+            "source": "metadata"
+        }
+    ]
+}

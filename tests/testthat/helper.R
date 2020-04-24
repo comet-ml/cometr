@@ -6,11 +6,12 @@ reset_comet_cache <- function() {
 test_api_key <- Sys.getenv("TRAVIS_COMET_API_KEY")
 if (test_api_key == "") test_api_key <- get_config_api_key(must_work = TRUE)
 reset_comet_cache()
-ws <- "cometrtestws"
-proj <- "cometrtestproject"
-experiment <- "cometrtestexp"
-proj_id <- "de6244b389c947699b84e11d82d4b338"
-exp_id <- "c169df5d59a1425c9d31743af744efc0"
+
+test_proj <- "cometrtestproject"
+test_ws <- "testuser-cometr"
+test_experiment <- "testexperiment1"
+test_proj_id <- "ebfbbc1212004f92b618d50db41f27f3"
+test_exp_id <- "c352827bcdcb45e3ad40d0decec0b43c"
 
 logfile <- "cometr.log"
 cleanup <- function() {
@@ -30,7 +31,7 @@ mock_experiment_by_id <- function(experiment_key, keep_active = FALSE,
 mock_experiment_full <- function(experiment_key = generate_random_id(), keep_active = FALSE,
                                  log_output = FALSE, log_error = FALSE, log_code = FALSE,
                                  log_system_details = FALSE, log_git_info = FALSE) {
-  link <- paste0("https://www.comet.ml/", ws, "/", proj, "/", experiment_key)
+  link <- paste0("https://www.comet.ml/", test_ws, "/", test_proj, "/", experiment_key)
   with_mock(
     `cometr:::new_experiment` = function(...) list(experimentKey = experiment_key, link = link), {
       create_experiment(api_key = test_api_key, keep_active = keep_active, log_output = log_output,

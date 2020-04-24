@@ -1,0 +1,18 @@
+{
+    "experiments": [
+        {
+            "experimentKey": "c352827bcdcb45e3ad40d0decec0b43c",
+            "experimentName": "testexperiment1",
+            "optimizationId": null,
+            "projectId": "ebfbbc1212004f92b618d50db41f27f3",
+            "projectName": "cometrtestproject",
+            "workspaceName": "testuser-cometr",
+            "filePath": null,
+            "fileName": null,
+            "durationMillis": 0,
+            "startTimeMillis": 1587671932216,
+            "endTimeMillis": 1587671932275,
+            "archived": false
+        }
+    ]
+}

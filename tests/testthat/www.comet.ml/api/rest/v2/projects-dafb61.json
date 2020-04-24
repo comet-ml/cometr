@@ -1,0 +1,14 @@
+{
+    "projects": [
+        {
+            "projectId": "ebfbbc1212004f92b618d50db41f27f3",
+            "projectName": "cometrtestproject",
+            "ownerUserName": "testuser-cometr",
+            "projectDescription": "cometrtestdescription",
+            "workspaceName": "testuser-cometr",
+            "numberOfExperiments": 1,
+            "lastUpdated": 1587670596951,
+            "public": true
+        }
+    ]
+}

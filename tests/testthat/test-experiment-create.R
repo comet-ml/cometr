@@ -41,30 +41,13 @@ test_that("a stopped experiment cannot be modified", {
   )
 })
 
-test_that("keepalive process is alive until the experiment stops", {
-  skip_if_offline()
-
-  exp <- mock_experiment_full(experiment_key = exp_id, keep_active = FALSE)
-  Sys.sleep(1)
-  expect_null(exp$.__enclos_env__$private$keepalive_process)
-  exp$stop()
-
-  exp <- mock_experiment_full(experiment_key = exp_id, keep_active = TRUE)
-  Sys.sleep(1)
-  sub_pid <- exp$.__enclos_env__$private$keepalive_process$get_pid()
-  expect_equal(nrow(get_subp(sub_pid)), 1)
-  exp$stop()
-  Sys.sleep(1)
-  expect_equal(nrow(get_subp(sub_pid)), 0)
-})
-
 test_that("logging process is alive until the experiment stops", {
-  exp <- mock_experiment_full(experiment_key = exp_id, log_output = FALSE)
+  exp <- mock_experiment_full(experiment_key = test_exp_id, log_output = FALSE)
   Sys.sleep(1)
   expect_null(exp$.__enclos_env__$private$logging_process)
   exp$stop()
 
-  exp <- mock_experiment_full(experiment_key = exp_id, log_output = TRUE)
+  exp <- mock_experiment_full(experiment_key = test_exp_id, log_output = TRUE)
   Sys.sleep(1)
   sub_pid <- exp$.__enclos_env__$private$logging_process$get_pid()
   expect_equal(nrow(get_subp(sub_pid)), 1)
@@ -144,36 +127,56 @@ with_mock(
   }
 )
 
-test_that("create and delete work", {
-  skip_on_cran()
-  skip_if_offline()
-  on.exit(reset_comet_cache())
-
-  experiments_init <- get_experiments(project_name = proj, workspace_name = ws, api_key = test_api_key)[["experiments"]]
-  experiments_init_num <- length(experiments_init)
-  exp <- create_experiment(experiment_name = experiment, project_name = proj, workspace_name = ws,
-                           api_key = test_api_key, keep_active = FALSE, log_output = FALSE,
-                           log_error = FALSE, log_code = FALSE, log_system_details = FALSE,
-                           log_git_info = FALSE)
-  Sys.sleep(2)
-
-  experiments_post <- get_experiments(project_name = proj, workspace_name = ws, api_key = test_api_key)[["experiments"]]
-  experiments_post_num <- length(experiments_post)
-  expect_equal(experiments_post_num, experiments_init_num + 1)
-  expect_true(experiment %in% get_values_from_list(experiments_post, "experimentName"))
-  exp$delete()
-  Sys.sleep(2)
-
-  experiments_end <- get_experiments(project_name = proj, workspace_name = ws, api_key = test_api_key)[["experiments"]]
-  experiments_end_num <- length(experiments_end)
-  expect_equal(experiments_end_num, experiments_init_num)
-  expect_false(experiment %in% get_values_from_list(experiments_end, "experimentName"))
-})
-
 test_that("get_key and get_url and get_metadata work", {
   on.exit(reset_comet_cache())
 
   exp <- mock_experiment_full(experiment_key = "testkey")
   expect_identical(exp$get_key(), "testkey")
-  expect_identical(exp$get_url(), "https://www.comet.ml/cometrtestws/cometrtestproject/testkey")
+  expect_identical(exp$get_url(), paste0("https://www.comet.ml/", test_ws, "/", test_proj, "/", "testkey"))
 })
+
+test_that("create and delete work", {
+  skip_on_cran()
+  skip_if_offline()
+  on.exit(reset_comet_cache())
+
+  exp <- create_experiment(experiment_name = test_experiment, project_name = test_proj,
+                           api_key = test_api_key, keep_active = FALSE, log_output = FALSE,
+                           log_error = FALSE, log_code = FALSE, log_system_details = FALSE,
+                           log_git_info = FALSE)
+  Sys.sleep(2)
+
+  experiments_post <- get_experiments(project_name = test_proj, api_key = test_api_key)[["experiments"]]
+  experiments_post_num <- length(experiments_post)
+  expect_true(test_experiment %in% get_values_from_list(experiments_post, "experimentName"))
+  exp$delete()
+  Sys.sleep(2)
+
+  experiments_end <- get_experiments(project_name = test_proj, api_key = test_api_key)[["experiments"]]
+  experiments_end_num <- length(experiments_end)
+  expect_equal(experiments_end_num, experiments_post_num - 1)
+})
+
+test_that("keepalive process is alive until the experiment stops", {
+  skip_if_offline()
+
+  exp <- create_experiment(experiment_name = test_experiment, project_name = test_proj,
+                           api_key = test_api_key, keep_active = FALSE, log_output = FALSE,
+                           log_error = FALSE, log_code = FALSE, log_system_details = FALSE,
+                           log_git_info = FALSE)
+  Sys.sleep(1)
+  expect_null(exp$.__enclos_env__$private$keepalive_process)
+  exp$delete()
+
+  exp <- create_experiment(experiment_name = test_experiment, project_name = test_proj,
+                           api_key = test_api_key, keep_active = TRUE, log_output = FALSE,
+                           log_error = FALSE, log_code = FALSE, log_system_details = FALSE,
+                           log_git_info = FALSE)
+  Sys.sleep(1)
+  sub_pid <- exp$.__enclos_env__$private$keepalive_process$get_pid()
+  expect_equal(nrow(get_subp(sub_pid)), 1)
+  exp$delete()
+  Sys.sleep(1)
+  expect_equal(nrow(get_subp(sub_pid)), 0)
+})
+
