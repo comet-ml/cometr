@@ -140,7 +140,7 @@ base_experiment <- function(
     comet_stop("log_git_info requires you to have `git2r` version 0.22.1 or later.")
   }
   if (!is.null(experiment_key) && (!is.null(workspace_name) || !is.null(project_name))) {
-    comet_stop("either experiment_key or (workspace_name and project_name) must be given, not both.")
+    comet_stop("Either experiment_key or (workspace_name and project_name) must be given, not both.")
   }
 
   if (is.null(experiment_key)) {
