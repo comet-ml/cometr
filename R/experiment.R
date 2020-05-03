@@ -53,9 +53,11 @@ create_experiment <- function(
   keep_active = TRUE, log_output = TRUE, log_error = FALSE,
   log_code = TRUE, log_system_details = TRUE, log_git_info = FALSE
 ) {
-  base_experiment(experiment_name, project_name, workspace_name, api_key,
-    keep_active, log_output, log_error,
-    log_code, log_system_details, log_git_info)
+  base_experiment(
+    experiment_name = experiment_name, project_name = project_name,
+    workspace_name = workspace_name, api_key = api_key,
+    keep_active = keep_active, log_output = log_output, log_error = log_error,
+    log_code = log_code, log_system_details = log_system_details, log_git_info = log_git_info)
 }
 
 #' Get a previously created experiment
@@ -137,9 +139,12 @@ base_experiment <- function(
   if (log_git_info && (!requireNamespace("git2r", quietly = TRUE) || utils::packageVersion("git2r") < "0.22.1")) {
     comet_stop("log_git_info requires you to have `git2r` version 0.22.1 or later.")
   }
+  if (!is.null(experiment_key) && (!is.null(workspace_name) || !is.null(project_name))) {
+    comet_stop("either experiment_key or (workspace_name and project_name) must be given, not both.")
+  }
 
   if (is.null(experiment_key)) {
-    online <- TRUE
+    dynamic <- TRUE
     if (!is.null(.cometrenv$curexp)) {
       LOG_INFO("Existing experiment ", .cometrenv$curexp$get_key(), " will be stopped ",
                "because a new experiment is being created.", echo = TRUE)
@@ -158,21 +163,18 @@ base_experiment <- function(
       comet_stop("Create experiment in Comet failed.")
     }
     LOG_INFO("Experiment created: ", experiment_link, echo = TRUE)
-    .cometrenv$cancreate <- TRUE
   } else {
-    online <- FALSE
+    dynamic <- FALSE
     resp <- get_metadata(experiment_key)
     project_name <- resp[["projectName"]]
     workspace_name <- resp[["workspaceName"]]
     experiment_name <- resp[["experimentName"]]
     archived <- resp[["archived"]]
-    if (archived) {
-      experiment_link <- paste(get_config_url_base(),
-        workspace_name, "/", project_name, "/archived/", experiment_key, sep="")
-    } else {
-      experiment_link <- paste(get_config_url_base(),
-        workspace_name, "/", project_name, "/", experiment_key, sep="")
-    }
+    experiment_link = create_experiment_link(modify_config_url(get_config_url()),
+                                             workspace_name,
+                                             project_name,
+                                             experiment_key,
+                                             resp[["archived"]])
     LOG_INFO("Experiment retrieved: ", experiment_link, echo = TRUE)
   }
 
@@ -212,6 +214,7 @@ base_experiment <- function(
     }
   }
 
+  .cometrenv$cancreate <- TRUE
   experiment <- Experiment$new(
     experiment_key = experiment_key,
     experiment_url = experiment_link,
@@ -219,7 +222,7 @@ base_experiment <- function(
     keep_active = keep_active,
     log_output = log_output,
     log_error = log_error,
-    online = online
+    dynamic = dynamic
   )
 
   invisible(experiment)
@@ -255,33 +258,31 @@ Experiment <- R6::R6Class(
 
   public = list(
 
-    #' @description
     #' Do not call this function directly. Use `create_experiment()` or `get_experiment()` instead.
-    #' @param experiment_key The experiment key
-    #' @param experiment_url The experiment URL
-    #' @param api_key The Comet API Key
-    #' @param keep_active Boolean to signal keep experiment active
-    #' @param log_output Boolean to signal whether to log the standard output
-    #' @param log_error Boolean to signal whether to log the standard error
-    #' @param archived Boolean indicating the archive state
-    #' @param online Boolean indicating whether this is a live experiment or not
+    #' param experiment_key The experiment key
+    #' param experiment_url The experiment URL
+    #' param api_key The Comet API Key
+    #' param keep_active Boolean to signal keep experiment active
+    #' param log_output Boolean to signal whether to log the standard output
+    #' param log_error Boolean to signal whether to log the standard error
+    #' param archived Boolean indicating the archive state
+    #' param dynamic Boolean indicating whether this experiment is operating in the sequential, heartbeat mode
     initialize = function(experiment_key, experiment_url = NULL, api_key = NULL,
                           keep_active = FALSE, log_output = FALSE, log_error = FALSE,
-			  online = TRUE) {
-      if (isTRUE(online)) {
-        if (!isTRUE(.cometrenv$cancreate)) {
-          comet_stop("Do not call this function directly. Use `create_experiment()` instead.")
-        }
+                          dynamic = TRUE) {
+      if (!isTRUE(.cometrenv$cancreate)) {
+        comet_stop("Do not call this function directly. Use `create_experiment()` instead.")
+      }
+      .cometrenv$cancreate <- FALSE
+      if (isTRUE(dynamic)) {
         LOG_DEBUG("Creating experiment ", experiment_key)
-
-          .cometrenv$cancreate <- FALSE
-	  .cometrenv$curexp <- self
+        .cometrenv$curexp <- self
       } else {
         LOG_DEBUG("Retrieving experiment ", experiment_key)
       }
 
       api_key <- api_key %||% get_config_api_key(must_work = TRUE)
-      private$online <- online
+      private$dynamic <- dynamic
       private$experiment_key <- experiment_key
       private$experiment_url <- experiment_url
       private$api_key <- api_key
@@ -316,8 +317,8 @@ Experiment <- R6::R6Class(
         LOG_DEBUG("Created process ", private$logging_process$get_pid(), " to send output logs.")
       }
 
-      if (isTRUE(online)) {
-	self$log_other(key = "Created by", value = "cometr")
+      if (isTRUE(dynamic)) {
+        initialize_dynamic_experiment(self)
       }
     },
 
@@ -328,9 +329,9 @@ Experiment <- R6::R6Class(
     },
 
     #' @description
-    #' Get the online status of an experiment.
-    get_online = function() {
-      private$online
+    #' Get the dynamic status of an experiment.
+    get_dynamic = function() {
+      private$dynamic
     },
 
     #' @description
@@ -679,7 +680,7 @@ Experiment <- R6::R6Class(
     experiment_key = NULL,
     api_key = NULL,
     experiment_url = NULL,
-    online = NULL,
+    dynamic = NULL,
     keepalive_process = NULL,
 
     log_output = NULL,
@@ -692,9 +693,7 @@ Experiment <- R6::R6Class(
     check_active = function() {
       if (is.null(.cometrenv$curexp) ||
           self$get_key() != .cometrenv$curexp$get_key()) {
-          if (isTRUE(self$get_online())) {
-            comet_stop("This experiment already ended and cannot be modified.")
-          }
+          comet_stop("This experiment already ended and cannot be modified.")
       }
     },
 

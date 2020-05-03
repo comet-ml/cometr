@@ -30,7 +30,7 @@ exp$stop()
 \itemize{
 \item \href{#method-new}{\code{Experiment$new()}}
 \item \href{#method-get_key}{\code{Experiment$get_key()}}
-\item \href{#method-get_online}{\code{Experiment$get_online()}}
+\item \href{#method-get_dynamic}{\code{Experiment$get_dynamic()}}
 \item \href{#method-get_url}{\code{Experiment$get_url()}}
 \item \href{#method-get_metadata}{\code{Experiment$get_metadata()}}
 \item \href{#method-archive}{\code{Experiment$archive()}}
@@ -70,7 +70,6 @@ exp$stop()
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
-Do not call this function directly. Use \code{create_experiment()} or \code{get_experiment()} instead.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Experiment$new(
   experiment_key,
@@ -79,31 +78,10 @@ Do not call this function directly. Use \code{create_experiment()} or \code{get_
   keep_active = FALSE,
   log_output = FALSE,
   log_error = FALSE,
-  online = TRUE
+  dynamic = TRUE
 )}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{experiment_key}}{The experiment key}
-
-\item{\code{experiment_url}}{The experiment URL}
-
-\item{\code{api_key}}{The Comet API Key}
-
-\item{\code{keep_active}}{Boolean to signal keep experiment active}
-
-\item{\code{log_output}}{Boolean to signal whether to log the standard output}
-
-\item{\code{log_error}}{Boolean to signal whether to log the standard error}
-
-\item{\code{online}}{Boolean indicating whether this is a live experiment or not}
-
-\item{\code{archived}}{Boolean indicating the archive state}
-}
-\if{html}{\out{</div>}}
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_key"></a>}}
@@ -116,12 +94,12 @@ Get the experiment key of an experiment.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_online"></a>}}
-\if{latex}{\out{\hypertarget{method-get_online}{}}}
-\subsection{Method \code{get_online()}}{
-Get the online status of an experiment.
+\if{html}{\out{<a id="method-get_dynamic"></a>}}
+\if{latex}{\out{\hypertarget{method-get_dynamic}{}}}
+\subsection{Method \code{get_dynamic()}}{
+Get the dynamic status of an experiment.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_online()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_dynamic()}\if{html}{\out{</div>}}
 }
 
 }
