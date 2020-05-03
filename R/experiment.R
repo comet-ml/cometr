@@ -139,8 +139,9 @@ base_experiment <- function(
   if (log_git_info && (!requireNamespace("git2r", quietly = TRUE) || utils::packageVersion("git2r") < "0.22.1")) {
     comet_stop("log_git_info requires you to have `git2r` version 0.22.1 or later.")
   }
-  if (!is.null(experiment_key) && (!is.null(workspace_name) || !is.null(project_name))) {
-    comet_stop("Either experiment_key or (workspace_name and project_name) must be given, not both.")
+  if (!is.null(experiment_key) &&
+      (!is.null(workspace_name) || !is.null(project_name) || !is.null(experiment_name))) {
+    comet_stop("If experiment_key is given, then workspace_name, project_name, and experiment_name must not be given.")
   }
 
   if (is.null(experiment_key)) {
