@@ -70,6 +70,7 @@ exp$stop()
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
+Do not call this function directly. Use \code{create_experiment()} or \code{get_experiment()} instead.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Experiment$new(
   experiment_key,
