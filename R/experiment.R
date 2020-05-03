@@ -170,11 +170,11 @@ base_experiment <- function(
     workspace_name <- resp[["workspaceName"]]
     experiment_name <- resp[["experimentName"]]
     archived <- resp[["archived"]]
-    experiment_link = create_experiment_link(modify_config_url(get_config_url()),
-                                             workspace_name,
-                                             project_name,
-                                             experiment_key,
-                                             resp[["archived"]])
+    experiment_link = create_experiment_link(base_url = modify_config_url(get_config_url()),
+                                             workspace_name = workspace_name,
+                                             project_name = project_name,
+                                             experiment_key = experiment_key,
+                                             archived = resp[["archived"]])
     LOG_INFO("Experiment retrieved: ", experiment_link, echo = TRUE)
   }
 
