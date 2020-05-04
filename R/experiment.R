@@ -60,6 +60,8 @@ create_experiment <- function(
     log_code = log_code, log_system_details = log_system_details, log_git_info = log_git_info)
 }
 
+#' @title get_experiment
+#' @description
 #' Get a previously created experiment
 #'
 #' Get a previously created experiment on Comet's servers. The return value is an [`Experiment`]
