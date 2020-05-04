@@ -34,12 +34,12 @@ create_experiment_link <- function(base_url, workspace_name, project_name, exper
       sep = ""
     )
   } else {
-    experiment_link <- paste(base_url,
-                             workspace_name,
-                             "/",
-                             project_name,
-                             "/",
-                             experiment_key,
-                             sep = "")
+    experiment_link <- paste(
+      base_url, workspace_name,
+      "/",
+      project_name,
+      "/",
+      experiment_key,
+      sep = "")
   }
 }
