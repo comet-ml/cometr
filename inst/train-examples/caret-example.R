@@ -58,6 +58,9 @@ metric <- "Accuracy"
 
 # a) linear algorithms
 set.seed(7)
+
+exp$log_parameter("seed", 7)
+
 fit.lda <- train(Species~., data=dataset, method="lda", metric=metric, trControl=control)
 
 ## b) nonlinear algorithms
@@ -83,4 +86,23 @@ fit.lda <- train(Species~., data=dataset, method="lda", metric=metric, trControl
 # Shows accuracy is 100% (1) for validation dataset
 predictions <- predict(fit.lda, validation)
 confusionMatrix(predictions, validation$Species)
+
+exp$add_tags(list("made with caret"))
+exp$log_html("
+<h1>Comet Caret Example</h1>
+
+<p>This example demonstrates using the caret library on the iris dataset.</p>
+
+<p>See the Output tab for confusion matrix.</p>
+
+<ul>
+<li><a href=https://github.com/comet-ml/cometr/blob/master/inst/train-examples/caret-example.R>github.com/comet-ml/cometr/inst/train-example/caret-example.R</a></li>
+</ul>
+
+<p>For help on the Comet R SDK, please see: <a href=https://www.comet.ml/docs/r-sdk/getting-started/>www.comet.ml/docs/r-sdk/getting-started/</a></p>
+
+")
+
+exp$print()
+
 exp$stop()
