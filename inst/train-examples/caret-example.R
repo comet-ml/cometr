@@ -1,10 +1,10 @@
 # https://github.com/RickPack/R-Dojo/blob/master/RDojo_MachLearn.R
 
-# Created by Rick Pack and Chad Himes during the Triangle .NET User Group 
-#   "Introduction to R" dojo, led by 
+# Created by Rick Pack and Chad Himes during the Triangle .NET User Group
+#   "Introduction to R" dojo, led by
 #   Kevin Feasel and Jamie Dixon.
 # Vast majority of code from the tutorial by Jason Brownlee:
-# "Your First Machine Learning Project in R 
+# "Your First Machine Learning Project in R
 #   Step-By-Step (tutorial and template for future projects)"
 #    http://machinelearningmastery.com/machine-learning-in-r-step-by-step/
 
@@ -45,9 +45,13 @@ dataset <- dataset[validation_index,]
 x <- dataset[,1:4]
 y <- dataset[,5]
 # scatterplot matrix
-# Scatterplot shows overlap of green (species "virginica") 
+# Scatterplot shows overlap of green (species "virginica")
 #   and pink (species "versicolor")
+
+png(file = "FeaturePlot.png")
 featurePlot(x=x, y=y, plot="ellipse")
+dev.off()
+exp$upload_asset("FeaturePlot.png")
 
 control <- trainControl(method="cv", number=10)
 metric <- "Accuracy"
@@ -79,5 +83,4 @@ fit.lda <- train(Species~., data=dataset, method="lda", metric=metric, trControl
 # Shows accuracy is 100% (1) for validation dataset
 predictions <- predict(fit.lda, validation)
 confusionMatrix(predictions, validation$Species)
-
 exp$stop()
