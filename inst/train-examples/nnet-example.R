@@ -63,14 +63,14 @@ output <- capture.output(train(), split = TRUE)
 output <- strsplit(output, "\n")
 
 # "initial  value 57.703088 "
-for (match in str_match(output, "^initial .* ([-+]?[0-9]*\\.?[0-9]+)")[,2]) {
+for (match in str_match(output, "^initial\\s+value\\s+([-+]?[0-9]*\\.?[0-9]+)")[,2]) {
   if (!is.na(match)) {
      exp$log_metric("loss", match, step=0)
   }
 }
 
 # "iter  10 value 46.803951"
-matrix = str_match(output, "^iter .*(\\d*) (.*)([-+]?[0-9]*\\.?[0-9]+)")
+matrix = str_match(output, "^iter\\s+(\\d+)\\s+value\\s+([-+]?[0-9]*\\.?[0-9]+)")
 for (i in 1:nrow(matrix)) {
   match = matrix[i,]
   if (!is.na(match[2])) {
