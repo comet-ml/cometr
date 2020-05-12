@@ -1,15 +1,24 @@
 # https://github.com/RickPack/R-Dojo/blob/master/RDojo_MachLearn.R
 
-# Created by Rick Pack and Chad Himes during the Triangle .NET User Group 
-#   "Introduction to R" dojo, led by 
+# Created by Rick Pack and Chad Himes during the Triangle .NET User Group
+#   "Introduction to R" dojo, led by
 #   Kevin Feasel and Jamie Dixon.
 # Vast majority of code from the tutorial by Jason Brownlee:
-# "Your First Machine Learning Project in R 
+# "Your First Machine Learning Project in R
 #   Step-By-Step (tutorial and template for future projects)"
 #    http://machinelearningmastery.com/machine-learning-in-r-step-by-step/
 
-#install.packages("caret", dependencies=c("Depends", "Suggests"))
-#install.packages("ellipse", dependencies = TRUE)
+# --------------------------------------------------
+# To get started with Comet and R, please see:
+# https://www.comet.ml/docs/r-sdk/getting-started/
+#
+# Specifically, you need to create a .comet.yml file
+# or add your Comet API key to create_experiment()
+# --------------------------------------------------
+
+#install.packages("cometr")
+#install.packages("caret")
+#install.packages("ellipse")
 
 library(cometr)
 library(caret)
@@ -45,15 +54,22 @@ dataset <- dataset[validation_index,]
 x <- dataset[,1:4]
 y <- dataset[,5]
 # scatterplot matrix
-# Scatterplot shows overlap of green (species "virginica") 
+# Scatterplot shows overlap of green (species "virginica")
 #   and pink (species "versicolor")
+
+png(file = "FeaturePlot.png")
 featurePlot(x=x, y=y, plot="ellipse")
+dev.off()
+exp$upload_asset("FeaturePlot.png")
 
 control <- trainControl(method="cv", number=10)
 metric <- "Accuracy"
 
 # a) linear algorithms
 set.seed(7)
+
+exp$log_parameter("seed", 7)
+
 fit.lda <- train(Species~., data=dataset, method="lda", metric=metric, trControl=control)
 
 ## b) nonlinear algorithms
@@ -79,5 +95,23 @@ fit.lda <- train(Species~., data=dataset, method="lda", metric=metric, trControl
 # Shows accuracy is 100% (1) for validation dataset
 predictions <- predict(fit.lda, validation)
 confusionMatrix(predictions, validation$Species)
+
+exp$add_tags(list("made with caret"))
+exp$log_html("
+<h1>Comet Caret Example</h1>
+
+<p>This example demonstrates using the caret library on the iris dataset.</p>
+
+<p>See the Output tab for confusion matrix.</p>
+
+<ul>
+<li><a href=https://github.com/comet-ml/cometr/blob/master/inst/train-examples/caret-example.R>github.com/comet-ml/cometr/inst/train-example/caret-example.R</a></li>
+</ul>
+
+<p>For help on the Comet R SDK, please see: <a href=https://www.comet.ml/docs/r-sdk/getting-started/>www.comet.ml/docs/r-sdk/getting-started/</a></p>
+
+")
+
+exp$print()
 
 exp$stop()
