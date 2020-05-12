@@ -127,5 +127,7 @@ for (i in 1:25) {
 dev.off()
 exp$upload_asset("FashionMNISTResults.png")
 
+exp$log_other(key = "Created by", value = "cometr")
+
 exp$print()
 exp$stop()

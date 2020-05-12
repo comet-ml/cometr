@@ -109,5 +109,7 @@ exp$log_html("
 <p>For help on the Comet R SDK, please see: <a href=https://www.comet.ml/docs/r-sdk/getting-started/>www.comet.ml/docs/r-sdk/getting-started/</a></p>
 ")
 
+exp$log_other(key = "Created by", value = "cometr")
+
 exp$print()
 exp$stop()
