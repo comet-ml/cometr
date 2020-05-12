@@ -8,8 +8,17 @@
 #   Step-By-Step (tutorial and template for future projects)"
 #    http://machinelearningmastery.com/machine-learning-in-r-step-by-step/
 
-#install.packages("caret", dependencies=c("Depends", "Suggests"))
-#install.packages("ellipse", dependencies = TRUE)
+# --------------------------------------------------
+# To get started with Comet and R, please see:
+# https://www.comet.ml/docs/r-sdk/getting-started/
+#
+# Specifically, you need to create a .comet.yml file
+# or add your Comet API key to create_experiment()
+# --------------------------------------------------
+
+#install.packages("cometr")
+#install.packages("caret")
+#install.packages("ellipse")
 
 library(cometr)
 library(caret)

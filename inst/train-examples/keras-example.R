@@ -1,9 +1,18 @@
 # Based on:
 # https://tensorflow.rstudio.com/tutorials/beginners/basic-ml/tutorial_basic_classification/
 
+# --------------------------------------------------
+# To get started with Comet and R, please see:
+# https://www.comet.ml/docs/r-sdk/getting-started/
+#
+# Specifically, you need to create a .comet.yml file
+# or add your Comet API key to create_experiment()
+# --------------------------------------------------
+
+# install.packages("cometr")
 # devtools::install_github("rstudio/keras")
 # install.packages("tidyr")
-# install.packages("cometr")
+
 # library(tensorflow)
 # install_keras()
 

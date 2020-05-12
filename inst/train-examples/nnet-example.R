@@ -1,6 +1,16 @@
 # Based on:
 # https://www.rdocumentation.org/packages/nnet/versions/7.3-13/topics/nnet
 
+# --------------------------------------------------
+# To get started with Comet and R, please see:
+# https://www.comet.ml/docs/r-sdk/getting-started/
+#
+# Specifically, you need to create a .comet.yml file
+# or add your Comet API key to create_experiment()
+# --------------------------------------------------
+
+#install.packages("cometr")
+
 library(cometr)
 library(nnet)
 library(stringr)
