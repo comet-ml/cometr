@@ -27,7 +27,7 @@ library(ellipse)
 exp = create_experiment(
   keep_active = TRUE,
   log_output = TRUE,
-  log_error = TRUE,
+  log_error = FALSE,
   log_code = TRUE,
   log_system_details = TRUE,
   log_git_info = TRUE
