@@ -93,7 +93,23 @@ test.cl <- function(true, pred) {
     cres <- max.col(pred)
     table(true, cres)
 }
-test.cl(targets[-samp,], predict(ir1, ir[-samp,]))
+cm = test.cl(targets[-samp,], predict(ir1, ir[-samp,]))
+
+matrix <- sprintf("[%s,%s,%s]",
+                  sprintf("[%s]", paste(cm[1,], collapse=",")),
+                  sprintf("[%s]", paste(cm[2,], collapse=",")),
+                  sprintf("[%s]", paste(cm[3,], collapse=",")))
+
+title <- "Iris Confusion Matrix"
+labels <- sprintf('["%s","%s","%s"]', "Setosa", "Versicolor", "Virginica")
+
+template <- '{"version":1,"title":"%s","labels":%s,"matrix":%s,"rowLabel":"Actual Category","columnLabel":"Predicted Category","maxSamplesPerCell":25,"sampleMatrix":[],"type":"integer"}'
+
+fp <- file("confusion_matrix.json")
+writeLines(c(sprintf(template, title, labels, matrix)), fp)
+close(fp)
+
+exp$upload_asset("confusion_matrix.json", type = "confusion-matrix")
 
 exp$log_html("
 <h1>Comet nnet Example</h1>
