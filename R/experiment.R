@@ -312,7 +312,7 @@ Experiment <- R6::R6Class(
       }
 
       if (isTRUE(dynamic)) {
-        initialize_dynamic_experiment(self)
+        experiment_log_metadata(self)
       }
     },
 

@@ -18,7 +18,7 @@ generate_random_id <- function() {
   paste0(epoch_ms(), "-", paste0(sample(c(0:9, letters[1:6]), 8, TRUE), collapse = ""))
 }
 
-initialize_dynamic_experiment <- function(experiment) {
+experiment_log_metadata <- function(experiment) {
   experiment$log_other(key = "Created by", value = "cometr")
 }
 

@@ -23,7 +23,7 @@ mock_experiment_by_id <- function(experiment_key, keep_active = FALSE,
                                   log_output = FALSE, log_error = FALSE) {
   .cometrenv$cancreate <- TRUE
   with_mock(
-    `cometr:::initialize_dynamic_experiment` = function(...) {
+    `cometr:::experiment_log_metadata` = function(...) {
     },
     Experiment$new(
       experiment_key = experiment_key,
@@ -44,7 +44,7 @@ mock_experiment_full <- function(experiment_key = generate_random_id(), keep_act
       list(experimentKey = experiment_key, link = link),
     {
       with_mock(
-        `cometr:::initialize_dynamic_experiment` = function(...) {
+        `cometr:::experiment_log_metadata` = function(...) {
         },
         create_experiment(
           api_key = test_api_key,
