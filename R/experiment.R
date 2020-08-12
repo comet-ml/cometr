@@ -53,6 +53,70 @@ create_experiment <- function(
   keep_active = TRUE, log_output = TRUE, log_error = FALSE,
   log_code = TRUE, log_system_details = TRUE, log_git_info = FALSE
 ) {
+  base_experiment(
+    experiment_name = experiment_name, project_name = project_name,
+    workspace_name = workspace_name, api_key = api_key,
+    keep_active = keep_active, log_output = log_output, log_error = log_error,
+    log_code = log_code, log_system_details = log_system_details, log_git_info = log_git_info)
+}
+
+#' @title Get a previously created experiment
+#' @description
+#' Get a previously created experiment on Comet's servers. The return value is an [`Experiment`]
+#' object that can be used to modify or get information about the experiment.
+#' @param experiment_key Experiment key.
+#' @param api_key Comet API key (can also be specified using the `COMET_API_KEY`
+#' parameter as an environment variable or in a comet config file).
+#' @param keep_active if `TRUE` keeps a communication channel open with comet.ml
+#' @param log_output If `TRUE`, all standard output will automatically be sent to
+#' the Comet servers to display as message logs for the experiment. The output will still
+#' be shown in the console as well.
+#' @param log_error If `TRUE`, all output from 'stderr' (which includes errors,
+#' warnings, and messages) will be redirected to the Comet servers to display as message
+#' logs for the experiment. Note that unlike `auto_log_output`, if this option is on then
+#' these messages will not be shown in the console and instead they will only be logged
+#' to the Comet experiment. This option is set to `FALSE` by default because of this
+#' behaviour.
+#' @param log_code If `TRUE`, log the source code of the R script that was called
+#' to Comet as the associated code of this experiment. This only works if the you run
+#' a script using the `Rscript` tool and will not work in interactive sessions.
+#' @param log_system_details If `TRUE`, automatically log the system details to
+#' Comet when the experiment is created.
+#' @param log_git_info If `TRUE`, log information about the active git repository.
+#' Requires the `git2r` package to be installed.
+#' @return An [`Experiment`] object.
+#'
+#' @examples
+#' \dontrun{
+#' library(cometr)
+#' # Assuming you have COMET_API_KEY, COMET_WORKSPACE, COMET_PROJECT_NAME variables defined
+#' exp <- get_experiment("SOME-EXPERIMENT-KEY")
+#' exp$get_key()
+#' exp$get_metadata()
+#' exp$add_tags(c("test", "tag2"))
+#' exp$get_tags()
+#' exp$log_metric("metric1", 5)
+#' exp$get_metric("metric1")
+#' exp$get_metrics_summary()
+#' exp$stop()
+#' }
+#'
+#' @export
+get_experiment <- function(
+  experiment_key, api_key = NULL, keep_active = FALSE, log_output = FALSE, log_error = FALSE,
+  log_code = FALSE, log_system_details = FALSE, log_git_info = FALSE
+) {
+  base_experiment(api_key = api_key, keep_active = keep_active, log_output = log_output,
+		  log_error = log_error, log_code = log_code, log_system_details = log_system_details,
+		  log_git_info = log_git_info, experiment_key = experiment_key)
+}
+
+base_experiment <- function(
+  experiment_name = NULL, project_name = NULL, workspace_name = NULL, api_key = NULL,
+  keep_active = TRUE, log_output = TRUE, log_error = FALSE,
+  log_code = TRUE, log_system_details = TRUE, log_git_info = FALSE,
+  experiment_key = NULL
+) {
 
   if (!isBool(keep_active)) {
     comet_stop("keep_active must be either TRUE or FALSE.")
@@ -75,25 +139,45 @@ create_experiment <- function(
   if (log_git_info && (!requireNamespace("git2r", quietly = TRUE) || utils::packageVersion("git2r") < "0.22.1")) {
     comet_stop("log_git_info requires you to have `git2r` version 0.22.1 or later.")
   }
-
-  if (!is.null(.cometrenv$curexp)) {
-    LOG_INFO("Existing experiment ", .cometrenv$curexp$get_key(), " will be stopped ",
-             "because a new experiment is being created.", echo = TRUE)
-    .cometrenv$curexp$stop()
+  if (!is.null(experiment_key) &&
+      (!is.null(workspace_name) || !is.null(project_name) || !is.null(experiment_name))) {
+    comet_stop("If experiment_key is given, then workspace_name, project_name, and experiment_name must not be given.")
   }
 
-  resp <- new_experiment(
-    experiment_name = experiment_name,
-    project_name = project_name,
-    workspace_name = workspace_name,
-    api_key = api_key
-  )
-  experiment_key <- resp[["experimentKey"]]
-  experiment_link <- resp[["link"]]
-  if (is.null(experiment_key) || is.null(experiment_link)) {
-    comet_stop("Create experiment in Comet failed.")
+  if (is.null(experiment_key)) {
+    dynamic <- TRUE
+    if (!is.null(.cometrenv$curexp)) {
+      LOG_INFO("Existing experiment ", .cometrenv$curexp$get_key(), " will be stopped ",
+               "because a new experiment is being created.", echo = TRUE)
+      .cometrenv$curexp$stop()
+    }
+
+    resp <- new_experiment(
+      experiment_name = experiment_name,
+      project_name = project_name,
+      workspace_name = workspace_name,
+      api_key = api_key
+    )
+    experiment_key <- resp[["experimentKey"]]
+    experiment_link <- resp[["link"]]
+    if (is.null(experiment_key) || is.null(experiment_link)) {
+      comet_stop("Create experiment in Comet failed.")
+    }
+    LOG_INFO("Experiment created: ", experiment_link, echo = TRUE)
+  } else {
+    dynamic <- FALSE
+    resp <- get_metadata(experiment_key)
+    project_name <- resp[["projectName"]]
+    workspace_name <- resp[["workspaceName"]]
+    experiment_name <- resp[["experimentName"]]
+    archived <- resp[["archived"]]
+    experiment_link = create_experiment_link(base_url = modify_config_url(get_config_url()),
+                                             workspace_name = workspace_name,
+                                             project_name = project_name,
+                                             experiment_key = experiment_key,
+                                             archived = resp[["archived"]])
+    LOG_INFO("Experiment retrieved: ", experiment_link, echo = TRUE)
   }
-  LOG_INFO("Experiment created: ", experiment_link, echo = TRUE)
 
   if (log_code) {
     source_file <- get_system_script()
@@ -138,7 +222,8 @@ create_experiment <- function(
     api_key = api_key,
     keep_active = keep_active,
     log_output = log_output,
-    log_error = log_error
+    log_error = log_error,
+    dynamic = dynamic
   )
 
   invisible(experiment)
@@ -148,7 +233,8 @@ create_experiment <- function(
 #' @description
 #' A comet experiment object can be used to modify or get information about an active
 #' experiment. All methods documented here are the different ways to interact with an
-#' experiment. Use [`create_experiment()`] to create a Comet experiment object.
+#' experiment. Use [`create_experiment()`] to create or [`get_experiment()`] to
+#' retrieve a Comet experiment object.
 #'
 #' @examples
 #' \dontrun{
@@ -174,22 +260,28 @@ Experiment <- R6::R6Class(
   public = list(
 
     #' @description
-    #' Do not call this function directly. Use `create_experiment()` instead.
+    #' Do not call this function directly. Use `create_experiment()` or `get_experiment()` instead.
     initialize = function(experiment_key, experiment_url = NULL, api_key = NULL,
-                          keep_active = FALSE, log_output = FALSE, log_error = FALSE) {
+                          keep_active = FALSE, log_output = FALSE, log_error = FALSE,
+                          dynamic = TRUE) {
       if (!isTRUE(.cometrenv$cancreate)) {
         comet_stop("Do not call this function directly. Use `create_experiment()` instead.")
       }
-      LOG_DEBUG("Creating experiment ", experiment_key)
-
       .cometrenv$cancreate <- FALSE
+      if (isTRUE(dynamic)) {
+        LOG_DEBUG("Creating experiment ", experiment_key)
+        .cometrenv$curexp <- self
+      } else {
+        LOG_DEBUG("Retrieving experiment ", experiment_key)
+      }
+
       api_key <- api_key %||% get_config_api_key(must_work = TRUE)
+      private$dynamic <- dynamic
       private$experiment_key <- experiment_key
       private$experiment_url <- experiment_url
       private$api_key <- api_key
       private$log_error <- log_error
       private$log_output <- log_output
-      .cometrenv$curexp <- self
 
       if (keep_active) {
         private$keepalive_process <- create_keepalive_process(exp_key = experiment_key, api_key = api_key)
@@ -218,12 +310,22 @@ Experiment <- R6::R6Class(
         )
         LOG_DEBUG("Created process ", private$logging_process$get_pid(), " to send output logs.")
       }
+
+      if (isTRUE(dynamic)) {
+        experiment_log_metadata(self)
+      }
     },
 
     #' @description
     #' Get the experiment key of an experiment.
     get_key = function() {
       private$experiment_key
+    },
+
+    #' @description
+    #' Get the dynamic status of an experiment.
+    get_dynamic = function() {
+      private$dynamic
     },
 
     #' @description
@@ -432,8 +534,8 @@ Experiment <- R6::R6Class(
 
     #' @description
     #' Log an experiment's git metadata. This should only be called once and it can be done
-    #' automatically by enabling `log_git_info` in [`create_experiment()`]. This will replace
-    #' any previous git metadata that was logged.
+    #' automatically by enabling `log_git_info` in [`create_experiment()`] or [`get_experiment()`].
+    #' This will replace any previous git metadata that was logged.
     #' @param branch Git branch name.
     #' @param origin Git repository origin.
     #' @param parent Git commit SHA.
@@ -477,8 +579,8 @@ Experiment <- R6::R6Class(
 
     #' @description
     #' Log an experiment's source code. This should only be called once and it can be done
-    #' automatically by enabling `log_code` in [`create_experiment()`]. This will replace
-    #' any previous code that was logged.
+    #' automatically by enabling `log_code` in [`create_experiment()`] or [`get_experiment()`].
+    #' This will replace any previous code that was logged.
     #' @param code The code to set as the source code.
     log_code = function(code) {
       private$check_active()
@@ -494,7 +596,7 @@ Experiment <- R6::R6Class(
 
     #' @description
     #' Log system details. This can be done automatically by enabling `log_system_details`
-    #' in [`create_experiment()`].
+    #' in [`create_experiment()`] or [`get_experiment()`].
     #' @param command Script and optional arguments.
     #' @param executable Executable.
     #' @param hostname Hostname.
@@ -572,6 +674,7 @@ Experiment <- R6::R6Class(
     experiment_key = NULL,
     api_key = NULL,
     experiment_url = NULL,
+    dynamic = NULL,
     keepalive_process = NULL,
 
     log_output = NULL,
@@ -584,7 +687,7 @@ Experiment <- R6::R6Class(
     check_active = function() {
       if (is.null(.cometrenv$curexp) ||
           self$get_key() != .cometrenv$curexp$get_key()) {
-        comet_stop("This experiment already ended and cannot be modified.")
+          comet_stop("This experiment already ended and cannot be modified.")
       }
     },
 

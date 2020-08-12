@@ -22,8 +22,17 @@ cleanup <- function() {
 mock_experiment_by_id <- function(experiment_key, keep_active = FALSE,
                                   log_output = FALSE, log_error = FALSE) {
   .cometrenv$cancreate <- TRUE
-  Experiment$new(experiment_key = experiment_key, api_key = test_api_key,
-                 keep_active = keep_active, log_output = log_output, log_error = log_error)
+  with_mock(
+    `cometr:::experiment_log_metadata` = function(...) {
+    },
+    Experiment$new(
+      experiment_key = experiment_key,
+      api_key = test_api_key,
+      keep_active = keep_active,
+      log_output = log_output,
+      log_error = log_error
+    )
+  )
 }
 
 mock_experiment_full <- function(experiment_key = generate_random_id(), keep_active = FALSE,
@@ -31,10 +40,22 @@ mock_experiment_full <- function(experiment_key = generate_random_id(), keep_act
                                  log_system_details = FALSE, log_git_info = FALSE) {
   link <- paste0("https://www.comet.ml/", test_ws, "/", test_proj, "/", experiment_key)
   with_mock(
-    `cometr:::new_experiment` = function(...) list(experimentKey = experiment_key, link = link), {
-      create_experiment(api_key = test_api_key, keep_active = keep_active, log_output = log_output,
-                        log_error = log_error, log_code = log_code,
-                        log_system_details = log_system_details, log_git_info = log_git_info)
+    `cometr:::new_experiment` = function(...)
+      list(experimentKey = experiment_key, link = link),
+    {
+      with_mock(
+        `cometr:::experiment_log_metadata` = function(...) {
+        },
+        create_experiment(
+          api_key = test_api_key,
+          keep_active = keep_active,
+          log_output = log_output,
+          log_error = log_error,
+          log_code = log_code,
+          log_system_details = log_system_details,
+          log_git_info = log_git_info
+        )
+      )
     }
   )
 }
