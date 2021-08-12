@@ -19,7 +19,7 @@ generate_random_id <- function() {
 }
 
 experiment_log_metadata <- function(experiment) {
-  experiment$log_other(key = "Created by", value = "cometr")
+  experiment$log_other(key = "Created from", value = "cometr")
 }
 
 create_experiment_link <- function(base_url, workspace_name, project_name, experiment_key, archived) {
