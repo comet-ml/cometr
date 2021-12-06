@@ -112,7 +112,7 @@ exp$log_html("
 
 ")
 
-exp$log_other(key = "Created by", value = "cometr")
+exp$log_other(key = "Created from", value = "cometr")
 
 exp$print()
 exp$stop()

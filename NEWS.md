@@ -4,7 +4,7 @@
     * Backwards compatible with previous versions
     * Continue training with previous experiments
     * Create multiple experiments for parallel code
-* All experiments now `log_other("Created by", "cometr")`
+* All experiments now `log_other("Created from", "cometr")`
 
 # cometr 0.1.1
 
