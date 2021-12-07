@@ -97,9 +97,8 @@ get_config_from_configfile <- function(name, dir) {
   tryCatch({
     file <- file.path(dir, get_config_filename())
     # Check for config file with .yaml instead of .yml
-    filename_yaml = stringr:::str_replace(get_config_filename(), '.yml$', '.yaml')
+    filename_yaml = paste0(strsplit(get_config_filename(), '.yml$')[[1]][1], '.yaml')
     file_yaml = file.path(dir, filename_yaml)
-
     if (file.exists(file)) {
       configs <- suppressWarnings(yaml::read_yaml(file, eval.expr = TRUE))
       configs[[name]]
@@ -116,7 +115,6 @@ get_config_from_configfile <- function(name, dir) {
     }
   }, error = function(err) {
     warning("Error trying to read from config file: ", err$message)
-
     NULL
   })
 }
