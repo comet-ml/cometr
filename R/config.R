@@ -96,9 +96,20 @@ get_config_from_homedir <- function(name) {
 get_config_from_configfile <- function(name, dir) {
   tryCatch({
     file <- file.path(dir, get_config_filename())
+    # Check for config file with .yaml instead of .yml
+    filename_yaml <- paste0(strsplit(get_config_filename(), '.yml$')[[1]][1], '.yaml')
+    file_yaml <- file.path(dir, filename_yaml)
     if (file.exists(file)) {
       configs <- suppressWarnings(yaml::read_yaml(file, eval.expr = TRUE))
       configs[[name]]
+    } else if (file.exists(file_yaml)){
+      warning("While looking for config file at path: ",
+              file,
+              "\n  Found file with .yaml extension: ",
+              file_yaml,
+              "\n  cometr requires a .yml extension for configuration files.",
+              "\n  Please change the file extension to .yml.")
+      NULL
     } else {
       NULL
     }
