@@ -9,7 +9,11 @@ Authors@R: c(
     person(given = "Doug",
            family = "Blank",
            role = c("cre"),
-           email = "doug@comet.ml"))
+           email = "doug@comet.ml"),
+    person(given = "Boris",
+           family = "Feld",
+           role = c("cre"),
+           email = "boris@comet.ml"))
 Description: A convenient 'R' wrapper to the 'Comet' API, which is a cloud
     platform allowing you to track, compare, explain and optimize machine
     learning experiments and models. Experiments can be viewed on the 'Comet'
