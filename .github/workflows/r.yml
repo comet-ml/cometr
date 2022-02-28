@@ -37,3 +37,5 @@ jobs:
         shell: Rscript {0}
         env:
           COMET_API_KEY: ${{ secrets.COMET_API_KEY }}
+          COMET_WORKSPACE: test-r-sdk
+          COMET_PROJECT_NAME: general
