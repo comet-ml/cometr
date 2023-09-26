@@ -2,6 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+.Renviron
 .comet.yml
 cometr.log
 cometlog.log
