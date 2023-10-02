@@ -42,8 +42,8 @@ Artifact <- R6::R6Class(
     #' @param version_tags List of tags to be attached to the future Artifact Version.
     initialize = function(artifact_name, artifact_type, artifact_version = NULL,
                           aliases = NULL, metadata = NULL, version_tags = NULL) {
-      stopifnot(is.character(artifact_name))
-      stopifnot(is.character(artifact_type))
+      stopifnot("Artifact name is mandatory" = is.character(artifact_name))
+      stopifnot("Artifact type is mandatory" = is.character(artifact_type))
 
       private$artifact_name <- artifact_name
       private$artifact_type <- artifact_type
@@ -122,11 +122,12 @@ Artifact <- R6::R6Class(
     #' @param metadata Some additional data to attach to the asset.
     add = function(local_path, overwrite=FALSE, logical_path = NULL, metadata = NULL) {
       if (is.null(local_path)) {
-        comet_stop("local_path cannot be NULL")
+        comet_stop("local_path can not be NULL")
       }
-      if (file.exists(local_path)) {
-        comet_stop("local_path doesn't exists", local_path)
+      if (!file.exists(local_path)) {
+        comet_stop("local_path doesn't exists: ", local_path)
       }
+
       if (dir.exists(local_path)) {
         private$add_assets_from_folder(local_path = local_path, overwrite = overwrite,
                                        logical_path = logical_path, metadata = metadata)
@@ -146,22 +147,37 @@ Artifact <- R6::R6Class(
     metadata = list(),
     version_tags = NULL,
     assets = list(),
+    assets_names = vector(mode = "character"),
 
-    add_assets_from_folder = function(local_path, overwrite=FALSE,
-                                      logical_path = NULL, metadata = NULL) {
+    add_assets_from_folder = function(local_path, overwrite,
+                                      logical_path, metadata) {
+      assets = create_assets_from_folder(folder = local_path, logical_path = logical_path,
+                                         overwrite = overwrite, metadata = metadata)
+      for (asset in assets) {
+        private$add_asset(asset)
+      }
+    },
 
-    }
-
-    add_file_asset = function(local_path, overwrite=FALSE,
-                              logical_path = NULL, metadata = NULL) {
+    add_file_asset = function(local_path, overwrite,
+                              logical_path, metadata) {
       if (is.null(logical_path)) {
-        logical_path <- local_path
+        logical_path <- basename(local_path)
       }
       asset = create_asset_from_file(asset_file = local_path,
                                      logical_path = logical_path,
                                      overwrite = overwrite,
                                      metadata = metadata)
+      private$add_asset(asset)
+    },
 
+    add_asset = function(asset) {
+      logical_path <- asset$get_logical_path()
+      if (any(private$assets_names == logical_path)) {
+        comet_stop(sprintf("Cannot add new asset with logical_path '%s', an existing asset already exists with this logical_path. To add this asset to this artifact you should use a new unique logical_path.", logical_path))
+      } else {
+        private$assets = append(private$assets, asset)
+        private$assets_names = append(private$assets_names, logical_path)
+      }
     }
   )
 )
@@ -185,6 +201,7 @@ ArtifactAsset <- R6::R6Class(
       private$local_path <- local_path
       private$metadata <- metadata
       private$asset_type <- asset_type
+      private$overwrite <-  overwrite
     },
 
     #' @description
@@ -253,27 +270,19 @@ ArtifactAsset <- R6::R6Class(
 )
 
 create_assets_from_folder = function(folder, logical_path, overwrite, metadata) {
-  if (is.null(logical_path)) {
-    # include root folder into name
-    full_names <- TRUE
-  } else {
-    full_names <- FALSE
-  }
-
-  asset_files = list.files(path = folder, recursive = TRUE, full.names = full_names)
-  unlist(lapply(asset_files, function(f) {
-      if (!is.null(logical_path)) {
-        # prefix file name with with logical_path
-        logical_file_name <- file.path(logical_path, f)
-        asset_file <- file.path(folder, f)
-      } else {
-        logical_file_name <- f
-        asset_file <- f
-      }
-      create_asset_from_file(asset_file = asset_file, logical_path = logical_file_name,
-                             overwrite = overwrite, metadata = metadata)
-    })
-  )
+  asset_files = list.files(path = folder, recursive = TRUE, full.names = FALSE)
+  lapply(asset_files, function(f) {
+    if (!is.null(logical_path)) {
+      # prefix logical file name with with logical_path
+      logical_file_name <- file.path(logical_path, f)
+    } else {
+      # prefix logical file name with with folder name
+      logical_file_name <- file.path(basename(folder), f)
+    }
+    asset_file <- file.path(folder, f)
+    create_asset_from_file(asset_file = asset_file, logical_path = logical_file_name,
+                           overwrite = overwrite, metadata = metadata)
+  })
 }
 
 create_asset_from_file = function(asset_file, logical_path, overwrite, metadata) {
