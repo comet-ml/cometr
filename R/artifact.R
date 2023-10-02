@@ -123,7 +123,7 @@ Artifact <- R6::R6Class(
     #' provided the file name from the `local_path` argument will be used.
     #' @param metadata Some additional data to attach to the asset.
     add = function(local_path, overwrite=FALSE, logical_path = NULL, metadata = NULL) {
-      if (is.null(local_path)) {
+      if (is.na(local_path) || is.null(local_path)) {
         comet_stop("local_path can not be NULL")
       }
       if (!file.exists(local_path)) {
@@ -140,7 +140,7 @@ Artifact <- R6::R6Class(
     },
 
     #' @description
-    #' dd a remote asset to the current pending artifact object. A Remote Asset is an asset but
+    #' Add a remote asset to the current pending artifact object. A Remote Asset is an asset but
     #' its content is not uploaded and stored on Comet. Rather a link for its location is stored so
     #' you can identify and distinguish between two experiment using different version of a dataset
     #' stored somewhere else.
@@ -149,11 +149,23 @@ Artifact <- R6::R6Class(
     #' @param logical_path The "name" of the remote asset, could be a dataset
     #' name, a model file name.
     #' @param overwrite If [`TRUE`] will overwrite all existing assets with the same name.
-    #' @param asset_type The type of remote asset.
     #' @param metadata Some additional data to attach to the asset.
-    add_remote = function(uri, logical_path = NULL, overwrite = NULL,
-                          asset_type = NULL, metadata = NULL) {
+    add_remote = function(uri, logical_path = NULL, overwrite = FALSE, metadata = NULL) {
+      if (is.na(uri) || is.null(uri)) {
+        comet_stop("uri can not be NULL")
+      }
 
+      if (is.null(logical_path)) {
+        # Try to parse the URI to see if we can extract a useful file name
+        logical_path <- basename(uri)
+        if (logical_path == "") {
+          logical_path = "remote"
+        }
+      }
+
+      asset = ArtifactAsset$new(logical_path = logical_path, overwrite = overwrite,
+                                remote = TRUE, link = uri, metadata = metadata)
+      private$add_asset(asset)
     }
 
   ),
