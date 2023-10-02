@@ -132,7 +132,7 @@ test_that("get_key and get_url and get_metadata work", {
 
   exp <- mock_experiment_full(experiment_key = "testkey")
   expect_identical(exp$get_key(), "testkey")
-  expect_identical(exp$get_url(), paste0("https://www.comet.ml/", test_ws, "/", test_proj, "/", "testkey"))
+  expect_identical(exp$get_url(), paste0("https://www.comet.com/", test_ws, "/", test_proj, "/", "testkey"))
 })
 
 test_that("create and delete work", {
