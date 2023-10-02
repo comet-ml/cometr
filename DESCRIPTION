@@ -9,11 +9,11 @@ Authors@R: c(
     person(given = "Nimrod",
            family = "Lahav",
            role = c("cre"),
-           email = "nimrod@comet.ml"))
+           email = "nimrod@comet.com"))
 Description: A convenient 'R' wrapper to the 'Comet' API, which is a cloud
     platform allowing you to track, compare, explain and optimize machine
     learning experiments and models. Experiments can be viewed on the 'Comet'
-    online dashboard at <https://www.comet.ml>.
+    online dashboard at <https://www.comet.com>.
 URL: https://github.com/comet-ml/cometr
 BugReports: https://github.com/comet-ml/cometr/issues
 Imports: 
@@ -37,4 +37,4 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.0
+RoxygenNote: 7.2.3

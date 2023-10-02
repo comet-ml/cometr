@@ -1,3 +1,6 @@
+#' @import R6
+NULL
+
 #' Create a new experiment
 #'
 #' Create a new experiment on Comet's servers. The return value is an [`Experiment`]

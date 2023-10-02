@@ -1,3 +1,6 @@
+#' @import R6
+NULL
+
 #' @title A Comet Artifact object
 #' @description
 #' Comet Artifacts allow keeping track of assets beyond any particular experiment. You can keep
@@ -27,7 +30,6 @@ Artifact <- R6::R6Class(
   "Artifact",
 
   public = list(
-    #' @title Creates new [`Artifact`] object
     #' @description
     #' Creates new [`Artifact`] object with provided parameters. After that,
     #' the [`Artifact`] object can be used to save assets and can be logged
@@ -115,10 +117,10 @@ Artifact <- R6::R6Class(
 
     #' @description
     #' Add a local asset to the current pending artifact object.
-    #' @param local_path Either a file/directory path of the files you want to log
+    #' @param local_path (Required) Either a file/directory path of the files you want to log
     #' @param overwrite If [`TRUE`] will overwrite all existing assets with the same name.
     #' @param logical_path A custom file name to be displayed. If not
-    #' provided the file name from the [`local_path`] argument will be used.
+    #' provided the file name from the `local_path` argument will be used.
     #' @param metadata Some additional data to attach to the asset.
     add = function(local_path, overwrite=FALSE, logical_path = NULL, metadata = NULL) {
       if (is.null(local_path)) {
@@ -135,6 +137,23 @@ Artifact <- R6::R6Class(
         private$add_file_asset(local_path = local_path, overwrite = overwrite,
                                logical_path = logical_path, metadata = metadata)
       }
+    },
+
+    #' @description
+    #' dd a remote asset to the current pending artifact object. A Remote Asset is an asset but
+    #' its content is not uploaded and stored on Comet. Rather a link for its location is stored so
+    #' you can identify and distinguish between two experiment using different version of a dataset
+    #' stored somewhere else.
+    #' @param uri (Required) The remote asset location, there is no imposed format and it could be a
+    #' private link.
+    #' @param logical_path The "name" of the remote asset, could be a dataset
+    #' name, a model file name.
+    #' @param overwrite If [`TRUE`] will overwrite all existing assets with the same name.
+    #' @param asset_type The type of remote asset.
+    #' @param metadata Some additional data to attach to the asset.
+    add_remote = function(uri, logical_path = NULL, overwrite = NULL,
+                          asset_type = NULL, metadata = NULL) {
+
     }
 
   ),
@@ -184,7 +203,8 @@ Artifact <- R6::R6Class(
 
 #' @title An Artifact Asset object
 #' @description
-#' ArtifactAsset represent local and remote assets added to an Artifact object but not yet uploaded
+#' The [`ArtifactAsset`] represent local or remote asset added to an
+#' [`Artifact`] object but not yet uploaded
 #' @export
 ArtifactAsset <- R6::R6Class(
   cloneable = FALSE,
@@ -192,6 +212,16 @@ ArtifactAsset <- R6::R6Class(
   "ArtifactAsset",
 
   public = list(
+    #' @description
+    #' Creates a new [`ArtifactAsset`] object with provided parameters.
+    #' @param logical_path the logical file name.
+    #' @param overwrite If [`TRUE`] will overwrite all existing assets with the same name.
+    #' @param remote Is the asset a remote asset or not.
+    #' @param size The size if the asset of a non-remote asset.
+    #' @param link The remote link if the asset is remote.
+    #' @param local_path The local file path if the asset is non-remote.
+    #' @param metadata The metadata to be associated with the asset.
+    #' @param asset_type The type of asset.
     initialize = function(logical_path, overwrite = FALSE, remote = FALSE, size = 0,
                           link = NULL, local_path = NULL, metadata = NULL, asset_type = NULL) {
       private$logical_path <- logical_path

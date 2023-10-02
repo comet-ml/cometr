@@ -2,7 +2,7 @@
 % Please edit documentation in R/experiment.R
 \name{get_experiment}
 \alias{get_experiment}
-\title{get_experiment}
+\title{Get a previously created experiment}
 \usage{
 get_experiment(
   experiment_key,
@@ -48,8 +48,6 @@ Requires the \code{git2r} package to be installed.}
 An \code{\link{Experiment}} object.
 }
 \description{
-Get a previously created experiment
-
 Get a previously created experiment on Comet's servers. The return value is an \code{\link{Experiment}}
 object that can be used to modify or get information about the experiment.
 }
