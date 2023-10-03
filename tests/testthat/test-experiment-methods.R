@@ -1,4 +1,3 @@
-hasInternet <- function() !is.null(curl::nslookup("r-project.org", error = FALSE))
 if (hasInternet()) {
 
   new_exp_name <- paste0("exp-", generate_random_id())
