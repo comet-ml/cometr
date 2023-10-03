@@ -31,14 +31,14 @@ test_that("Artifact constructor version properly handled", {
   testthat::expect_identical(r_version, numeric_version(version))
 })
 
-test_that("Artifact constructor invalid metadata raise error", {
+test_that("Artifact constructor invalid metadata raises error", {
   expect_error(
     Artifact$new(artifact_name = "test", artifact_type = "type", metadata = 34),
     "Invalid metadata, expecting list"
   )
 })
 
-test_that("Artifact add file assets", {
+test_that("Artifact add file assets works", {
   artifact = Artifact$new(artifact_name = "test", artifact_type = "type")
   local_path = testthat::test_path("test-data", "logo_dark.png")
   logical_path = "logo_image"
@@ -64,7 +64,7 @@ test_that("Artifact add file assets", {
   testthat::expect_length(assets, 2)
 })
 
-test_that("Artifact add file asset without logical path", {
+test_that("Artifact add file asset without logical path works", {
   artifact = Artifact$new(artifact_name = "test", artifact_type = "type")
   local_path = testthat::test_path("test-data", "logo_dark.png")
   metadata = list(foo="bar")
@@ -100,7 +100,7 @@ test_that("Artifact add duplicate file asset raises error", {
   testthat::expect_length(assets, 1)
 })
 
-test_that("Artifact add not existing file/dir", {
+test_that("Artifact add not existing file/dir raises error", {
   artifact = Artifact$new(artifact_name = "test", artifact_type = "type")
   local_path = "not_existing_file"
 
@@ -110,7 +110,7 @@ test_that("Artifact add not existing file/dir", {
   )
 })
 
-test_that("Artifact local path is NULL", {
+test_that("Artifact local path is NULL raises error", {
   artifact = Artifact$new(artifact_name = "test", artifact_type = "type")
 
   testthat::expect_error(

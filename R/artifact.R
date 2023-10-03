@@ -31,8 +31,8 @@ Artifact <- R6::R6Class(
 
   public = list(
     #' @description
-    #' Creates new [`Artifact`] object with provided parameters. After that,
-    #' the [`Artifact`] object can be used to save assets and can be logged
+    #' Creates new `Artifact` object with provided parameters. After that,
+    #' the `Artifact` object can be used to save assets and can be logged
     #' with an [`Experiment`].
     #' @param artifact_name (Required) Artifact name.
     #' @param artifact_type (Required) The artifact type, for example 'dataset'.
