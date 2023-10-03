@@ -137,6 +137,7 @@ Artifact <- R6::R6Class(
         private$add_file_asset(local_path = local_path, overwrite = overwrite,
                                logical_path = logical_path, metadata = metadata)
       }
+      invisible(self)
     },
 
     #' @description
@@ -166,6 +167,7 @@ Artifact <- R6::R6Class(
       asset = ArtifactAsset$new(logical_path = logical_path, overwrite = overwrite,
                                 remote = TRUE, link = uri, metadata = metadata)
       private$add_asset(asset)
+      invisible(self)
     }
 
   ),
