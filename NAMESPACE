@@ -3,6 +3,8 @@
 export(Artifact)
 export(ArtifactAsset)
 export(Experiment)
+export(LoggedArtifact)
+export(LoggedArtifactAsset)
 export(call_api)
 export(create_experiment)
 export(create_project)
