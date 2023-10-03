@@ -13,12 +13,22 @@ NULL
 #' Version. The aliases list is de-duplicated.
 #' @param metadata Some additional meta-data to attach to the future Artifact Version.
 #' @param version_tags List of tags to be attached to the future Artifact Version.
-create_artifact <- function(artifact_name, artifact_type, artifact_version = NULL,
-                            aliases = NULL, metadata = NULL, version_tags = NULL) {
-  Artifact$new(artifact_name = artifact_name, artifact_type = artifact_type,
-               artifact_version = artifact_version, aliases = aliases,
-               metadata = metadata, version_tags = version_tags)
-}
+create_artifact <-
+  function(artifact_name,
+           artifact_type,
+           artifact_version = NULL,
+           aliases = NULL,
+           metadata = NULL,
+           version_tags = NULL) {
+    Artifact$new(
+      artifact_name = artifact_name,
+      artifact_type = artifact_type,
+      artifact_version = artifact_version,
+      aliases = aliases,
+      metadata = metadata,
+      version_tags = version_tags
+    )
+  }
 
 #' @title A Comet Artifact object
 #' @description
@@ -61,8 +71,12 @@ Artifact <- R6::R6Class(
     #' Version. The aliases list is de-duplicated.
     #' @param metadata Some additional meta-data to attach to the future Artifact Version.
     #' @param version_tags List of tags to be attached to the future Artifact Version.
-    initialize = function(artifact_name, artifact_type, artifact_version = NULL,
-                          aliases = NULL, metadata = NULL, version_tags = NULL) {
+    initialize = function(artifact_name,
+                          artifact_type,
+                          artifact_version = NULL,
+                          aliases = NULL,
+                          metadata = NULL,
+                          version_tags = NULL) {
       stopifnot("Artifact name is mandatory" = is.character(artifact_name))
       stopifnot("Artifact type is mandatory" = is.character(artifact_type))
 
@@ -87,7 +101,7 @@ Artifact <- R6::R6Class(
 
       if (is.list(metadata)) {
         private$metadata <- metadata
-      } else if(!is.null(metadata)) {
+      } else if (!is.null(metadata)) {
         comet_stop("Invalid metadata, expecting list", metadata)
       }
     },
@@ -141,7 +155,10 @@ Artifact <- R6::R6Class(
     #' @param logical_path A custom file name to be displayed. If not
     #' provided the file name from the `local_path` argument will be used.
     #' @param metadata Some additional data to attach to the asset.
-    add = function(local_path, overwrite=FALSE, logical_path = NULL, metadata = NULL) {
+    add = function(local_path,
+                   overwrite = FALSE,
+                   logical_path = NULL,
+                   metadata = NULL) {
       if (is.na(local_path) || is.null(local_path)) {
         comet_stop("local_path can not be NULL")
       }
@@ -150,11 +167,19 @@ Artifact <- R6::R6Class(
       }
 
       if (dir.exists(local_path)) {
-        private$add_assets_from_folder(local_path = local_path, overwrite = overwrite,
-                                       logical_path = logical_path, metadata = metadata)
+        private$add_assets_from_folder(
+          local_path = local_path,
+          overwrite = overwrite,
+          logical_path = logical_path,
+          metadata = metadata
+        )
       } else {
-        private$add_file_asset(local_path = local_path, overwrite = overwrite,
-                               logical_path = logical_path, metadata = metadata)
+        private$add_file_asset(
+          local_path = local_path,
+          overwrite = overwrite,
+          logical_path = logical_path,
+          metadata = metadata
+        )
       }
       invisible(self)
     },
@@ -170,7 +195,10 @@ Artifact <- R6::R6Class(
     #' name, a model file name.
     #' @param overwrite If [`TRUE`] will overwrite all existing assets with the same name.
     #' @param metadata Some additional data to attach to the asset.
-    add_remote = function(uri, logical_path = NULL, overwrite = FALSE, metadata = NULL) {
+    add_remote = function(uri,
+                          logical_path = NULL,
+                          overwrite = FALSE,
+                          metadata = NULL) {
       if (is.na(uri) || is.null(uri)) {
         comet_stop("uri can not be NULL")
       }
@@ -183,8 +211,13 @@ Artifact <- R6::R6Class(
         }
       }
 
-      asset = ArtifactAsset$new(logical_path = logical_path, overwrite = overwrite,
-                                remote = TRUE, link = uri, metadata = metadata)
+      asset = ArtifactAsset$new(
+        logical_path = logical_path,
+        overwrite = overwrite,
+        remote = TRUE,
+        link = uri,
+        metadata = metadata
+      )
       private$add_asset(asset)
       invisible(self)
     }
@@ -201,31 +234,46 @@ Artifact <- R6::R6Class(
     assets = list(),
     assets_names = vector(mode = "character"),
 
-    add_assets_from_folder = function(local_path, overwrite,
-                                      logical_path, metadata) {
-      assets = create_assets_from_folder(folder = local_path, logical_path = logical_path,
-                                         overwrite = overwrite, metadata = metadata)
+    add_assets_from_folder = function(local_path,
+                                      overwrite,
+                                      logical_path,
+                                      metadata) {
+      assets = create_assets_from_folder(
+        folder = local_path,
+        logical_path = logical_path,
+        overwrite = overwrite,
+        metadata = metadata
+      )
       for (asset in assets) {
         private$add_asset(asset)
       }
     },
 
-    add_file_asset = function(local_path, overwrite,
-                              logical_path, metadata) {
+    add_file_asset = function(local_path,
+                              overwrite,
+                              logical_path,
+                              metadata) {
       if (is.null(logical_path)) {
         logical_path <- basename(local_path)
       }
-      asset = create_asset_from_file(asset_file = local_path,
-                                     logical_path = logical_path,
-                                     overwrite = overwrite,
-                                     metadata = metadata)
+      asset = create_asset_from_file(
+        asset_file = local_path,
+        logical_path = logical_path,
+        overwrite = overwrite,
+        metadata = metadata
+      )
       private$add_asset(asset)
     },
 
     add_asset = function(asset) {
       logical_path <- asset$get_logical_path()
       if (any(private$assets_names == logical_path)) {
-        comet_stop(sprintf("Cannot add new asset with logical_path '%s', an existing asset already exists with this logical_path. To add this asset to this artifact you should use a new unique logical_path.", logical_path))
+        comet_stop(
+          sprintf(
+            "Cannot add new asset with logical_path '%s', an existing asset already exists with this logical_path. To add this asset to this artifact you should use a new unique logical_path.",
+            logical_path
+          )
+        )
       } else {
         private$assets = append(private$assets, asset)
         private$assets_names = append(private$assets_names, logical_path)
@@ -255,8 +303,14 @@ ArtifactAsset <- R6::R6Class(
     #' @param local_path The local file path if the asset is non-remote.
     #' @param metadata The metadata to be associated with the asset.
     #' @param asset_type The type of asset.
-    initialize = function(logical_path, overwrite = FALSE, remote = FALSE, size = 0,
-                          link = NULL, local_path = NULL, metadata = NULL, asset_type = NULL) {
+    initialize = function(logical_path,
+                          overwrite = FALSE,
+                          remote = FALSE,
+                          size = 0,
+                          link = NULL,
+                          local_path = NULL,
+                          metadata = NULL,
+                          asset_type = NULL) {
       private$logical_path <- logical_path
       private$remote <- remote
       private$size <- size
@@ -322,7 +376,7 @@ ArtifactAsset <- R6::R6Class(
 
   private = list(
     logical_path = NULL,
-    overwrite=FALSE,
+    overwrite = FALSE,
     remote = FALSE,
     size = 0,
     link = NULL,
@@ -333,7 +387,9 @@ ArtifactAsset <- R6::R6Class(
 )
 
 create_assets_from_folder = function(folder, logical_path, overwrite, metadata) {
-  asset_files = list.files(path = folder, recursive = TRUE, full.names = FALSE)
+  asset_files = list.files(path = folder,
+                           recursive = TRUE,
+                           full.names = FALSE)
   lapply(asset_files, function(f) {
     if (!is.null(logical_path)) {
       # prefix logical file name with with logical_path
@@ -343,13 +399,25 @@ create_assets_from_folder = function(folder, logical_path, overwrite, metadata) 
       logical_file_name <- file.path(basename(folder), f)
     }
     asset_file <- file.path(folder, f)
-    create_asset_from_file(asset_file = asset_file, logical_path = logical_file_name,
-                           overwrite = overwrite, metadata = metadata)
+    create_asset_from_file(
+      asset_file = asset_file,
+      logical_path = logical_file_name,
+      overwrite = overwrite,
+      metadata = metadata
+    )
   })
 }
 
-create_asset_from_file = function(asset_file, logical_path, overwrite, metadata) {
+create_asset_from_file = function(asset_file,
+                                  logical_path,
+                                  overwrite,
+                                  metadata) {
   size <- file.size(asset_file)
-  ArtifactAsset$new(logical_path = logical_path, overwrite = overwrite,
-                    local_path = asset_file, metadata = metadata, size = size)
+  ArtifactAsset$new(
+    logical_path = logical_path,
+    overwrite = overwrite,
+    local_path = asset_file,
+    metadata = metadata,
+    size = size
+  )
 }
