@@ -4,7 +4,7 @@
 \alias{ArtifactAsset}
 \title{An Artifact Asset object}
 \description{
-The \code{\link{ArtifactAsset}} represent local or remote asset added to an
+The \code{ArtifactAsset} represent local or remote asset added to an
 \code{\link{Artifact}} object but not yet uploaded
 }
 \section{Methods}{
@@ -25,7 +25,7 @@ The \code{\link{ArtifactAsset}} represent local or remote asset added to an
 \if{html}{\out{<a id="method-ArtifactAsset-new"></a>}}
 \if{latex}{\out{\hypertarget{method-ArtifactAsset-new}{}}}
 \subsection{Method \code{new()}}{
-Creates a new \code{\link{ArtifactAsset}} object with provided parameters.
+Creates a new \code{ArtifactAsset} object with provided parameters.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ArtifactAsset$new(
   logical_path,

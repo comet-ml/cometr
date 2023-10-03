@@ -44,8 +44,8 @@ exp$stop()
 \if{html}{\out{<a id="method-Artifact-new"></a>}}
 \if{latex}{\out{\hypertarget{method-Artifact-new}{}}}
 \subsection{Method \code{new()}}{
-Creates new \code{\link{Artifact}} object with provided parameters. After that,
-the \code{\link{Artifact}} object can be used to save assets and can be logged
+Creates new \code{Artifact} object with provided parameters. After that,
+the \code{Artifact} object can be used to save assets and can be logged
 with an \code{\link{Experiment}}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Artifact$new(
@@ -181,7 +181,7 @@ provided the file name from the \code{local_path} argument will be used.}
 \if{html}{\out{<a id="method-Artifact-add_remote"></a>}}
 \if{latex}{\out{\hypertarget{method-Artifact-add_remote}{}}}
 \subsection{Method \code{add_remote()}}{
-dd a remote asset to the current pending artifact object. A Remote Asset is an asset but
+Add a remote asset to the current pending artifact object. A Remote Asset is an asset but
 its content is not uploaded and stored on Comet. Rather a link for its location is stored so
 you can identify and distinguish between two experiment using different version of a dataset
 stored somewhere else.
@@ -189,8 +189,7 @@ stored somewhere else.
 \if{html}{\out{<div class="r">}}\preformatted{Artifact$add_remote(
   uri,
   logical_path = NULL,
-  overwrite = NULL,
-  asset_type = NULL,
+  overwrite = FALSE,
   metadata = NULL
 )}\if{html}{\out{</div>}}
 }
@@ -205,8 +204,6 @@ private link.}
 name, a model file name.}
 
 \item{\code{overwrite}}{If \code{\link{TRUE}} will overwrite all existing assets with the same name.}
-
-\item{\code{asset_type}}{The type of remote asset.}
 
 \item{\code{metadata}}{Some additional data to attach to the asset.}
 }
