@@ -1,3 +1,25 @@
+test_that("create_artifact works as expected", {
+  aliases = c("one", "two", "three")
+  tags = c("one", "two", "three")
+  version = "1.2.3"
+  artifact_name = "Artifact Name"
+  artifact_type = "type"
+  metadata = list(foo="bar")
+
+  artifact <- create_artifact(artifact_name = artifact_name,
+                              artifact_type = artifact_type,
+                              artifact_version = version,
+                              aliases = aliases,
+                              metadata = metadata,
+                              version_tags = tags)
+  testthat::expect_identical(artifact$get_artifact_name(), artifact_name)
+  testthat::expect_identical(artifact$get_artifact_type(), artifact_type)
+  testthat::expect_identical(artifact$get_aliases(), c("one", "two", "three"))
+  testthat::expect_identical(artifact$get_artifact_version(), numeric_version(version))
+  testthat::expect_identical(artifact$get_version_tags(), c("one", "two", "three"))
+  testthat::expect_identical(artifact$get_metadata(), metadata)
+})
+
 test_that("Artifact constructor enforces mandatory fields", {
   expect_error(
     Artifact$new(artifact_name = NULL, artifact_type = "type"),

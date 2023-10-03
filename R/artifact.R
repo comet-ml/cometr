@@ -1,6 +1,25 @@
 #' @import R6
 NULL
 
+#' @description
+#' Creates new `Artifact` object with provided parameters. After that,
+#' the `Artifact` object can be used to save assets and can be logged
+#' with an [`Experiment`].
+#' @param artifact_name (Required) Artifact name.
+#' @param artifact_type (Required) The artifact type, for example 'dataset'.
+#' @param artifact_version The version number to create. If not provided,
+#' a new version number will be created automatically.
+#' @param aliases List of aliases. Some aliases to attach to the future Artifact
+#' Version. The aliases list is de-duplicated.
+#' @param metadata Some additional meta-data to attach to the future Artifact Version.
+#' @param version_tags List of tags to be attached to the future Artifact Version.
+create_artifact <- function(artifact_name, artifact_type, artifact_version = NULL,
+                            aliases = NULL, metadata = NULL, version_tags = NULL) {
+  Artifact$new(artifact_name = artifact_name, artifact_type = artifact_type,
+               artifact_version = artifact_version, aliases = aliases,
+               metadata = metadata, version_tags = version_tags)
+}
+
 #' @title A Comet Artifact object
 #' @description
 #' Comet Artifacts allow keeping track of assets beyond any particular experiment. You can keep
@@ -217,7 +236,7 @@ Artifact <- R6::R6Class(
 
 #' @title An Artifact Asset object
 #' @description
-#' The [`ArtifactAsset`] represent local or remote asset added to an
+#' The `ArtifactAsset` represent local or remote asset added to an
 #' [`Artifact`] object but not yet uploaded
 #' @export
 ArtifactAsset <- R6::R6Class(
@@ -227,7 +246,7 @@ ArtifactAsset <- R6::R6Class(
 
   public = list(
     #' @description
-    #' Creates a new [`ArtifactAsset`] object with provided parameters.
+    #' Creates a new `ArtifactAsset` object with provided parameters.
     #' @param logical_path the logical file name.
     #' @param overwrite If [`TRUE`] will overwrite all existing assets with the same name.
     #' @param remote Is the asset a remote asset or not.
