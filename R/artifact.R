@@ -1,6 +1,7 @@
 #' @import R6
 NULL
 
+#' @title Create Comet Artifact object
 #' @description
 #' Creates new `Artifact` object with provided parameters. After that,
 #' the `Artifact` object can be used to save assets and can be logged

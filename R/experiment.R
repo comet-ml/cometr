@@ -652,6 +652,19 @@ Experiment <- R6::R6Class(
     },
 
     #' @description
+    #' Log an [`Artifact`] object, synchronously create a new Artifact Version and
+    #' upload all local and remote assets attached to the [`Artifact`] object.
+    #' @param artifact an [`Artifact`] object.
+    #' @returns [`LoggedArtifact`] with all relevant information about logged
+    #' artifact.
+    log_artifact = function(artifact) {
+      if (!inherits(artifact, "Artifact")) {
+        comet_stop("Object is not an Artifact and cannot be logged")
+      }
+      log_artifact(artifact = artifact, experiment_key = private$experiment_key, api_key = private$api_key)
+    },
+
+    #' @description
     #' Set an experiment's start and end time.
     #' @param start Start time for the experiment (milliseconds since the Epoch)
     #' @param end End time for the experiment (milliseconds since the Epoch)

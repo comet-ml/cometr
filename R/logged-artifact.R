@@ -35,8 +35,8 @@ LoggedArtifact <- R6::R6Class(
     #' @param artifact_type (Required) The artifact type.
     #' @param artifact_id (Required) The ID of artifact.
     #' @param artifact_version_id (Required) The ID of Artifact Version.
-    #' @param workspace (Required) The workspace where artifact saved
-    #' @param experiment_key (Required) The ID of associated experiment
+    #' @param workspace (Required) The workspace where artifact saved.
+    #' @param experiment_key (Required) The ID of the associated experiment.
     #' @param artifact_version (Required) The latest artifact version.
     #' @param aliases (Required) List of Artifact Version aliases.
     #' @param artifact_tags (Required) The list of artifact tags.
@@ -44,6 +44,7 @@ LoggedArtifact <- R6::R6Class(
     #' @param size (Required) The total size of logged artifact version.
     #' It is the sum of all the artifact version assets.
     #' @param metadata The meta-data of Artifact Version.
+    #' @param source_experiment_key The ID of the experiment that created this artifact version.
     initialize = function(artifact_name,
                           artifact_type,
                           artifact_id,
@@ -55,7 +56,8 @@ LoggedArtifact <- R6::R6Class(
                           artifact_tags,
                           version_tags,
                           size,
-                          metadata = NULL) {
+                          metadata = NULL,
+                          source_experiment_key = NULL) {
       private$artifact_name <- artifact_name
       private$artifact_type <- artifact_type
       private$artifact_id <- artifact_id
@@ -67,6 +69,7 @@ LoggedArtifact <- R6::R6Class(
       private$version_tags <- version_tags
       private$size <- size
       private$metadata <- metadata
+      private$source_experiment_key <- source_experiment_key
 
       if (!is.null(artifact_version)) {
         private$artifact_version <- numeric_version(artifact_version)
@@ -111,6 +114,12 @@ LoggedArtifact <- R6::R6Class(
     },
 
     #' @description
+    #' Get the workspace of the Artifact.
+    get_workspace = function() {
+      private$workspace
+    },
+
+    #' @description
     #' Get the list of all [`LoggedArtifactAsset`] that have been logged with
     #' this `LoggedArtifact`.
     assets = function() {
@@ -152,6 +161,7 @@ LoggedArtifact <- R6::R6Class(
     metadata = NULL,
     version_tags = NULL,
     size = 0,
+    source_experiment_key = NULL,
 
     to_logged_asset = function(asset) {
       LoggedArtifactAsset$new(

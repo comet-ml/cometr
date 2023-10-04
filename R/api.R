@@ -54,20 +54,30 @@ call_api <- function(endpoint, method = c("GET", "POST"), params = list(), respo
     comet_stop("Error calling Comet API: ", err$message)
   })
 
-  check_response(response)
+  check_response(res = response, params = params)
 
   parsed <- parse_response(response, response_json = response_json)
   LOG_INFO("Parsed response: ", parsed)
   parsed
 }
 
-check_response <- function(res) {
+check_response <- function(res, params = NULL) {
   tryCatch({
     if (httr::status_code(res) != 200) {
       code <- httr::status_code(res)
       res <- try(parse_response(res), silent = TRUE)
-      if (is.list(res) && !is.null(res[["msg"]])) {
-        stop(res[["msg"]])
+      if (is.list(res)) {
+        if (!is.null(res[["sdk_error_code"]])) {
+          sdk_error_code <- as.integer(res[["sdk_error_code"]])
+          if (sdk_error_code == 624523) {
+            comet_stop("Artifact not found with: ", params)
+          } else if (sdk_error_code == 90403 || sdk_error_code == 90402) {
+            comet_stop("Artifact is not in a finalized state and cannot be accessed with: ", params)
+          }
+        }
+        if (!is.null(res[["msg"]])) {
+          stop(res[["msg"]])
+        }
       } else {
         stop("Comet API response status was not OK (", code, ")")
       }
