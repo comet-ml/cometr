@@ -31,6 +31,7 @@ exp$stop()
 \item \href{#method-LoggedArtifact-get_aliases}{\code{LoggedArtifact$get_aliases()}}
 \item \href{#method-LoggedArtifact-get_metadata}{\code{LoggedArtifact$get_metadata()}}
 \item \href{#method-LoggedArtifact-get_version_tags}{\code{LoggedArtifact$get_version_tags()}}
+\item \href{#method-LoggedArtifact-get_workspace}{\code{LoggedArtifact$get_workspace()}}
 \item \href{#method-LoggedArtifact-assets}{\code{LoggedArtifact$assets()}}
 \item \href{#method-LoggedArtifact-remote_assets}{\code{LoggedArtifact$remote_assets()}}
 }
@@ -55,7 +56,8 @@ to retrieve \code{LoggedArtifact}.
   artifact_tags,
   version_tags,
   size,
-  metadata = NULL
+  metadata = NULL,
+  source_experiment_key = NULL
 )}\if{html}{\out{</div>}}
 }
 
@@ -70,9 +72,9 @@ to retrieve \code{LoggedArtifact}.
 
 \item{\code{artifact_version_id}}{(Required) The ID of Artifact Version.}
 
-\item{\code{workspace}}{(Required) The workspace where artifact saved}
+\item{\code{workspace}}{(Required) The workspace where artifact saved.}
 
-\item{\code{experiment_key}}{(Required) The ID of associated experiment}
+\item{\code{experiment_key}}{(Required) The ID of the associated experiment.}
 
 \item{\code{artifact_version}}{(Required) The latest artifact version.}
 
@@ -86,6 +88,8 @@ to retrieve \code{LoggedArtifact}.
 It is the sum of all the artifact version assets.}
 
 \item{\code{metadata}}{The meta-data of Artifact Version.}
+
+\item{\code{source_experiment_key}}{The ID of the experiment that created this artifact version.}
 }
 \if{html}{\out{</div>}}
 }
@@ -147,6 +151,16 @@ Get the metadata of the artifact.
 Get the list of tags of the artifact version.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{LoggedArtifact$get_version_tags()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-LoggedArtifact-get_workspace"></a>}}
+\if{latex}{\out{\hypertarget{method-LoggedArtifact-get_workspace}{}}}
+\subsection{Method \code{get_workspace()}}{
+Get the workspace of the Artifact.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{LoggedArtifact$get_workspace()}\if{html}{\out{</div>}}
 }
 
 }

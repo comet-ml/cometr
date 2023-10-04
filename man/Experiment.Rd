@@ -3,6 +3,10 @@
 \name{Experiment}
 \alias{Experiment}
 \title{A Comet Experiment object}
+\value{
+\code{\link{LoggedArtifact}} with all relevant information about logged
+artifact.
+}
 \description{
 A comet experiment object can be used to modify or get information about an active
 experiment. All methods documented here are the different ways to interact with an
@@ -62,6 +66,7 @@ exp$stop()
 \item \href{#method-Experiment-get_code}{\code{Experiment$get_code()}}
 \item \href{#method-Experiment-log_system_details}{\code{Experiment$log_system_details()}}
 \item \href{#method-Experiment-get_system_details}{\code{Experiment$get_system_details()}}
+\item \href{#method-Experiment-log_artifact}{\code{Experiment$log_artifact()}}
 \item \href{#method-Experiment-set_start_end_time}{\code{Experiment$set_start_end_time()}}
 \item \href{#method-Experiment-print}{\code{Experiment$print()}}
 }
@@ -619,6 +624,24 @@ Get an experiment's system details.
 \if{html}{\out{<div class="r">}}\preformatted{Experiment$get_system_details()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Experiment-log_artifact"></a>}}
+\if{latex}{\out{\hypertarget{method-Experiment-log_artifact}{}}}
+\subsection{Method \code{log_artifact()}}{
+Log an \code{\link{Artifact}} object, synchronously create a new Artifact Version and
+upload all local and remote assets attached to the \code{\link{Artifact}} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$log_artifact(artifact)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{artifact}}{an \code{\link{Artifact}} object.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Experiment-set_start_end_time"></a>}}
