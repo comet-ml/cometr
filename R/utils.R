@@ -65,3 +65,20 @@ file_size_formated <- function(size){
 
   return(outSize)
 }
+
+remote_asset_name_from_uri <- function(asset_uri) {
+  # Try to parse the URI to see if we can extract a useful file name
+  if (is.null(asset_uri) || is.na(asset_uri)) {
+    logical_path <- "remote"
+  } else {
+    logical_path <- basename(asset_uri)
+    if (logical_path == asset_uri) {
+      splitted = strsplit(asset_uri, "/", fixed = TRUE)
+      logical_path <- tail(splitted, n = 1)
+    }
+  }
+  if (logical_path == "") {
+    logical_path <- "remote"
+  }
+  logical_path
+}

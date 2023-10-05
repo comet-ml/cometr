@@ -504,9 +504,55 @@ Experiment <- R6::R6Class(
     upload_asset = function(file, step = NULL, overwrite = NULL, context = NULL,
                             type = NULL, name = NULL, metadata = NULL) {
       private$check_active()
-      upload_asset(experiment_key = private$experiment_key, api_key = private$api_key,
-                   file = file, step = step, overwrite = overwrite,
-                   context = context, type = type, name = name, metadata = metadata)
+      upload_asset(
+        experiment_key = private$experiment_key,
+        api_key = private$api_key,
+        file = file,
+        step = step,
+        overwrite = overwrite,
+        context = context,
+        type = type,
+        name = name,
+        metadata = metadata
+      )
+      invisible(self)
+    },
+
+    #' @description
+    #' Logs a Remote Asset identified by an URI. A Remote Asset is an asset but its content is not
+    #' uploaded and stored on Comet. Rather a link for its location is stored, so you can identify
+    #' and distinguish between two experiment using different version of a dataset stored somewhere
+    #' else.
+    #' @param uri (Required) The remote asset location, there is no imposed format, and it could be a
+    #' private link.
+    #' @param remote_file_name The "name" of the remote asset, could be a dataset
+    #' name, a model file name.
+    #' @param step Step number.
+    #' @param overwrite If `TRUE`, overwrite any logged asset with the same name.
+    #' @param type The type of asset, default: "asset".
+    #' @param metadata Metadata to log along with the asset
+    log_remote_asset = function(uri,
+                                remote_file_name = NULL,
+                                step = NULL,
+                                overwrite = FALSE,
+                                type = "asset",
+                                metadata = NULL) {
+      private$check_active()
+      if (is.null(remote_file_name)) {
+        # Try to parse the URI to see if we can extract a useful file name
+        remote_file_name <- remote_asset_name_from_uri(uri)
+      }
+
+      upload_remote_asset(
+        experiment_key = private$experiment_key,
+        api_key = private$api_key,
+        remote_uri = uri,
+        step = step,
+        overwrite = overwrite,
+        type = type,
+        name = remote_file_name,
+        metadata = metadata
+      )
       invisible(self)
     },
 

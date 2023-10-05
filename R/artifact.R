@@ -206,10 +206,7 @@ Artifact <- R6::R6Class(
 
       if (is.null(logical_path)) {
         # Try to parse the URI to see if we can extract a useful file name
-        logical_path <- basename(uri)
-        if (logical_path == "") {
-          logical_path = "remote"
-        }
+        logical_path <- remote_asset_name_from_uri(uri)
       }
 
       asset = ArtifactAsset$new(

@@ -44,3 +44,22 @@ test_that("file_size_formated works", {
   res <- sapply(sizes, file_size_formated)
   expect_identical(res, expected)
 })
+
+test_that("remote_asset_name_from_uri works", {
+  uris <-
+    list("s3://bucket/dataset.dat",
+         "https://localhost:8080/file.txt",
+         "https://comet.com/dataset",
+         NULL,
+         NA,
+         "file.dat")
+  expected <-
+    list("dataset.dat",
+         "file.txt",
+         "dataset",
+         "remote",
+         "remote",
+         "file.dat")
+  res <- sapply(uris, remote_asset_name_from_uri)
+  expect_identical(res, expected)
+})

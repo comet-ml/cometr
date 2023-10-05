@@ -34,8 +34,17 @@ call_api <- function(endpoint, method = c("GET", "POST"), params = list(), respo
     if (endpoint == "/write/experiment/upload-asset" ||
         endpoint == "/write/experiment/git/patch") {
       LOG_INFO("API call: ", endpoint)
-      body_params <- list(file = httr::upload_file(params$file))
-      params$file <- NULL
+      body_params <- list()
+      if (!is.null(params$file)) {
+        # local assets
+        body_params$file <- httr::upload_file(params$file)
+        params$file <- NULL
+      }
+      if (!is.null(params$remote_uri)) {
+        # remote assets
+        body_params$link = list(link = remote_uri)
+        params$remote_uri <- NULL
+      }
       if (!is.null(params$metadata)) {
         body_params$metadata <- jsonlite::toJSON(params$metadata)
         params$metadata <- NULL
