@@ -88,16 +88,16 @@ Artifact <- R6::R6Class(
         private$artifact_version <- numeric_version(artifact_version)
       }
 
-      if (is.vector(aliases)) {
+      if (is.list(aliases)) {
         private$aliases <- unique(aliases)
-      } else {
-        private$aliases <- c()
+      } else if (!is.null(aliases)) {
+        comet_stop("aliases is not a list: ", aliases)
       }
 
-      if (is.vector(version_tags)) {
+      if (is.list(version_tags)) {
         private$version_tags <- unique(version_tags)
-      } else {
-        private$version_tags <- c()
+      } else if(!is.null(version_tags)) {
+        comet_stop("version_tags is not a list: ", version_tags)
       }
 
       if (is.list(metadata)) {
@@ -227,7 +227,7 @@ Artifact <- R6::R6Class(
     artifact_type = NULL,
     artifact_version = NULL,
     aliases = NULL,
-    metadata = list(),
+    metadata = NULL,
     version_tags = NULL,
     assets = list(),
     assets_names = vector(mode = "character"),

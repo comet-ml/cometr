@@ -24,9 +24,9 @@ get_artifact_files <- function(artifact_id = NULL,
 log_artifact <- function(artifact,
                          experiment_key,
                          api_key = NULL) {
-  response <-upsert_artifact(artifact = artifact,
-                             experiment_key = experiment_key,
-                             api_key = api_key)
+  response <- upsert_artifact(artifact = artifact,
+                              experiment_key = experiment_key,
+                              api_key = api_key)
   artifact_id <- response$artifactId
   artifact_version_id <- response$artifactVersionId
 
@@ -48,14 +48,20 @@ log_artifact <- function(artifact,
     return(logged_artifact)
   }
 
+  LOG_INFO(
+    sprintf(
+      "Artifact '%s/%s:%s' uploading started",
+      logged_artifact$get_workspace(),
+      logged_artifact$get_artifact_name(),
+      as.character(logged_artifact$get_artifact_version())
+    )
+  )
+
   # log assets
   tryCatch({
     log_artifact_assets(
       artifact = artifact,
       artifact_version_id = artifact_version_id,
-      logged_artifact_workspace = logged_artifact$get_workspace(),
-      logged_artifact_name = logged_artifact$get_artifact_name(),
-      logged_artifact_version = as.character(logged_artifact$get_artifact_version()),
       experiment_key = experiment_key,
       api_key = api_key
     )
@@ -65,9 +71,19 @@ log_artifact <- function(artifact,
       experiment_key = experiment_key,
       api_key = api_key
     )
+
+    LOG_INFO(
+      sprintf(
+        "Artifact '%s/%s:%s' has been successfully uploaded",
+        logged_artifact$get_workspace(),
+        logged_artifact$get_artifact_name(),
+        as.character(logged_artifact$get_artifact_version())
+      )
+    )
   },
   error = function(err) {
     LOG_ERROR("Failed to log Artifact assets, reason: ", err)
+
     update_artifact_version_state(
       artifact_version_id = artifact_version_id,
       state = "ERROR",
@@ -80,15 +96,14 @@ log_artifact <- function(artifact,
 
 log_artifact_assets <- function(artifact,
                                 artifact_version_id,
-                                logged_artifact_workspace,
-                                logged_artifact_name,
-                                logged_artifact_version,
                                 experiment_key,
                                 api_key = NULL) {
   assets <- artifact$get_assets()
   num_assets <- length(assets)
-  total_size <-
-    Reduce(function(u, v) u + v$get_size(), assets, right = FALSE)
+  total_size <- 0
+  for (asset in assets) {
+    total_size <- total_size + asset$get_size()
+  }
 
   LOG_INFO(
     sprintf(
@@ -97,22 +112,61 @@ log_artifact_assets <- function(artifact,
       file_size_formated(total_size)
     )
   )
+  for (asset in assets) {
+    if (asset$is_remote()) {
+      upload_remote_asset(
+        experiment_key = experiment_key,
+        remote_uri = asset$get_link(),
+        overwrite = asset$has_overwrite(),
+        type = asset$get_asset_type(),
+        name = asset$get_logical_path(),
+        metadata = asset$get_metadata(),
+        artifact_version_id = artifact_version_id,
+        api_key = api_key
+      )
+    } else {
+      upload_asset(
+        experiment_key = experiment_key,
+        file = asset$get_local_path(),
+        overwrite = asset$has_overwrite(),
+        type = asset$get_asset_type(),
+        name = asset$get_logical_path(),
+        metadata = asset$get_metadata(),
+        artifact_version_id = artifact_version_id,
+        api_key = api_key
+      )
+    }
 
+    total_size <- total_size - asset$get_size()
+    num_assets <- num_assets - 1
+
+    if (num_assets > 0) {
+      LOG_INFO(
+        sprintf(
+          "Still uploading %d artifact assets, remaining size %s",
+          num_assets,
+          file_size_formated(total_size)
+        )
+      )
+    }
+  }
 }
 
 upsert_artifact <- function(artifact,
                             experiment_key,
                             api_key = NULL) {
-  endpoint <- "write/artifacts/upsert"
+  endpoint <- "/write/artifacts/upsert"
   method <- "POST"
   params <- list(
     artifactName = artifact$get_artifact_name(),
     artifactType = artifact$get_artifact_type(),
     experimentKey = experiment_key,
-    version = as.character(artifact$get_artifact_version()),
     alias = artifact$get_aliases(),
     versionTags = artifact$get_version_tags()
   )
+  if (!is.null(artifact$artifact_version)){
+    params$version = as.character(artifact$get_artifact_version())
+  }
   if (!is.null(artifact$get_metadata())) {
     params$versionMetadata <- jsonlite::toJSON(artifact$get_metadata())
   }
@@ -122,6 +176,7 @@ upsert_artifact <- function(artifact,
     params = params,
     api_key = api_key
   )
+
   current_version <- response$currentVersion
   previous_version <- response$previousVersion
   if (is.null(previous_version)) {
@@ -149,19 +204,21 @@ update_artifact_version_state <- function(artifact_version_id,
                                           state,
                                           experiment_key,
                                           api_key = NULL) {
-  endpoint <- "write/artifacts/state"
+  endpoint <- "/write/artifacts/state"
   method <- "POST"
   params <- list(
     artifactVersionId = artifact_version_id,
     experimentKey = experiment_key,
     state = state
   )
-  call_api(
+  response <- call_api(
     endpoint = endpoint,
     method = method,
     params = params,
-    api_key = api_key
+    api_key = api_key,
+    response_json = FALSE
   )
+  response
 }
 
 get_artifact <- function(workspace = NULL,
@@ -174,7 +231,7 @@ get_artifact <- function(workspace = NULL,
                          experiment_key = NULL,
                          consumer_experiment_key = NULL,
                          api_key = NULL) {
-  endpoint <- "artifacts/version"
+  endpoint <- "/artifacts/version"
   method <- "GET"
   params <- list(
     alias = alias,
@@ -193,6 +250,7 @@ get_artifact <- function(workspace = NULL,
     params = params,
     api_key = api_key
   )
+
   artifact_metadata <- result$metadata
   if (!is.null(artifact_metadata)) {
     artifact_metadata <-

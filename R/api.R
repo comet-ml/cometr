@@ -33,8 +33,6 @@ call_api <- function(endpoint, method = c("GET", "POST"), params = list(), respo
   tryCatch({
     if (endpoint == "/write/experiment/upload-asset" ||
         endpoint == "/write/experiment/git/patch") {
-      LOG_INFO("API call: ", endpoint)
-
       body_params <- list()
       if (!is.null(params[["file"]])) {
         # local assets
@@ -53,13 +51,14 @@ call_api <- function(endpoint, method = c("GET", "POST"), params = list(), respo
       }
 
       url <- httr::modify_url(url, query = params)
+      LOG_INFO("API call: ", method, " ", url, ", params: ", params, ", body_params ", body_params)
       response <- httr::POST(url, auth, agent, encode = "multipart", body = body_params, timeout)
     } else if (method == "GET") {
       url <- httr::modify_url(url, query = params)
-      LOG_INFO("API call: ", method, " ", url)
+      LOG_INFO("API call: ", method, " ", url, ", params: ", params)
       response <- httr::GET(url, auth, agent, timeout)
     } else if (method == "POST") {
-      LOG_INFO("API call: ", method, " ", url, " ", params)
+      LOG_INFO("API call: ", method, " ", url, ", params: ", params)
       response <- httr::POST(url, auth, agent, encode = "json", body = params, timeout)
     }
   }, error = function(err) {
@@ -90,9 +89,8 @@ check_response <- function(res, params = NULL) {
         if (!is.null(res[["msg"]])) {
           stop(res[["msg"]])
         }
-      } else {
-        stop("Comet API response status was not OK (", code, ")")
       }
+      stop("Comet API response status was not OK (", code, ")")
     }
   }, error = function(err) {
     comet_stop("Error with Comet API response status: ", err$message)
