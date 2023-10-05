@@ -166,15 +166,13 @@ upload_remote_asset <- function(experiment_key, remote_uri, step = NULL, overwri
     artifactVersionId = artifact_version_id,
     isRemote = TRUE
   )
+
   .upload_asset(experiment_key = experiment_key, params = params, api_key = api_key)
 }
 
 .upload_asset <- function(experiment_key, params, api_key = NULL) {
   endpoint <- "/write/experiment/upload-asset"
   method <- "POST"
-  if (is.null(params$source)) {
-    params$source <- "cometr"
-  }
   params$experimentKey <- experiment_key
   call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
 }

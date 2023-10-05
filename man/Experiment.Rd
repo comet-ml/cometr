@@ -55,6 +55,7 @@ exp$stop()
 \item \href{#method-Experiment-log_html}{\code{Experiment$log_html()}}
 \item \href{#method-Experiment-get_html}{\code{Experiment$get_html()}}
 \item \href{#method-Experiment-upload_asset}{\code{Experiment$upload_asset()}}
+\item \href{#method-Experiment-log_remote_asset}{\code{Experiment$log_remote_asset()}}
 \item \href{#method-Experiment-get_asset_list}{\code{Experiment$get_asset_list()}}
 \item \href{#method-Experiment-get_asset}{\code{Experiment$get_asset()}}
 \item \href{#method-Experiment-create_symlink}{\code{Experiment$create_symlink()}}
@@ -404,6 +405,45 @@ match the file that you upload, but you can use this parameter to use a
 different name.}
 
 \item{\code{metadata}}{Metadata to upload along with the file.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Experiment-log_remote_asset"></a>}}
+\if{latex}{\out{\hypertarget{method-Experiment-log_remote_asset}{}}}
+\subsection{Method \code{log_remote_asset()}}{
+Logs a Remote Asset identified by an URI. A Remote Asset is an asset but its content is not
+uploaded and stored on Comet. Rather a link for its location is stored, so you can identify
+and distinguish between two experiment using different version of a dataset stored somewhere
+else.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$log_remote_asset(
+  uri,
+  remote_file_name = NULL,
+  step = NULL,
+  overwrite = FALSE,
+  type = "asset",
+  metadata = NULL
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{uri}}{(Required) The remote asset location, there is no imposed format, and it could be a
+private link.}
+
+\item{\code{remote_file_name}}{The "name" of the remote asset, could be a dataset
+name, a model file name.}
+
+\item{\code{step}}{Step number.}
+
+\item{\code{overwrite}}{If \code{TRUE}, overwrite any logged asset with the same name.}
+
+\item{\code{type}}{The type of asset, default: "asset".}
+
+\item{\code{metadata}}{Metadata to log along with the asset}
 }
 \if{html}{\out{</div>}}
 }

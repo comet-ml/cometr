@@ -23,7 +23,9 @@ if (hasInternet()) {
     other <- "some value"
     tags <- c("t1", "t2")
     html <- "<div style='color: red'>test</div>"
-    file <- "sample-script.R"
+    file <- test_path("test-data", "sample-script.R")
+    remote_uri <- "https://comet.com/dataset.dat"
+    metadata <- list(foo="bar")
 
     test_exp$
       log_metric("metric1", metric)$
@@ -32,7 +34,8 @@ if (hasInternet()) {
       log_other("other1", other)$
       add_tags(tags)$
       log_html(html, override = FALSE)$
-      upload_asset(file)
+      upload_asset(file, metadata = metadata)$
+      log_remote_asset(uri = remote_uri, metadata = metadata)
 
     Sys.sleep(5)
 
@@ -61,9 +64,20 @@ if (hasInternet()) {
     expect_equal(html_r, html)
 
     assets <- test_exp$get_asset_list()$assets
-    expect_equal(assets[[1]]$fileName, file)
-    asset_r <- test_exp$get_asset(assetId = assets[[1]]$assetId)
-    expect_equal(asset_r, readLines(file, warn = FALSE))
+    expect_length(assets, 2)
+
+    for (asset in assets) {
+      expect_equal(asset$metadata, as.character(jsonlite::toJSON(metadata)))
+      if (asset$remote) {
+        expect_equal(asset$link, remote_uri)
+        expect_equal(asset$fileName, basename(remote_uri))
+        expect_equal(asset$type, "asset")
+      } else {
+        expect_equal(asset$fileName, basename(file))
+        asset_r <- test_exp$get_asset(assetId = asset$assetId)
+        expect_equal(asset_r, readLines(file, warn = FALSE))
+      }
+    }
   })
 
   test_that("set_start_end_time works", {
@@ -81,7 +95,7 @@ if (hasInternet()) {
   })
 
   test_that("automatic getter/setter functions on Experiment work", {
-    file <- "sample-script.R"
+    file <- test_path("test-data", "sample-script.R")
 
     test_exp$
       log_git_metadata(branch = "dev", user = "daattali")$
