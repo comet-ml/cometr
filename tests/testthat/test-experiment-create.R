@@ -80,7 +80,7 @@ with_mock(
 
     test_that("create_experiment log_code works", {
       with_mock(
-        `cometr:::get_system_script` = function(...) "sample-script.R",
+        `cometr:::get_system_script` = function(...) test_path("test-data", "sample-script.R"),
         `cometr:::log_code` = function(...) NULL, {
           on.exit(cleanup())
 
