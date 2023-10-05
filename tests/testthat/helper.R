@@ -61,7 +61,7 @@ mock_experiment_full <- function(experiment_key = generate_random_id(), keep_act
 }
 
 get_subp <- function(sub_pid) {
-  subset(ps::ps(), pid == sub_pid, ppid = Sys.getpid())
+  subset(ps::ps(), pid == sub_pid, ppid == Sys.getpid())
 }
 
 hasInternet <- function() !is.null(curl::nslookup("r-project.org", error = FALSE))
