@@ -28,12 +28,19 @@ exp$stop()
 \item \href{#method-LoggedArtifact-get_artifact_name}{\code{LoggedArtifact$get_artifact_name()}}
 \item \href{#method-LoggedArtifact-get_artifact_type}{\code{LoggedArtifact$get_artifact_type()}}
 \item \href{#method-LoggedArtifact-get_artifact_version}{\code{LoggedArtifact$get_artifact_version()}}
+\item \href{#method-LoggedArtifact-get_artifact_id}{\code{LoggedArtifact$get_artifact_id()}}
+\item \href{#method-LoggedArtifact-get_artifact_tags}{\code{LoggedArtifact$get_artifact_tags()}}
 \item \href{#method-LoggedArtifact-get_aliases}{\code{LoggedArtifact$get_aliases()}}
 \item \href{#method-LoggedArtifact-get_metadata}{\code{LoggedArtifact$get_metadata()}}
 \item \href{#method-LoggedArtifact-get_version_tags}{\code{LoggedArtifact$get_version_tags()}}
 \item \href{#method-LoggedArtifact-get_workspace}{\code{LoggedArtifact$get_workspace()}}
-\item \href{#method-LoggedArtifact-assets}{\code{LoggedArtifact$assets()}}
-\item \href{#method-LoggedArtifact-remote_assets}{\code{LoggedArtifact$remote_assets()}}
+\item \href{#method-LoggedArtifact-get_artifact_version_id}{\code{LoggedArtifact$get_artifact_version_id()}}
+\item \href{#method-LoggedArtifact-get_source_experiment_key}{\code{LoggedArtifact$get_source_experiment_key()}}
+\item \href{#method-LoggedArtifact-get_experiment_key}{\code{LoggedArtifact$get_experiment_key()}}
+\item \href{#method-LoggedArtifact-size}{\code{LoggedArtifact$size()}}
+\item \href{#method-LoggedArtifact-get_assets}{\code{LoggedArtifact$get_assets()}}
+\item \href{#method-LoggedArtifact-get_remote_assets}{\code{LoggedArtifact$get_remote_assets()}}
+\item \href{#method-LoggedArtifact-update_artifact_tags}{\code{LoggedArtifact$update_artifact_tags()}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -125,6 +132,26 @@ Get the version of the artifact.
 
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-LoggedArtifact-get_artifact_id"></a>}}
+\if{latex}{\out{\hypertarget{method-LoggedArtifact-get_artifact_id}{}}}
+\subsection{Method \code{get_artifact_id()}}{
+Get the ID of the artifact.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{LoggedArtifact$get_artifact_id()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-LoggedArtifact-get_artifact_tags"></a>}}
+\if{latex}{\out{\hypertarget{method-LoggedArtifact-get_artifact_tags}{}}}
+\subsection{Method \code{get_artifact_tags()}}{
+Get the tags of the artifact.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{LoggedArtifact$get_artifact_tags()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-LoggedArtifact-get_aliases"></a>}}
 \if{latex}{\out{\hypertarget{method-LoggedArtifact-get_aliases}{}}}
 \subsection{Method \code{get_aliases()}}{
@@ -165,25 +192,90 @@ Get the workspace of the Artifact.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-LoggedArtifact-assets"></a>}}
-\if{latex}{\out{\hypertarget{method-LoggedArtifact-assets}{}}}
-\subsection{Method \code{assets()}}{
-Get the list of all \code{\link{LoggedArtifactAsset}} that have been logged with
-this \code{LoggedArtifact}.
+\if{html}{\out{<a id="method-LoggedArtifact-get_artifact_version_id"></a>}}
+\if{latex}{\out{\hypertarget{method-LoggedArtifact-get_artifact_version_id}{}}}
+\subsection{Method \code{get_artifact_version_id()}}{
+The ID of current Artifact Version
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{LoggedArtifact$assets()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{LoggedArtifact$get_artifact_version_id()}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-LoggedArtifact-remote_assets"></a>}}
-\if{latex}{\out{\hypertarget{method-LoggedArtifact-remote_assets}{}}}
-\subsection{Method \code{remote_assets()}}{
-Get the list of remote \code{\link{LoggedArtifactAsset}} that have been logged
-with this \code{LoggedArtifact}.
+\if{html}{\out{<a id="method-LoggedArtifact-get_source_experiment_key"></a>}}
+\if{latex}{\out{\hypertarget{method-LoggedArtifact-get_source_experiment_key}{}}}
+\subsection{Method \code{get_source_experiment_key()}}{
+The ID of the experiment that created this artifact version.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{LoggedArtifact$remote_assets()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{LoggedArtifact$get_source_experiment_key()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-LoggedArtifact-get_experiment_key"></a>}}
+\if{latex}{\out{\hypertarget{method-LoggedArtifact-get_experiment_key}{}}}
+\subsection{Method \code{get_experiment_key()}}{
+The ID of the associated experiment.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{LoggedArtifact$get_experiment_key()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-LoggedArtifact-size"></a>}}
+\if{latex}{\out{\hypertarget{method-LoggedArtifact-size}{}}}
+\subsection{Method \code{size()}}{
+Get/set arifact size.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{LoggedArtifact$size(size = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{size}}{The new size for the Artifact or \code{NULL} if retrieving existing
+size of the Artifact.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-LoggedArtifact-get_assets"></a>}}
+\if{latex}{\out{\hypertarget{method-LoggedArtifact-get_assets}{}}}
+\subsection{Method \code{get_assets()}}{
+Get the list of all \code{\link{LoggedArtifactAsset}} that have been logged with
+this \code{LoggedArtifact} from Comet server.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{LoggedArtifact$get_assets()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-LoggedArtifact-get_remote_assets"></a>}}
+\if{latex}{\out{\hypertarget{method-LoggedArtifact-get_remote_assets}{}}}
+\subsection{Method \code{get_remote_assets()}}{
+Get the list of remote \code{\link{LoggedArtifactAsset}} that have been logged
+with this \code{LoggedArtifact} from Comet server.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{LoggedArtifact$get_remote_assets()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-LoggedArtifact-update_artifact_tags"></a>}}
+\if{latex}{\out{\hypertarget{method-LoggedArtifact-update_artifact_tags}{}}}
+\subsection{Method \code{update_artifact_tags()}}{
+Update the logged artifact tags
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{LoggedArtifact$update_artifact_tags(artifact_tags)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{artifact_tags}}{The new tags for the artifact}
+}
+\if{html}{\out{</div>}}
+}
 }
 }

@@ -6,6 +6,9 @@
 \value{
 \code{\link{LoggedArtifact}} with all relevant information about logged
 artifact.
+
+\code{\link{LoggedArtifact}} with all relevant information about logged
+artifact.
 }
 \description{
 A comet experiment object can be used to modify or get information about an active
@@ -28,12 +31,32 @@ exp$get_metrics_summary()
 exp$stop()
 }
 
+
+## ------------------------------------------------
+## Method `Experiment$get_artifact`
+## ------------------------------------------------
+
+\dontrun{
+library(cometr)
+# Assuming you have COMET_API_KEY, COMET_WORKSPACE, COMET_PROJECT_NAME variables define
+exp <- create_experiment()
+
+# Get a Comet Artifact
+logged_artifact <- exp$get_artifact("workspace/artifact-name:version_or_alias")
+
+# Which is equivalent to
+logged_artifact = exp$get_artifact(artifact_name="artifact-name",
+                                   workspace="workspace",
+                                   version_or_alias="version_or_alias")
+}
 }
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-Experiment-new}{\code{Experiment$new()}}
 \item \href{#method-Experiment-get_key}{\code{Experiment$get_key()}}
+\item \href{#method-Experiment-get_workspace_name}{\code{Experiment$get_workspace_name()}}
+\item \href{#method-Experiment-get_project_name}{\code{Experiment$get_project_name()}}
 \item \href{#method-Experiment-get_dynamic}{\code{Experiment$get_dynamic()}}
 \item \href{#method-Experiment-get_url}{\code{Experiment$get_url()}}
 \item \href{#method-Experiment-get_metadata}{\code{Experiment$get_metadata()}}
@@ -68,6 +91,7 @@ exp$stop()
 \item \href{#method-Experiment-log_system_details}{\code{Experiment$log_system_details()}}
 \item \href{#method-Experiment-get_system_details}{\code{Experiment$get_system_details()}}
 \item \href{#method-Experiment-log_artifact}{\code{Experiment$log_artifact()}}
+\item \href{#method-Experiment-get_artifact}{\code{Experiment$get_artifact()}}
 \item \href{#method-Experiment-set_start_end_time}{\code{Experiment$set_start_end_time()}}
 \item \href{#method-Experiment-print}{\code{Experiment$print()}}
 }
@@ -85,7 +109,9 @@ Do not call this function directly. Use \code{create_experiment()} or \code{get_
   keep_active = FALSE,
   log_output = FALSE,
   log_error = FALSE,
-  dynamic = TRUE
+  dynamic = TRUE,
+  workspace_name = NULL,
+  project_name = NULL
 )}\if{html}{\out{</div>}}
 }
 
@@ -97,6 +123,26 @@ Do not call this function directly. Use \code{create_experiment()} or \code{get_
 Get the experiment key of an experiment.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Experiment$get_key()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Experiment-get_workspace_name"></a>}}
+\if{latex}{\out{\hypertarget{method-Experiment-get_workspace_name}{}}}
+\subsection{Method \code{get_workspace_name()}}{
+Get the workspace name of an experiment.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_workspace_name()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Experiment-get_project_name"></a>}}
+\if{latex}{\out{\hypertarget{method-Experiment-get_project_name}{}}}
+\subsection{Method \code{get_project_name()}}{
+Get the project name of an experiment.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_project_name()}\if{html}{\out{</div>}}
 }
 
 }
@@ -682,6 +728,56 @@ upload all local and remote assets attached to the \code{\link{Artifact}} object
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Experiment-get_artifact"></a>}}
+\if{latex}{\out{\hypertarget{method-Experiment-get_artifact}{}}}
+\subsection{Method \code{get_artifact()}}{
+Returns a logged artifact object that can be used to access the artifact
+version assets and download them locally.
+
+If no version or alias is provided, the latest version for that artifact is returned.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Experiment$get_artifact(
+  artifact_name,
+  workspace = NULL,
+  version_or_alias = NULL
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{artifact_name}}{(Required) Retrieve an artifact with that name. This could either be a fully
+qualified artifact name like \code{workspace/artifact-name:versionOrAlias} or just the name
+of the artifact like \code{artifact-name}.}
+
+\item{\code{workspace}}{Retrieve an artifact belonging to that workspace.}
+
+\item{\code{version_or_alias}}{Retrieve the artifact by the given alias or version.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+library(cometr)
+# Assuming you have COMET_API_KEY, COMET_WORKSPACE, COMET_PROJECT_NAME variables define
+exp <- create_experiment()
+
+# Get a Comet Artifact
+logged_artifact <- exp$get_artifact("workspace/artifact-name:version_or_alias")
+
+# Which is equivalent to
+logged_artifact = exp$get_artifact(artifact_name="artifact-name",
+                                   workspace="workspace",
+                                   version_or_alias="version_or_alias")
+}
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Experiment-set_start_end_time"></a>}}
