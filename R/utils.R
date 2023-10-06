@@ -84,3 +84,33 @@ remote_asset_name_from_uri <- function(asset_uri) {
   }
   logical_path
 }
+
+parse_artifact_name <- function(artifact_name) {
+  components <- strsplit(artifact_name, "/", fixed = TRUE)
+  if (length(components[[1]]) == 1) {
+    workspace <- NULL
+    artifact_name_version <- components[[1]][[1]]
+  } else {
+    workspace <- components[[1]][[1]]
+    artifact_name_version <- components[[1]][[2]]
+  }
+
+  name_version_components <- strsplit(artifact_name_version, ":", fixed = TRUE)
+  if (length(name_version_components[[1]]) == 1) {
+    artifact_name <- name_version_components[[1]][[1]]
+    version_or_alias <- NULL
+  } else {
+    artifact_name <- name_version_components[[1]][[1]]
+    version_or_alias <- name_version_components[[1]][[2]]
+  }
+
+  list(workspace=workspace, artifact_name=artifact_name, version_or_alias=version_or_alias)
+}
+
+encode_metadata <- function(metadata) {
+  jsonlite::toJSON(metadata, auto_unbox = TRUE)
+}
+
+decode_metadata <- function(metadata) {
+  jsonlite::fromJSON(metadata, simplifyVector = FALSE)
+}

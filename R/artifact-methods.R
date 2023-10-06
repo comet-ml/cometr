@@ -173,7 +173,7 @@ upsert_artifact <- function(artifact,
     params$version = as.character(artifact$get_artifact_version())
   }
   if (!is.null(artifact$get_metadata())) {
-    params$versionMetadata <- jsonlite::toJSON(artifact$get_metadata(), auto_unbox = TRUE)
+    params$versionMetadata <- encode_metadata(artifact$get_metadata())
   }
 
   response <- call_api(
@@ -227,6 +227,32 @@ update_artifact_version_state <- function(artifact_version_id,
   response
 }
 
+update_arifact <- function(artifact_id,
+                           artifact_type = NULL,
+                           metadata = NULL,
+                           version = NULL,
+                           tags = NULL,
+                           api_key = NULL) {
+  if (!is.null(metadata)) {
+    metadata <- encode_metadata(metadata)
+  }
+  endpoint <- "/write/artifacts/details"
+  method <- "POST"
+  params <- list(
+    artifactId = artifact_id,
+    artifactType = artifact_type,
+    versionMetadata = metadata,
+    version = version,
+    tags = tags
+  )
+  call_api(
+    endpoint = endpoint,
+    method = method,
+    params = params,
+    api_key = api_key
+  )
+}
+
 get_artifact <- function(workspace = NULL,
                          name = NULL,
                          artifact_id = NULL,
@@ -259,8 +285,7 @@ get_artifact <- function(workspace = NULL,
 
   artifact_metadata <- result[["metadata"]]
   if (!is.null(artifact_metadata)) {
-    artifact_metadata <-
-      jsonlite::fromJSON(artifact_metadata, simplifyVector = FALSE)
+    artifact_metadata <- decode_metadata(artifact_metadata)
   }
   artifact <- result[["artifact"]]
   LoggedArtifact$new(
@@ -278,4 +303,53 @@ get_artifact <- function(workspace = NULL,
     metadata = artifact_metadata,
     source_experiment_key = result[["experimentKey"]]
   )
+}
+
+get_artifact_by_name <- function(experiment_key,
+                                 artifact_name,
+                                 workspace = NULL,
+                                 version_or_alias = NULL,
+                                 api_key = NULL) {
+  parsed <- parse_artifact_name(artifact_name = artifact_name)
+
+  if (is.null(parsed$workspace) && is.null(workspace)) {
+    # In that case, the backend will use the experiment id to get the workspace
+    param_workspace <- NULL
+  } else if (!is.null(parsed$workspace) && !is.null(workspace)) {
+    LOG_WARNING(
+      sprintf(
+        "Workspace was given both explicitly '%s' and as part of the fully-qualified artifact name '%s', using the explicit value.",
+        workspace,
+        artifact_name
+      )
+    )
+    param_workspace <- workspace
+  } else if (is.null(workspace)) {
+    param_workspace <- parsed$workspace
+  } else {
+    param_workspace <- workspace
+  }
+
+  if (!is.null(parsed$version_or_alias) &&
+      !is.null(version_or_alias)) {
+    LOG_WARNING(
+      sprintf(
+        "Version_or_alias was given both explicitly '%s' and as part of the fully-qualified artifact name '%s', using the explicit value.",
+        version_or_alias,
+        artifact_name
+      )
+    )
+    param_version_or_alias <- version_or_alias
+  } else if (!is.null(parsed$version_or_alias)) {
+    param_version_or_alias <- parsed$version_or_alias
+  } else {
+    param_version_or_alias <- version_or_alias
+  }
+
+  get_artifact(workspace = param_workspace,
+               name = parsed$artifact_name,
+               version_or_alias = param_version_or_alias,
+               experiment_key = experiment_key,
+               consumer_experiment_key = experiment_key,
+               api_key = api_key)
 }

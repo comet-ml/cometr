@@ -1,5 +1,5 @@
 test_that("LoggedArtifact return correct list of mocked assets when calling assets() and remote_assets()", {
-  metadata_json <- jsonlite::toJSON(list(foo="bar"), auto_unbox = TRUE)
+  metadata_json <- encode_metadata(list(foo="bar"))
   files = list(
     list(
       remote = TRUE,
@@ -60,7 +60,7 @@ test_that("LoggedArtifact return correct list of mocked assets when calling asse
                           is.null(actual$get_metadata())) {
       TRUE
     } else {
-      meta_json <- jsonlite::toJSON(actual$get_metadata(), auto_unbox = TRUE)
+      meta_json <- encode_metadata(actual$get_metadata())
       all.equal(expected$metadata, meta_json)
     }
     all(

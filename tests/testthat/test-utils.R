@@ -63,3 +63,28 @@ test_that("remote_asset_name_from_uri works", {
   res <- sapply(uris, remote_asset_name_from_uri)
   expect_identical(res, expected)
 })
+
+test_that("parse_artifact_name works", {
+  names <- list(
+    "workspace/artifact-name:versionOrAlias",
+    "workspace/artifact-name",
+    "artifact-name:versionOrAlias",
+    "artifact-name"
+  )
+  expected <- list(
+      "workspace", "artifact-name", "versionOrAlias",
+      "workspace", "artifact-name", NULL,
+      NULL, "artifact-name", "versionOrAlias",
+      NULL, "artifact-name", NULL
+  )
+  res <- sapply(names, parse_artifact_name)
+  expect_identical(unlist(res), unlist(expected))
+})
+
+test_that("encode_metadata and decode_metadata works", {
+  metadata <- list(foo="bar")
+
+  encoded <- encode_metadata(metadata)
+  decoded <- decode_metadata(encoded)
+  expect_equal(decoded, metadata)
+})

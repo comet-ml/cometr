@@ -724,10 +724,48 @@ Experiment <- R6::R6Class(
     #' @returns [`LoggedArtifact`] with all relevant information about logged
     #' artifact.
     log_artifact = function(artifact) {
+      private$check_active()
       if (!inherits(artifact, "Artifact")) {
         comet_stop("Object is not an Artifact and cannot be logged")
       }
       log_artifact(artifact = artifact, experiment_key = private$experiment_key, api_key = private$api_key)
+    },
+
+    #' @description
+    #' Returns a logged artifact object that can be used to access the artifact
+    #' version assets and download them locally.
+    #'
+    #' If no version or alias is provided, the latest version for that artifact is returned.
+    #'
+    #' @param artifact_name (Required) Retrieve an artifact with that name. This could either be a fully
+    #' qualified artifact name like `workspace/artifact-name:versionOrAlias` or just the name
+    #' of the artifact like `artifact-name`.
+    #' @param workspace Retrieve an artifact belonging to that workspace.
+    #' @param version_or_alias Retrieve the artifact by the given alias or version.
+    #' @returns [`LoggedArtifact`] with all relevant information about logged
+    #' artifact.
+    #'
+    #' @examples
+    #' \dontrun{
+    #' library(cometr)
+    #' # Assuming you have COMET_API_KEY, COMET_WORKSPACE, COMET_PROJECT_NAME variables define
+    #' exp <- create_experiment()
+    #'
+    #' # Get a Comet Artifact
+    #' logged_artifact <- exp$get_artifact("workspace/artifact-name:version_or_alias")
+    #'
+    #' # Which is equivalent to
+    #' logged_artifact = exp$get_artifact(artifact_name="artifact-name",
+    #'                                    workspace="workspace",
+    #'                                    version_or_alias="version_or_alias")
+    #' }
+    get_artifact = function(artifact_name, workspace = NULL, version_or_alias = NULL) {
+      private$check_active()
+      get_artifact_by_name(experiment_key = private$experiment_key,
+                           artifact_name = artifact_name,
+                           workspace = workspace,
+                           version_or_alias = version_or_alias,
+                           api_key = private$api_key)
     },
 
     #' @description

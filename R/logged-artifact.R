@@ -102,6 +102,12 @@ LoggedArtifact <- R6::R6Class(
     },
 
     #' @description
+    #' Get the tags of the artifact.
+    get_artifact_tags = function() {
+      private$artifact_tags
+    },
+
+    #' @description
     #' Get the version of the artifact.
     get_aliases = function() {
       private$aliases
@@ -145,6 +151,8 @@ LoggedArtifact <- R6::R6Class(
 
     #' @description
     #'Get/set arifact size.
+    #'@param size The new size for the Artifact or `NULL` if retrieving existing
+    #'size of the Artifact.
     size = function(size = NULL) {
       if (!is.null(size)) {
         private$.size <- size
@@ -178,6 +186,17 @@ LoggedArtifact <- R6::R6Class(
       } else {
         list()
       }
+    },
+
+    #' @description
+    #' Update the logged artifact tags
+    #' @param artifact_tags The new tags for the artifact
+    update_artifact_tags = function(artifact_tags) {
+      update_arifact(
+        artifact_id = private$artifact_id,
+        tags = artifact_tags
+      )
+      private$artifact_tags <- artifact_tags
     }
   ),
 
@@ -199,8 +218,7 @@ LoggedArtifact <- R6::R6Class(
     to_logged_asset = function(asset) {
       asset_metadata <- asset[["metadata"]]
       if (!is.null(asset_metadata)) {
-        asset_metadata <-
-          jsonlite::fromJSON(asset_metadata, simplifyVector = FALSE)
+        asset_metadata <- decode_metadata(asset_metadata)
       }
 
       LoggedArtifactAsset$new(
