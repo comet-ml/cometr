@@ -161,11 +161,15 @@ base_experiment <- function(
       workspace_name = workspace_name,
       api_key = api_key
     )
+
     experiment_key <- resp[["experimentKey"]]
     experiment_link <- resp[["link"]]
     if (is.null(experiment_key) || is.null(experiment_link)) {
       comet_stop("Create experiment in Comet failed.")
     }
+
+    workspace_name <- resp[["workspaceName"]]
+    project_name <- resp[["projectName"]]
     LOG_INFO("Experiment created: ", experiment_link, echo = TRUE)
   } else {
     dynamic <- FALSE
@@ -226,7 +230,9 @@ base_experiment <- function(
     keep_active = keep_active,
     log_output = log_output,
     log_error = log_error,
-    dynamic = dynamic
+    dynamic = dynamic,
+    workspace_name = workspace_name,
+    project_name = project_name
   )
 
   invisible(experiment)
@@ -266,7 +272,7 @@ Experiment <- R6::R6Class(
     #' Do not call this function directly. Use `create_experiment()` or `get_experiment()` instead.
     initialize = function(experiment_key, experiment_url = NULL, api_key = NULL,
                           keep_active = FALSE, log_output = FALSE, log_error = FALSE,
-                          dynamic = TRUE) {
+                          dynamic = TRUE, workspace_name = NULL, project_name = NULL) {
       if (!isTRUE(.cometrenv$cancreate)) {
         comet_stop("Do not call this function directly. Use `create_experiment()` instead.")
       }
@@ -285,6 +291,8 @@ Experiment <- R6::R6Class(
       private$api_key <- api_key
       private$log_error <- log_error
       private$log_output <- log_output
+      private$workspace_name <- workspace_name
+      private$project_name <- project_name
 
       if (keep_active) {
         private$keepalive_process <- create_keepalive_process(exp_key = experiment_key, api_key = api_key)
@@ -323,6 +331,18 @@ Experiment <- R6::R6Class(
     #' Get the experiment key of an experiment.
     get_key = function() {
       private$experiment_key
+    },
+
+    #' @description
+    #' Get the workspace name of an experiment.
+    get_workspace_name = function() {
+      private$workspace_name
+    },
+
+    #' @description
+    #' Get the project name of an experiment.
+    get_project_name = function() {
+      private$project_name
     },
 
     #' @description
@@ -738,6 +758,9 @@ Experiment <- R6::R6Class(
     experiment_url = NULL,
     dynamic = NULL,
     keepalive_process = NULL,
+
+    workspace_name = NULL,
+    project_name = NULL,
 
     log_output = NULL,
     log_error = NULL,

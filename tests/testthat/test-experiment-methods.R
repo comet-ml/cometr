@@ -26,6 +26,7 @@ if (hasInternet()) {
     file <- test_path("test-data", "sample-script.R")
     remote_uri <- "https://comet.com/dataset.dat"
     metadata <- list(foo="bar")
+    workspace_name <- get_config_workspace(must_work = TRUE)
 
     test_exp$
       log_metric("metric1", metric)$
@@ -38,6 +39,9 @@ if (hasInternet()) {
       log_remote_asset(uri = remote_uri, metadata = metadata)
 
     Sys.sleep(5)
+
+    expect_equal(test_exp$get_project_name(), test_proj)
+    expect_equal(test_exp$get_workspace_name(), workspace_name)
 
     metric_r <- test_exp$get_metric("metric1")$metrics
     expect_equal(as.numeric(metric_r[[1]]$metricValue), metric)
@@ -67,7 +71,7 @@ if (hasInternet()) {
     expect_length(assets, 2)
 
     for (asset in assets) {
-      expect_equal(asset$metadata, as.character(jsonlite::toJSON(metadata)))
+      expect_equal(asset$metadata, as.character(jsonlite::toJSON(metadata, auto_unbox = TRUE)))
       if (asset$remote) {
         expect_equal(asset$link, remote_uri)
         expect_equal(asset$fileName, basename(remote_uri))
