@@ -27,8 +27,8 @@ log_artifact <- function(artifact,
   response <- upsert_artifact(artifact = artifact,
                               experiment_key = experiment_key,
                               api_key = api_key)
-  artifact_id <- response$artifactId
-  artifact_version_id <- response$artifactVersionId
+  artifact_id <- response[["artifactId"]]
+  artifact_version_id <- response[["artifactVersionId"]]
 
   logged_artifact <- get_artifact(
     artifact_id = artifact_id,
@@ -38,7 +38,7 @@ log_artifact <- function(artifact,
   )
 
   if (length(artifact$get_assets()) == 0) {
-    LOG_WARNING("Artifact created without adding any assets, was this the intent?")
+    LOG_WARNING("Artifact created without adding any assets, was this the intent?", echo = TRUE)
     update_artifact_version_state(
       artifact_version_id = artifact_version_id,
       state = "CLOSED",
@@ -54,12 +54,12 @@ log_artifact <- function(artifact,
       logged_artifact$get_workspace(),
       logged_artifact$get_artifact_name(),
       as.character(logged_artifact$get_artifact_version())
-    )
+    ), echo = TRUE
   )
 
   # log assets
   tryCatch({
-    log_artifact_assets(
+    total_size <- log_artifact_assets(
       artifact = artifact,
       artifact_version_id = artifact_version_id,
       experiment_key = experiment_key,
@@ -71,6 +71,7 @@ log_artifact <- function(artifact,
       experiment_key = experiment_key,
       api_key = api_key
     )
+    logged_artifact$size(total_size)
 
     LOG_INFO(
       sprintf(
@@ -78,11 +79,11 @@ log_artifact <- function(artifact,
         logged_artifact$get_workspace(),
         logged_artifact$get_artifact_name(),
         as.character(logged_artifact$get_artifact_version())
-      )
+      ), echo = TRUE
     )
   },
   error = function(err) {
-    LOG_ERROR("Failed to log Artifact assets, reason: ", err)
+    LOG_ERROR("Failed to log Artifact assets, reason: ", err, echo = TRUE)
 
     update_artifact_version_state(
       artifact_version_id = artifact_version_id,
@@ -105,12 +106,14 @@ log_artifact_assets <- function(artifact,
     total_size <- total_size + asset$get_size()
   }
 
+  remaining_bytes <- total_size
+
   LOG_INFO(
     sprintf(
       "Scheduling the upload of %d assets for a size of %s, this can take some time.",
       num_assets,
-      file_size_formated(total_size)
-    )
+      file_size_formated(remaining_bytes)
+    ), echo = TRUE
   )
   for (asset in assets) {
     if (asset$is_remote()) {
@@ -137,7 +140,7 @@ log_artifact_assets <- function(artifact,
       )
     }
 
-    total_size <- total_size - asset$get_size()
+    remaining_bytes <- remaining_bytes - asset$get_size()
     num_assets <- num_assets - 1
 
     if (num_assets > 0) {
@@ -145,11 +148,12 @@ log_artifact_assets <- function(artifact,
         sprintf(
           "Still uploading %d artifact assets, remaining size %s",
           num_assets,
-          file_size_formated(total_size)
-        )
+          file_size_formated(remaining_bytes)
+        ), echo = TRUE
       )
     }
   }
+  total_size
 }
 
 upsert_artifact <- function(artifact,
@@ -157,6 +161,7 @@ upsert_artifact <- function(artifact,
                             api_key = NULL) {
   endpoint <- "/write/artifacts/upsert"
   method <- "POST"
+
   params <- list(
     artifactName = artifact$get_artifact_name(),
     artifactType = artifact$get_artifact_type(),
@@ -164,12 +169,13 @@ upsert_artifact <- function(artifact,
     alias = artifact$get_aliases(),
     versionTags = artifact$get_version_tags()
   )
-  if (!is.null(artifact$artifact_version)){
+  if (!is.null(artifact$get_artifact_version())){
     params$version = as.character(artifact$get_artifact_version())
   }
   if (!is.null(artifact$get_metadata())) {
-    params$versionMetadata <- jsonlite::toJSON(artifact$get_metadata())
+    params$versionMetadata <- jsonlite::toJSON(artifact$get_metadata(), auto_unbox = TRUE)
   }
+
   response <- call_api(
     endpoint = endpoint,
     method = method,
@@ -177,8 +183,8 @@ upsert_artifact <- function(artifact,
     api_key = api_key
   )
 
-  current_version <- response$currentVersion
-  previous_version <- response$previousVersion
+  current_version <- response[["currentVersion"]]
+  previous_version <- response[["previousVersion"]]
   if (is.null(previous_version)) {
     LOG_INFO(
       sprintf(
@@ -251,24 +257,25 @@ get_artifact <- function(workspace = NULL,
     api_key = api_key
   )
 
-  artifact_metadata <- result$metadata
+  artifact_metadata <- result[["metadata"]]
   if (!is.null(artifact_metadata)) {
     artifact_metadata <-
       jsonlite::fromJSON(artifact_metadata, simplifyVector = FALSE)
   }
+  artifact <- result[["artifact"]]
   LoggedArtifact$new(
-    artifact_name = result$artifact$artifactName,
-    artifact_type = result$artifact$artifactType,
-    artifact_id = result$artifact$artifactId,
-    artifact_version_id = result$artifactVersionId,
-    workspace = result$artifact$workspaceName,
+    artifact_name = artifact[["artifactName"]],
+    artifact_type = artifact[["artifactType"]],
+    artifact_id = artifact[["artifactId"]],
+    artifact_version_id = result[["artifactVersionId"]],
+    workspace = artifact[["workspaceName"]],
     experiment_key = experiment_key,
-    artifact_version = result$artifactVersion,
-    aliases = result$alias,
-    artifact_tags = result$artifact$tags,
-    version_tags = result$tags,
-    size = result$sizeInBytes,
+    artifact_version = result[["artifactVersion"]],
+    aliases = result[["alias"]],
+    artifact_tags = artifact[["tags"]],
+    version_tags = result[["tags"]],
+    size = result[["sizeInBytes"]],
     metadata = artifact_metadata,
-    source_experiment_key = result$experimentKey
+    source_experiment_key = result[["experimentKey"]]
   )
 }

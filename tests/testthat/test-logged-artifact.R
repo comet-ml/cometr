@@ -1,11 +1,12 @@
 test_that("LoggedArtifact return correct list of mocked assets when calling assets() and remote_assets()", {
+  metadata_json <- jsonlite::toJSON(list(foo="bar"), auto_unbox = TRUE)
   files = list(
     list(
       remote = TRUE,
       fileName = "file1",
       fileSize = 0,
       link = "s3://test-bucket/dataset",
-      metadata = list(foo = "bar"),
+      metadata = metadata_json,
       type = "asset",
       assetId = generate_random_id()
     ),
@@ -14,7 +15,7 @@ test_that("LoggedArtifact return correct list of mocked assets when calling asse
       fileName = "dataset.dat",
       fileSize = 1110,
       link = NULL,
-      metadata = list(foo = "bar"),
+      metadata = metadata_json,
       type = "asset",
       assetId = generate_random_id()
     ),
@@ -51,7 +52,7 @@ test_that("LoggedArtifact return correct list of mocked assets when calling asse
     metadata = list(foo = "bar")
   )
 
-  assets = artifact$assets()
+  assets = artifact$get_assets()
   expect_length(assets, 3)
 
   compared = mapply(function(expected, actual) {
@@ -59,7 +60,8 @@ test_that("LoggedArtifact return correct list of mocked assets when calling asse
                           is.null(actual$get_metadata())) {
       TRUE
     } else {
-      all.equal(expected$metadata, actual$get_metadata())
+      meta_json <- jsonlite::toJSON(actual$get_metadata(), auto_unbox = TRUE)
+      all.equal(expected$metadata, meta_json)
     }
     all(
       expected$fileName == actual$get_logical_path(),
@@ -73,7 +75,7 @@ test_that("LoggedArtifact return correct list of mocked assets when calling asse
   }, files, assets)
   expect_true(all(compared))
 
-  remote_assets = artifact$remote_assets()
+  remote_assets = artifact$get_remote_assets()
   expect_length(remote_assets, 1)
   expect_true(remote_assets[[1]]$is_remote())
 })

@@ -46,7 +46,7 @@ call_api <- function(endpoint, method = c("GET", "POST"), params = list(), respo
       }
 
       if (!is.null(params$metadata)) {
-        body_params$metadata <- jsonlite::toJSON(params$metadata)
+        body_params$metadata <- jsonlite::toJSON(params$metadata, auto_unbox = TRUE)
         params[["metadata"]] <- NULL
       }
 

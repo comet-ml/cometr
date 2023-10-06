@@ -67,7 +67,7 @@ LoggedArtifact <- R6::R6Class(
       private$aliases <- aliases
       private$artifact_tags <- artifact_tags
       private$version_tags <- version_tags
-      private$size <- size
+      private$.size <- size
       private$metadata <- metadata
       private$source_experiment_key <- source_experiment_key
 
@@ -96,6 +96,12 @@ LoggedArtifact <- R6::R6Class(
     },
 
     #' @description
+    #' Get the ID of the artifact.
+    get_artifact_id = function() {
+      private$artifact_id
+    },
+
+    #' @description
     #' Get the version of the artifact.
     get_aliases = function() {
       private$aliases
@@ -120,9 +126,36 @@ LoggedArtifact <- R6::R6Class(
     },
 
     #' @description
+    #' The ID of current Artifact Version
+    get_artifact_version_id = function() {
+      private$artifact_version_id
+    },
+
+    #' @description
+    #'The ID of the experiment that created this artifact version.
+    get_source_experiment_key = function() {
+      private$source_experiment_key
+    },
+
+    #' @description
+    #'The ID of the associated experiment.
+    get_experiment_key = function() {
+      private$experiment_key
+    },
+
+    #' @description
+    #'Get/set arifact size.
+    size = function(size = NULL) {
+      if (!is.null(size)) {
+        private$.size <- size
+      }
+      private$.size
+    },
+
+    #' @description
     #' Get the list of all [`LoggedArtifactAsset`] that have been logged with
-    #' this `LoggedArtifact`.
-    assets = function() {
+    #' this `LoggedArtifact` from Comet server.
+    get_assets = function() {
       files = private$load_artifact_assets()
       if (length(files)) {
         lapply(files, function (file)
@@ -134,8 +167,8 @@ LoggedArtifact <- R6::R6Class(
 
     #' @description
     #' Get the list of remote [`LoggedArtifactAsset`] that have been logged
-    #' with this `LoggedArtifact`.
-    remote_assets = function() {
+    #' with this `LoggedArtifact` from Comet server.
+    get_remote_assets = function() {
       files = private$load_artifact_assets()
       if (length(files)) {
         remote_indexes = sapply(files, function(f)
@@ -160,18 +193,24 @@ LoggedArtifact <- R6::R6Class(
     artifact_tags = NULL,
     metadata = NULL,
     version_tags = NULL,
-    size = 0,
+    .size = 0,
     source_experiment_key = NULL,
 
     to_logged_asset = function(asset) {
+      asset_metadata <- asset[["metadata"]]
+      if (!is.null(asset_metadata)) {
+        asset_metadata <-
+          jsonlite::fromJSON(asset_metadata, simplifyVector = FALSE)
+      }
+
       LoggedArtifactAsset$new(
-        logical_path = asset$fileName,
-        remote = as.logical(asset$remote),
-        size = as.integer(asset$fileSize),
-        link = asset$link,
-        metadata = asset$metadata,
-        asset_type = asset$type,
-        id = asset$assetId,
+        logical_path = asset[["fileName"]],
+        remote = as.logical(asset[["remote"]]),
+        size = as.integer(asset[["fileSize"]]),
+        link = asset[["link"]],
+        metadata = asset_metadata,
+        asset_type = asset[["type"]],
+        id = asset[["assetId"]],
         artifact_version_id = private$artifact_version_id,
         artifact_id = private$artifact_id,
         experiment_key = private$experiment_key
@@ -179,12 +218,12 @@ LoggedArtifact <- R6::R6Class(
     },
 
     load_artifact_assets = function() {
-      r_files = get_artifact_files(
+      artifact_files = get_artifact_files(
         workspace = private$workspace,
         artifact_name = private$artifact_name,
         version = as.character(private$artifact_version)
       )
-      r_files$files
+      artifact_files[["files"]]
     }
   )
 )
