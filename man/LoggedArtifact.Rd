@@ -41,6 +41,8 @@ exp$stop()
 \item \href{#method-LoggedArtifact-get_assets}{\code{LoggedArtifact$get_assets()}}
 \item \href{#method-LoggedArtifact-get_remote_assets}{\code{LoggedArtifact$get_remote_assets()}}
 \item \href{#method-LoggedArtifact-update_artifact_tags}{\code{LoggedArtifact$update_artifact_tags()}}
+\item \href{#method-LoggedArtifact-update_version_tags}{\code{LoggedArtifact$update_version_tags()}}
+\item \href{#method-LoggedArtifact-update_aliases}{\code{LoggedArtifact$update_aliases()}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -274,6 +276,40 @@ Update the logged artifact tags
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{artifact_tags}}{The new tags for the artifact}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-LoggedArtifact-update_version_tags"></a>}}
+\if{latex}{\out{\hypertarget{method-LoggedArtifact-update_version_tags}{}}}
+\subsection{Method \code{update_version_tags()}}{
+Update the logged artifact version tags
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{LoggedArtifact$update_version_tags(version_tags)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{version_tags}}{The new tags for the artifact version}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-LoggedArtifact-update_aliases"></a>}}
+\if{latex}{\out{\hypertarget{method-LoggedArtifact-update_aliases}{}}}
+\subsection{Method \code{update_aliases()}}{
+Update the logged artifact version aliases
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{LoggedArtifact$update_aliases(aliases)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{aliases}}{The new aliases for the artifact version}
 }
 \if{html}{\out{</div>}}
 }

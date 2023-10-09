@@ -253,6 +253,30 @@ update_arifact <- function(artifact_id,
   )
 }
 
+update_artifact_version <- function(artifact_version_id,
+                                    version_aliases = NULL,
+                                    version_metadata = NULL,
+                                    version_tags = NULL,
+                                    api_key = NULL) {
+  if (!is.null(version_metadata)) {
+    version_metadata <- encode_metadata(version_metadata)
+  }
+  endpoint <- "/write/artifacts/version/labels"
+  method <- "POST"
+  params <- list(
+    artifactVersionId = artifact_version_id,
+    alias = version_aliases,
+    versionMetadata = version_metadata,
+    versionTags = version_tags
+  )
+  call_api(
+    endpoint = endpoint,
+    method = method,
+    params = params,
+    api_key = api_key
+  )
+}
+
 get_artifact <- function(workspace = NULL,
                          name = NULL,
                          artifact_id = NULL,

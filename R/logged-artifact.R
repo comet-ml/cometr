@@ -197,6 +197,35 @@ LoggedArtifact <- R6::R6Class(
         tags = artifact_tags
       )
       private$artifact_tags <- artifact_tags
+      invisible(self)
+    },
+
+    #' @description
+    #' Update the logged artifact version tags
+    #' @param version_tags The new tags for the artifact version
+    update_version_tags = function(version_tags) {
+      version_tags <- unique(version_tags)
+
+      update_artifact_version(
+        artifact_version_id = private$artifact_version_id,
+        version_tags = version_tags
+      )
+      private$version_tags <- version_tags
+      invisible(self)
+    },
+
+    #' @description
+    #' Update the logged artifact version aliases
+    #' @param aliases The new aliases for the artifact version
+    update_aliases = function(aliases) {
+      aliases <- unique(aliases)
+
+      update_artifact_version(
+        artifact_version_id = private$artifact_version_id,
+        version_aliases = aliases
+      )
+      private$aliases <- aliases
+      invisible(self)
     }
   ),
 
