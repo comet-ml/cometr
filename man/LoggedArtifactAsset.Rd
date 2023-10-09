@@ -66,7 +66,7 @@ Creates a new \code{LoggedArtifactAsset} object with provided parameters.
 
 \item{\code{asset_type}}{The type of asset.}
 
-\item{\code{id}}{The ID os the asset}
+\item{\code{id}}{The ID of the asset}
 
 \item{\code{artifact_version_id}}{The ID of Artifact Version associated with this asset.}
 

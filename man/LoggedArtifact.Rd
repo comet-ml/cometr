@@ -227,7 +227,7 @@ The ID of the associated experiment.
 \if{html}{\out{<a id="method-LoggedArtifact-size"></a>}}
 \if{latex}{\out{\hypertarget{method-LoggedArtifact-size}{}}}
 \subsection{Method \code{size()}}{
-Get/set arifact size.
+Get/set artifact size.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{LoggedArtifact$size(size = NULL)}\if{html}{\out{</div>}}
 }

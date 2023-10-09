@@ -22,7 +22,7 @@ create_artifact(
 a new version number will be created automatically.}
 
 \item{aliases}{List of aliases. Some aliases to attach to the future Artifact
-Version. The aliases list is de-duplicated.}
+Version. The aliases list is normalized to remove duplicates.}
 
 \item{metadata}{Some additional meta-data to attach to the future Artifact Version.}
 
