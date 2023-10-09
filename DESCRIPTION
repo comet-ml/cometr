@@ -1,6 +1,6 @@
 Package: cometr
 Title: 'Comet' API for R
-Version: 0.2.0
+Version: 0.3.0
 Authors@R: c(
     person(given = "Dean",
            family = "Attali",

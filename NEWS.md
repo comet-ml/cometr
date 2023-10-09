@@ -1,3 +1,9 @@
+# cometr 0.3.0
+
+* Added support for logging Comet Artifacts `Experiment$log_artifact(artifact)`
+* Added experiment method to get workspace name `get_workspace_name()`
+* Added experiment method to get project name `get_project_name()`
+
 # cometr 0.2.0
 
 * Added `get_experiment("PREVIOUS-EXPERIMENT-KEY")`
