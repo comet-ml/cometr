@@ -11,7 +11,7 @@ NULL
 #' @param artifact_version The version number to create. If not provided,
 #' a new version number will be created automatically.
 #' @param aliases List of aliases. Some aliases to attach to the future Artifact
-#' Version. The aliases list is de-duplicated.
+#' Version. The aliases list is normalized to remove duplicates.
 #' @param metadata Some additional meta-data to attach to the future Artifact Version.
 #' @param version_tags List of tags to be attached to the future Artifact Version.
 create_artifact <-
@@ -69,7 +69,7 @@ Artifact <- R6::R6Class(
     #' @param artifact_version The version number to create. If not provided,
     #' a new version number will be created automatically.
     #' @param aliases List of aliases. Some aliases to attach to the future Artifact
-    #' Version. The aliases list is de-duplicated.
+    #' Version. The aliases list is normalized to remove duplicates.
     #' @param metadata Some additional meta-data to attach to the future Artifact Version.
     #' @param version_tags List of tags to be attached to the future Artifact Version.
     initialize = function(artifact_name,

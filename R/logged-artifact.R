@@ -150,7 +150,7 @@ LoggedArtifact <- R6::R6Class(
     },
 
     #' @description
-    #'Get/set arifact size.
+    #'Get/set artifact size.
     #'@param size The new size for the Artifact or `NULL` if retrieving existing
     #'size of the Artifact.
     size = function(size = NULL) {
@@ -295,7 +295,7 @@ LoggedArtifactAsset <- R6::R6Class(
     #' @param size The size if the asset of a non-remote asset.
     #' @param metadata The metadata to be associated with the asset.
     #' @param asset_type The type of asset.
-    #' @param id The ID os the asset
+    #' @param id The ID of the asset
     #' @param artifact_version_id The ID of Artifact Version associated with this asset.
     #' @param artifact_id The ID of Artifact associated with this asset.
     #' @param experiment_key The experiment key of the experiment that logged this asset.

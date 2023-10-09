@@ -25,7 +25,7 @@ NULL
 #' logs for the experiment. Note that unlike `auto_log_output`, if this option is on then
 #' these messages will not be shown in the console and instead they will only be logged
 #' to the Comet experiment. This option is set to `FALSE` by default because of this
-#' behaviour.
+#' behavior.
 #' @param log_code If `TRUE`, log the source code of the R script that was called
 #' to Comet as the associated code of this experiment. This only works if the you run
 #' a script using the `Rscript` tool and will not work in interactive sessions.
@@ -79,7 +79,7 @@ create_experiment <- function(
 #' logs for the experiment. Note that unlike `auto_log_output`, if this option is on then
 #' these messages will not be shown in the console and instead they will only be logged
 #' to the Comet experiment. This option is set to `FALSE` by default because of this
-#' behaviour.
+#' behavior.
 #' @param log_code If `TRUE`, log the source code of the R script that was called
 #' to Comet as the associated code of this experiment. This only works if the you run
 #' a script using the `Rscript` tool and will not work in interactive sessions.
