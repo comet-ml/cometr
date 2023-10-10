@@ -270,6 +270,28 @@ Experiment <- R6::R6Class(
 
     #' @description
     #' Do not call this function directly. Use `create_experiment()` or `get_experiment()` instead.
+    #'
+    #' @param experiment_key The key of the `Experiment`.
+    #' @param experiment_url The URL of the `Experiment`.
+    #' @param api_key Comet API key (can also be specified using the `COMET_API_KEY`
+    #' parameter as an environment variable or in a comet config file).
+    #' @param keep_active If `TRUE`, automatically send Comet a status update every
+    #' few seconds until the experiment is stopped to mark the experiment as active on the
+    #' Comet web dashboard.
+    #' @param log_output If `TRUE`, all standard output will automatically be sent to
+    #' the Comet servers to display as message logs for the experiment. The output will still
+    #' be shown in the console as well.
+    #' @param log_error If `TRUE`, all output from 'stderr' (which includes errors,
+    #' warnings, and messages) will be redirected to the Comet servers to display as message
+    #' logs for the experiment. Note that unlike `auto_log_output`, if this option is on then
+    #' these messages will not be shown in the console and instead they will only be logged
+    #' to the Comet experiment. This option is set to `FALSE` by default because of this
+    #' behavior.
+    #' @param dynamic If `TRUE` the Experiment was created rather than retrieved.
+    #' @param workspace_name The workspace name (can also be specified using the `COMET_WORKSPACE`
+    #' parameter as an environment variable or in a comet config file).
+    #' @param project_name The project name (can also be specified using the `COMET_PROJECT_NAME`
+    #' parameter as an environment variable or in a comet config file).
     initialize = function(experiment_key, experiment_url = NULL, api_key = NULL,
                           keep_active = FALSE, log_output = FALSE, log_error = FALSE,
                           dynamic = TRUE, workspace_name = NULL, project_name = NULL) {
