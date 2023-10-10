@@ -1,3 +1,6 @@
+# clean any existing log files if any
+cleanup()
+
 with_mock(
   `cometr:::get_config_logging_file` = function() logfile, {
     test_that("logging works at the right level: DEBUG", {
