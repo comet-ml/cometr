@@ -7,13 +7,15 @@ with_mock(
 
           LOG_DEBUG("test debug")
           LOG_INFO("test info")
+          LOG_WARNING("test warning")
           LOG_ERROR("test error")
           output <- readLines(logfile)
 
-          expect_identical(length(output), 3L)
+          expect_identical(length(output), 4L)
           expect_match(output[1], "\\[DBG\\] test debug")
           expect_match(output[2], "\\[INF\\] test info")
-          expect_match(output[3], "\\[ERR\\] test error")
+          expect_match(output[3], "\\[WARN\\] test warning")
+          expect_match(output[4], "\\[ERR\\] test error")
         }
       )
     })
@@ -25,11 +27,31 @@ with_mock(
 
           LOG_DEBUG("test debug")
           LOG_INFO("test info")
+          LOG_WARNING("test warning")
+          LOG_ERROR("test error")
+          output <- readLines(logfile)
+
+          expect_identical(length(output), 3L)
+          expect_match(output[1], "\\[INF\\] test info")
+          expect_match(output[2], "\\[WARN\\] test warning")
+          expect_match(output[3], "\\[ERR\\] test error")
+        }
+      )
+    })
+
+    test_that("logging works at the right level: WARNING", {
+      with_mock(
+        `cometr:::get_config_logging_file_level` = function() "WARNING", {
+          on.exit(cleanup())
+
+          LOG_DEBUG("test debug")
+          LOG_INFO("test info")
+          LOG_WARNING("test warning")
           LOG_ERROR("test error")
           output <- readLines(logfile)
 
           expect_identical(length(output), 2L)
-          expect_match(output[1], "\\[INF\\] test info")
+          expect_match(output[1], "\\[WARN\\] test warning")
           expect_match(output[2], "\\[ERR\\] test error")
         }
       )
@@ -42,6 +64,7 @@ with_mock(
 
           LOG_DEBUG("test debug")
           LOG_INFO("test info")
+          LOG_WARNING("test warning")
           LOG_ERROR("test error")
           output <- readLines(logfile)
 
