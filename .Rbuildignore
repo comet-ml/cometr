@@ -6,3 +6,5 @@
 ^codecov\.yml$
 ^cometlog\.log$
 ^\.github$
+^CRAN-SUBMISSION$
+^cran-comments\.md$
