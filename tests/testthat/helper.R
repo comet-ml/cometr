@@ -38,7 +38,7 @@ mock_experiment_by_id <- function(experiment_key, keep_active = FALSE,
 mock_experiment_full <- function(experiment_key = generate_random_id(), keep_active = FALSE,
                                  log_output = FALSE, log_error = FALSE, log_code = FALSE,
                                  log_system_details = FALSE, log_git_info = FALSE) {
-  link <- paste0("https://www.comet.ml/", test_ws, "/", test_proj, "/", experiment_key)
+  link <- paste0("https://www.comet.com/", test_ws, "/", test_proj, "/", experiment_key)
   with_mock(
     `cometr:::new_experiment` = function(...)
       list(experimentKey = experiment_key, link = link),
@@ -61,5 +61,7 @@ mock_experiment_full <- function(experiment_key = generate_random_id(), keep_act
 }
 
 get_subp <- function(sub_pid) {
-  subset(ps::ps(), pid == sub_pid, ppid = Sys.getpid())
+  subset(ps::ps(), pid == sub_pid, ppid == Sys.getpid())
 }
+
+hasInternet <- function() !is.null(curl::nslookup("r-project.org", error = FALSE))

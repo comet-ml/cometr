@@ -136,19 +136,44 @@ get_asset <- function(experiment_key, assetId, api_key = NULL) {
 
 upload_asset <- function(experiment_key, file, step = NULL, overwrite = NULL,
                          context = NULL, type = NULL, name = NULL, metadata = NULL,
-                         api_key = NULL) {
-  endpoint <- "/write/experiment/upload-asset"
-  method <- "POST"
+                         artifact_version_id = NULL, source = NULL, api_key = NULL) {
   params <- list(
-    experimentKey = experiment_key,
     file = file,
     step = step,
     overwrite = overwrite,
     context = context,
     type = type,
     fileName = name,
-    metadata = metadata
+    metadata = metadata,
+    source = source,
+    artifactVersionId = artifact_version_id
   )
+  .upload_asset(experiment_key = experiment_key, params = params, api_key = api_key)
+}
+
+upload_remote_asset <- function(experiment_key, remote_uri, step = NULL, overwrite = NULL,
+                                context = NULL, type = NULL, name = NULL, metadata = NULL,
+                                artifact_version_id = NULL, source = NULL, api_key = NULL) {
+  params <- list(
+    remote_uri = remote_uri,
+    step = step,
+    overwrite = overwrite,
+    context = context,
+    type = type,
+    fileName = name,
+    metadata = metadata,
+    source = source,
+    artifactVersionId = artifact_version_id,
+    isRemote = TRUE
+  )
+
+  .upload_asset(experiment_key = experiment_key, params = params, api_key = api_key)
+}
+
+.upload_asset <- function(experiment_key, params, api_key = NULL) {
+  endpoint <- "/write/experiment/upload-asset"
+  method <- "POST"
+  params$experimentKey <- experiment_key
   call_api(endpoint = endpoint, method = method, params = params, api_key = api_key)
 }
 

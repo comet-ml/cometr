@@ -33,44 +33,64 @@ call_api <- function(endpoint, method = c("GET", "POST"), params = list(), respo
   tryCatch({
     if (endpoint == "/write/experiment/upload-asset" ||
         endpoint == "/write/experiment/git/patch") {
-      LOG_INFO("API call: ", endpoint)
-      body_params <- list(file = httr::upload_file(params$file))
-      params$file <- NULL
-      if (!is.null(params$metadata)) {
-        body_params$metadata <- jsonlite::toJSON(params$metadata)
-        params$metadata <- NULL
+      body_params <- list()
+      if (!is.null(params[["file"]])) {
+        # local assets
+        body_params$file <- httr::upload_file(params[["file"]])
+        params[["file"]] <- NULL
       }
+      if (!is.null(params$remote_uri)) {
+        # remote assets
+        body_params$link = params$remote_uri
+        params[["remote_uri"]] <- NULL
+      }
+
+      if (!is.null(params$metadata)) {
+        body_params$metadata <- encode_metadata(params$metadata)
+        params[["metadata"]] <- NULL
+      }
+
       url <- httr::modify_url(url, query = params)
+      LOG_INFO("API call: ", method, " ", url, ", params: ", params, ", body_params ", body_params)
       response <- httr::POST(url, auth, agent, encode = "multipart", body = body_params, timeout)
     } else if (method == "GET") {
       url <- httr::modify_url(url, query = params)
-      LOG_INFO("API call: ", method, " ", url)
+      LOG_INFO("API call: ", method, " ", url, ", params: ", params)
       response <- httr::GET(url, auth, agent, timeout)
     } else if (method == "POST") {
-      LOG_INFO("API call: ", method, " ", url, " ", params)
+      LOG_INFO("API call: ", method, " ", url, ", params: ", params)
       response <- httr::POST(url, auth, agent, encode = "json", body = params, timeout)
     }
   }, error = function(err) {
     comet_stop("Error calling Comet API: ", err$message)
   })
 
-  check_response(response)
+  check_response(res = response, params = params)
 
   parsed <- parse_response(response, response_json = response_json)
   LOG_INFO("Parsed response: ", parsed)
   parsed
 }
 
-check_response <- function(res) {
+check_response <- function(res, params = NULL) {
   tryCatch({
     if (httr::status_code(res) != 200) {
       code <- httr::status_code(res)
       res <- try(parse_response(res), silent = TRUE)
-      if (is.list(res) && !is.null(res[["msg"]])) {
-        stop(res[["msg"]])
-      } else {
-        stop("Comet API response status was not OK (", code, ")")
+      if (is.list(res)) {
+        if (!is.null(res[["sdk_error_code"]])) {
+          sdk_error_code <- as.integer(res[["sdk_error_code"]])
+          if (sdk_error_code == 624523) {
+            comet_stop("Artifact not found with: ", params)
+          } else if (sdk_error_code == 90403 || sdk_error_code == 90402) {
+            comet_stop("Artifact is not in a finalized state and cannot be accessed with: ", params)
+          }
+        }
+        if (!is.null(res[["msg"]])) {
+          stop(res[["msg"]])
+        }
       }
+      stop("Comet API response status was not OK (", code, ")")
     }
   }, error = function(err) {
     comet_stop("Error with Comet API response status: ", err$message)

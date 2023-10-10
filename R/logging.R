@@ -17,6 +17,10 @@ LOG_INFO <- function(..., echo = FALSE) {
   comet_log(..., level = "INFO", echo = echo)
 }
 
+LOG_WARNING <- function(..., echo = FALSE) {
+  comet_log(..., level = "WARNING", echo = echo)
+}
+
 LOG_ERROR <- function(..., echo = FALSE) {
   comet_log(..., level = "ERROR", echo = echo)
 }

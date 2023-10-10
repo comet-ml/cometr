@@ -140,13 +140,14 @@ with_mock(
   `cometr:::can_write_log` = function() TRUE,
   `cometr:::get_config_logging_file` = function() logfile,
   `cometr:::get_config_logging_file_level` = function() "DEBUG", {
-    test_that("Cannot log a level other than INFO, DEBUG, ERROR", {
+    test_that("Cannot log a level other than INFO, DEBUG, WARNING, ERROR", {
       on.exit(cleanup())
       expect_warning(comet_log("test", level = 0))
       expect_warning(comet_log("test", level = 1), NA)
       expect_warning(comet_log("test", level = 2), NA)
       expect_warning(comet_log("test", level = 3), NA)
-      expect_warning(comet_log("test", level = 4))
+      expect_warning(comet_log("test", level = 4), NA)
+      expect_warning(comet_log("test", level = 5))
     })
   }
 )

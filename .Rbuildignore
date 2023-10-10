@@ -5,3 +5,4 @@
 ^cometr\.log$
 ^codecov\.yml$
 ^cometlog\.log$
+^\.github$

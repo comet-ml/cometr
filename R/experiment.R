@@ -1,3 +1,6 @@
+#' @import R6
+NULL
+
 #' Create a new experiment
 #'
 #' Create a new experiment on Comet's servers. The return value is an [`Experiment`]
@@ -22,7 +25,7 @@
 #' logs for the experiment. Note that unlike `auto_log_output`, if this option is on then
 #' these messages will not be shown in the console and instead they will only be logged
 #' to the Comet experiment. This option is set to `FALSE` by default because of this
-#' behaviour.
+#' behavior.
 #' @param log_code If `TRUE`, log the source code of the R script that was called
 #' to Comet as the associated code of this experiment. This only works if the you run
 #' a script using the `Rscript` tool and will not work in interactive sessions.
@@ -76,7 +79,7 @@ create_experiment <- function(
 #' logs for the experiment. Note that unlike `auto_log_output`, if this option is on then
 #' these messages will not be shown in the console and instead they will only be logged
 #' to the Comet experiment. This option is set to `FALSE` by default because of this
-#' behaviour.
+#' behavior.
 #' @param log_code If `TRUE`, log the source code of the R script that was called
 #' to Comet as the associated code of this experiment. This only works if the you run
 #' a script using the `Rscript` tool and will not work in interactive sessions.
@@ -158,11 +161,15 @@ base_experiment <- function(
       workspace_name = workspace_name,
       api_key = api_key
     )
+
     experiment_key <- resp[["experimentKey"]]
     experiment_link <- resp[["link"]]
     if (is.null(experiment_key) || is.null(experiment_link)) {
       comet_stop("Create experiment in Comet failed.")
     }
+
+    workspace_name <- resp[["workspaceName"]]
+    project_name <- resp[["projectName"]]
     LOG_INFO("Experiment created: ", experiment_link, echo = TRUE)
   } else {
     dynamic <- FALSE
@@ -223,7 +230,9 @@ base_experiment <- function(
     keep_active = keep_active,
     log_output = log_output,
     log_error = log_error,
-    dynamic = dynamic
+    dynamic = dynamic,
+    workspace_name = workspace_name,
+    project_name = project_name
   )
 
   invisible(experiment)
@@ -263,7 +272,7 @@ Experiment <- R6::R6Class(
     #' Do not call this function directly. Use `create_experiment()` or `get_experiment()` instead.
     initialize = function(experiment_key, experiment_url = NULL, api_key = NULL,
                           keep_active = FALSE, log_output = FALSE, log_error = FALSE,
-                          dynamic = TRUE) {
+                          dynamic = TRUE, workspace_name = NULL, project_name = NULL) {
       if (!isTRUE(.cometrenv$cancreate)) {
         comet_stop("Do not call this function directly. Use `create_experiment()` instead.")
       }
@@ -282,6 +291,8 @@ Experiment <- R6::R6Class(
       private$api_key <- api_key
       private$log_error <- log_error
       private$log_output <- log_output
+      private$workspace_name <- workspace_name
+      private$project_name <- project_name
 
       if (keep_active) {
         private$keepalive_process <- create_keepalive_process(exp_key = experiment_key, api_key = api_key)
@@ -320,6 +331,18 @@ Experiment <- R6::R6Class(
     #' Get the experiment key of an experiment.
     get_key = function() {
       private$experiment_key
+    },
+
+    #' @description
+    #' Get the workspace name of an experiment.
+    get_workspace_name = function() {
+      private$workspace_name
+    },
+
+    #' @description
+    #' Get the project name of an experiment.
+    get_project_name = function() {
+      private$project_name
     },
 
     #' @description
@@ -501,9 +524,55 @@ Experiment <- R6::R6Class(
     upload_asset = function(file, step = NULL, overwrite = NULL, context = NULL,
                             type = NULL, name = NULL, metadata = NULL) {
       private$check_active()
-      upload_asset(experiment_key = private$experiment_key, api_key = private$api_key,
-                   file = file, step = step, overwrite = overwrite,
-                   context = context, type = type, name = name, metadata = metadata)
+      upload_asset(
+        experiment_key = private$experiment_key,
+        api_key = private$api_key,
+        file = file,
+        step = step,
+        overwrite = overwrite,
+        context = context,
+        type = type,
+        name = name,
+        metadata = metadata
+      )
+      invisible(self)
+    },
+
+    #' @description
+    #' Logs a Remote Asset identified by an URI. A Remote Asset is an asset but its content is not
+    #' uploaded and stored on Comet. Rather a link for its location is stored, so you can identify
+    #' and distinguish between two experiment using different version of a dataset stored somewhere
+    #' else.
+    #' @param uri (Required) The remote asset location, there is no imposed format, and it could be a
+    #' private link.
+    #' @param remote_file_name The "name" of the remote asset, could be a dataset
+    #' name, a model file name.
+    #' @param step Step number.
+    #' @param overwrite If `TRUE`, overwrite any logged asset with the same name.
+    #' @param type The type of asset, default: "asset".
+    #' @param metadata Metadata to log along with the asset
+    log_remote_asset = function(uri,
+                                remote_file_name = NULL,
+                                step = NULL,
+                                overwrite = FALSE,
+                                type = "asset",
+                                metadata = NULL) {
+      private$check_active()
+      if (is.null(remote_file_name)) {
+        # Try to parse the URI to see if we can extract a useful file name
+        remote_file_name <- remote_asset_name_from_uri(uri)
+      }
+
+      upload_remote_asset(
+        experiment_key = private$experiment_key,
+        api_key = private$api_key,
+        remote_uri = uri,
+        step = step,
+        overwrite = overwrite,
+        type = type,
+        name = remote_file_name,
+        metadata = metadata
+      )
       invisible(self)
     },
 
@@ -649,6 +718,57 @@ Experiment <- R6::R6Class(
     },
 
     #' @description
+    #' Log an [`Artifact`] object, synchronously create a new Artifact Version and
+    #' upload all local and remote assets attached to the [`Artifact`] object.
+    #' @param artifact an [`Artifact`] object.
+    #' @returns [`LoggedArtifact`] with all relevant information about logged
+    #' artifact.
+    log_artifact = function(artifact) {
+      private$check_active()
+      if (!inherits(artifact, "Artifact")) {
+        comet_stop("Object is not an Artifact and cannot be logged")
+      }
+      log_artifact(artifact = artifact, experiment_key = private$experiment_key, api_key = private$api_key)
+    },
+
+    #' @description
+    #' Returns a logged artifact object that can be used to access the artifact
+    #' version assets and download them locally.
+    #'
+    #' If no version or alias is provided, the latest version for that artifact is returned.
+    #'
+    #' @param artifact_name (Required) Retrieve an artifact with that name. This could either be a fully
+    #' qualified artifact name like `workspace/artifact-name:versionOrAlias` or just the name
+    #' of the artifact like `artifact-name`.
+    #' @param workspace Retrieve an artifact belonging to that workspace.
+    #' @param version_or_alias Retrieve the artifact by the given alias or version.
+    #' @returns [`LoggedArtifact`] with all relevant information about logged
+    #' artifact.
+    #'
+    #' @examples
+    #' \dontrun{
+    #' library(cometr)
+    #' # Assuming you have COMET_API_KEY, COMET_WORKSPACE, COMET_PROJECT_NAME variables define
+    #' exp <- create_experiment()
+    #'
+    #' # Get a Comet Artifact
+    #' logged_artifact <- exp$get_artifact("workspace/artifact-name:version_or_alias")
+    #'
+    #' # Which is equivalent to
+    #' logged_artifact = exp$get_artifact(artifact_name="artifact-name",
+    #'                                    workspace="workspace",
+    #'                                    version_or_alias="version_or_alias")
+    #' }
+    get_artifact = function(artifact_name, workspace = NULL, version_or_alias = NULL) {
+      private$check_active()
+      get_artifact_by_name(experiment_key = private$experiment_key,
+                           artifact_name = artifact_name,
+                           workspace = workspace,
+                           version_or_alias = version_or_alias,
+                           api_key = private$api_key)
+    },
+
+    #' @description
     #' Set an experiment's start and end time.
     #' @param start Start time for the experiment (milliseconds since the Epoch)
     #' @param end End time for the experiment (milliseconds since the Epoch)
@@ -676,6 +796,9 @@ Experiment <- R6::R6Class(
     experiment_url = NULL,
     dynamic = NULL,
     keepalive_process = NULL,
+
+    workspace_name = NULL,
+    project_name = NULL,
 
     log_output = NULL,
     log_error = NULL,
