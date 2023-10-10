@@ -2,7 +2,6 @@
 
 [![CRAN version](https://www.r-pkg.org/badges/version/cometr)](https://cran.r-project.org/package=cometr)
 [![R](https://github.com/comet-ml/cometr/actions/workflows/r.yml/badge.svg?branch=master)](https://github.com/comet-ml/cometr/actions/workflows/r.yml)
-[![Codecov test coverage](https://app.codecov.io/gh/comet-ml/cometr/branch/master/graph/badge.svg)](https://app.codecov.io/gh/comet-ml/cometr?branch=master)
 
 [Comet](https://www.comet.com/) is a cloud platform allowing you to track, compare, explain and optimize machine learning experiments and models. If you perform any machine learning in R, you can use the `cometr` R package to create and track Comet experiments. All experiment data is available for retrieval through `cometr` or can be viewed on the [Comet dashboard](https://www.comet.com/).
 
