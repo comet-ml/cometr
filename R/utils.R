@@ -114,3 +114,24 @@ encode_metadata <- function(metadata) {
 decode_metadata <- function(metadata) {
   jsonlite::fromJSON(metadata, simplifyVector = FALSE)
 }
+
+validate_artifact_overwrite_strategy <- function(overwrite_strategy) {
+  if (isBool(overwrite_strategy)) {
+    if (overwrite_strategy) {
+      return("OVERWRITE")
+    } else {
+      return("FAIL")
+    }
+  } else if (is.character(overwrite_strategy)) {
+    user_overwrite_strategy <- tolower(overwrite_strategy)
+    if (user_overwrite_strategy == "fail") {
+      return("FAIL")
+    } else if (user_overwrite_strategy == "preserve") {
+      return("PRESERVE")
+    } else if (user_overwrite_strategy == "overwrite") {
+      return("OVERWRITE")
+    }
+  }
+
+  comet_stop("Unsupported overwrite_strategy value: ", overwrite_strategy)
+}

@@ -88,3 +88,26 @@ test_that("encode_metadata and decode_metadata works", {
   decoded <- decode_metadata(encoded)
   expect_equal(decoded, metadata)
 })
+
+test_that("validate_artifact_overwrite_strategy works", {
+  strategies <- list(TRUE, FALSE, "FAIL", "PRESERVE", "OVERWRITE")
+  expected <- list("OVERWRITE", "FAIL", "FAIL", "PRESERVE", "OVERWRITE")
+
+  res <- sapply(strategies, validate_artifact_overwrite_strategy)
+  expect_identical(unlist(res), unlist(expected))
+})
+
+test_that("validate_artifact_overwrite_strategy fails appropriately", {
+  expect_error(
+    validate_artifact_overwrite_strategy("NOT EXISTING"),
+    "Unsupported overwrite_strategy value: NOT EXISTING"
+  )
+  expect_error(
+    validate_artifact_overwrite_strategy(1),
+    "Unsupported overwrite_strategy value: 1"
+  )
+  expect_error(
+    validate_artifact_overwrite_strategy(NULL),
+    "Unsupported overwrite_strategy value: "
+  )
+})
