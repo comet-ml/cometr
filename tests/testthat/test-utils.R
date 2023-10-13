@@ -111,3 +111,29 @@ test_that("validate_artifact_overwrite_strategy fails appropriately", {
     "Unsupported overwrite_strategy value: "
   )
 })
+
+test_that("resolve_artifact_asset_path works for not existing file", {
+  parent_dir <- withr::local_tempdir()
+  asset_file <- file.path("asset_dir", "asset.dat")
+  result <- resolve_artifact_asset_path(parent_dir = parent_dir,
+                                        asset_file = asset_file,
+                                        overwrite_strategy = "FAIL")
+  expect_false(result$already_exists)
+  expect_equal(result$asset_path, file.path(parent_dir, asset_file))
+  expect_true(dir.exists(file.path(parent_dir, "asset_dir")))
+})
+
+test_that("resolve_artifact_asset_path works for existing file with OVERWRITE", {
+  parent_dir <- withr::local_tempdir()
+  asset_file <- "asset.dat"
+  asset_file_path <- file.path(parent_dir, asset_file)
+  cat("Test data", file = asset_file_path)
+  expect_true(file.exists(asset_file_path))
+
+  result <- resolve_artifact_asset_path(parent_dir = parent_dir,
+                                        asset_file = asset_file,
+                                        overwrite_strategy = "OVERWRITE")
+  expect_true(result$already_exists)
+  expect_equal(result$asset_path, file.path(parent_dir, asset_file))
+  expect_false(file.exists(asset_file_path))
+})

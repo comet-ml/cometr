@@ -133,5 +133,28 @@ validate_artifact_overwrite_strategy <- function(overwrite_strategy) {
     }
   }
 
-  comet_stop("Unsupported overwrite_strategy value: ", overwrite_strategy)
+    comet_stop("Unsupported overwrite_strategy value: ", overwrite_strategy)
+  }
+
+resolve_artifact_asset_path <- function(parent_dir,
+                                        asset_file,
+                                        overwrite_strategy) {
+  asset_path <- file.path(parent_dir, asset_file)
+
+  result <- list(asset_path=asset_path)
+  result["already_exists"] <- FALSE
+  if (file.exists(asset_path)) {
+    result["already_exists"] <- TRUE
+    if (overwrite_strategy == "OVERWRITE") {
+      # remove existing file
+      file.remove(asset_path)
+    }
+  } else {
+    # create parent directories
+    parent_dir <- dirname(asset_path)
+    if (!dir.exists(parent_dir)) {
+      dir.create(parent_dir, recursive = TRUE)
+    }
+  }
+  result
 }
