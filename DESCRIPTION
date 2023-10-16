@@ -33,14 +33,16 @@ Imports:
     R.utils,
     R6 (>= 2.4.0),
     utils,
-    yaml
+    yaml,
+    digest
 Suggests:
     covr,
     curl,
     git2r (>= 0.22.1),
     httptest,
     ps,
-    testthat
+    testthat,
+    withr
 Depends: 
     R (>= 3.5.0)
 License: MIT + file LICENSE

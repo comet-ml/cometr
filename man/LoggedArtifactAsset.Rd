@@ -8,7 +8,7 @@ The \code{LoggedArtifactAsset} represent local or remote asset already logged wi
 particular \code{\link{Artifact}} to the Comet.
 }
 \section{Super class}{
-\code{\link[cometr:ArtifactAsset]{cometr::ArtifactAsset}} -> \code{LoggedArtifactAsset}
+\code{cometr::ArtifactAsset} -> \code{LoggedArtifactAsset}
 }
 \section{Methods}{
 \subsection{Public methods}{
