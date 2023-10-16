@@ -17,7 +17,7 @@ get_api_version <- function() {
 #' to the URL; for POST endpoints, the parameters are sent in the body of the request.
 #' @param parse_response If `TRUE`, try to parse response from server.
 #' @param response_json If `TRUE`, try to parse the response as JSON. If `FALSE`, return
-#' the response as raw data.
+#' the response as raw data, e.g. binary.
 #' @param local_file_path The path to the local file for saving downloaded content
 #' if appropriate.
 #' @return The parsed response
@@ -62,10 +62,8 @@ call_api <- function(endpoint,
       url <- httr::modify_url(url, query = params)
       LOG_INFO("API call: ", method, " ", url, ", params: ", params, ", body_params ", body_params)
       response <- httr::POST(url, auth, agent, encode = "multipart", body = body_params, timeout)
-    } else if (endpoint == "/experiment/asset/get-asset") {
-      if (is.null(local_file_path)) {
-        comet_stop("local_file_path should be provided when downloading asset")
-      }
+    } else if (endpoint == "/experiment/asset/get-asset" && !is.null(local_file_path)) {
+      # download asset to file
       parse_response <- FALSE
       url <- httr::modify_url(url, query = params)
       response <- httr::GET(url, auth, agent, timeout, httr::write_disk(local_file_path))
