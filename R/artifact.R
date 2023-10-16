@@ -409,13 +409,15 @@ create_assets_from_folder = function(folder, logical_path, overwrite, metadata) 
 create_asset_from_file = function(asset_file,
                                   logical_path,
                                   overwrite,
-                                  metadata) {
+                                  metadata,
+                                  asset_type = NULL) {
   size <- file.size(asset_file)
   ArtifactAsset$new(
     logical_path = logical_path,
     overwrite = overwrite,
     local_path = asset_file,
     metadata = metadata,
-    size = size
+    size = size,
+    asset_type = asset_type
   )
 }

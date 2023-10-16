@@ -241,6 +241,99 @@ if (hasInternet()) {
     expect_equal(logged_artifact$get_aliases(), new_aliases)
   })
 
+  test_that("LoggedArtifactAsset download works", {
+    # move assets to temporary dir
+    parent_dir <- withr::local_tempdir()
+    file.copy(test_path("test-data"), parent_dir, recursive = TRUE)
+
+    test_data_tmp <- file.path(parent_dir, "test-data")
+    asset_files = list.files(test_data_tmp,
+                             recursive = TRUE,
+                             full.names = FALSE)
+    expect_length(asset_files, 4)
+
+    # create and log artifact
+    artifact_name <- paste0("artifact-", generate_random_id())
+    metadata <- list(foo="bar")
+    remote_uri <- "http://localhost/dataset.dat"
+    artifact <- create_artifact(artifact_name = artifact_name,
+                                artifact_type = "dataset")
+    artifact$add_remote(uri = remote_uri,
+                        logical_path = "dataset",
+                        metadata = metadata)
+    artifact$add(local_path = test_data_tmp,
+                 metadata = metadata)
+    artifact$add(local_path = file.path(test_data_tmp, "sample-script.R"),
+                 logical_path = "samle-code",
+                 metadata = metadata)
+
+    logged_artifact <- test_exp$log_artifact(artifact)
+
+    assets <- logged_artifact$get_assets()
+    expect_length(assets, 6)
+
+    # check FAIL with equal files - no error
+    #
+    asset_filename <- "test-data/sample-script.R"
+    asset_path <- file.path(test_data_tmp, "sample-script.R")
+    asset <- asset_by_name(assets, logical_path = asset_filename)[[1]]
+    artifact_asset <- asset$download(local_path = parent_dir)
+
+    expect_equal(artifact_asset$get_local_path(), asset_path)
+    expect_equal(artifact_asset$get_size(), file.size(asset_path))
+    expect_equal(artifact_asset$get_metadata(), metadata)
+    expect_equal(artifact_asset$get_logical_path(), asset_filename)
+
+    # check FAIL with not equal files - error must be raised
+    #
+    cat("# Modified data", file = asset_path, append = TRUE)
+    error_message <- sprintf("Cannot write Asset '%s' on path '%s', a file already exists.",
+                             asset_filename,
+                             asset_path)
+    expect_error(asset$download(local_path = parent_dir), error_message)
+
+    # check OVERWRITE
+    #
+    asset_filename <- "test-data/test_table.csv"
+    asset_path <- file.path(test_data_tmp, "test_table.csv")
+    asset_size_before <- file.size(asset_path)
+    asset <- asset_by_name(assets, logical_path = asset_filename)[[1]]
+    artifact_asset <- asset$download(local_path = parent_dir, overwrite_strategy = "OVERWRITE")
+
+    expect_equal(asset_size_before, file.size(asset_path))
+    expect_equal(artifact_asset$get_local_path(), asset_path)
+    expect_equal(artifact_asset$get_metadata(), metadata)
+    expect_equal(artifact_asset$get_logical_path(), asset_filename)
+
+    # check PRESERVE
+    #
+    asset_filename <- "test-data/logo_dark.png"
+    asset_path <- file.path(test_data_tmp, "logo_dark.png")
+    asset <- asset_by_name(assets, logical_path = asset_filename)[[1]]
+
+    output_message <- sprintf(
+      "Preserving original Artefact asset '%s' at file '%s' due to selected overwrite strategy.",
+                              asset_filename, asset_path)
+    artifact_asset <- expect_output(asset$download(local_path = parent_dir, overwrite_strategy = "PRESERVE"))
+
+    expect_equal(artifact_asset$get_local_path(), asset_path)
+    expect_equal(artifact_asset$get_size(), file.size(asset_path))
+    expect_equal(artifact_asset$get_metadata(), metadata)
+    expect_equal(artifact_asset$get_logical_path(), asset_filename)
+
+    # check remote asset download - raises an error
+    #
+    logical_path <-  "dataset"
+    asset <- asset_by_name(assets, logical_path = logical_path)[[1]]
+
+    error_message <- sprintf(sprintf(
+      "Failed to download remote asset '%s'. Please use asset's URI to download it directly from: '%s'",
+      logical_path, asset$get_link()
+    ))
+    expect_error(asset$download(local_path = parent_dir), error_message)
+
+  })
+
 
   test_exp$delete()
 }

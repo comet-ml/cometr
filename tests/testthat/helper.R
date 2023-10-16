@@ -65,3 +65,9 @@ get_subp <- function(sub_pid) {
 }
 
 hasInternet <- function() !is.null(curl::nslookup("r-project.org", error = FALSE))
+
+asset_by_name <- function(assets, logical_path) {
+  selection <- sapply(assets, function(f)
+    f$get_logical_path() == logical_path)
+  assets[selection]
+}
