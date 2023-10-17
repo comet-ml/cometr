@@ -449,7 +449,7 @@ download_artifact_asset <- function(experiment_key,
         # raise an error because content is different
         comet_stop(
           sprintf("Cannot write Asset '%s' on path '%s', a file already exists.",
-                  asset_filename, asset_file_path), echo = TRUE
+                  asset_filename, asset_file_path)
         )
       }
     } else {
