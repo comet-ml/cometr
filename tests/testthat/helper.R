@@ -85,13 +85,11 @@ wait_for <- function(reason, timeout, callback) {
     LOG_INFO(sprintf("waiting for: '%s' (%03.0fs left)", reason, remaining),
              echo = TRUE)
     Sys.sleep(1)
-    LOG_INFO(
-      sprintf(
-        "finished waiting for '%s', it took %03.0f seconds",
-        reason,
-        remaining
-      ),
-      echo = TRUE
-    )
   }
+  LOG_INFO(sprintf(
+    "finished waiting for '%s', it took %03.0f seconds",
+    reason,
+    elapsed
+  ),
+  echo = TRUE)
 }

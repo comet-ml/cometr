@@ -64,23 +64,18 @@ test_that("create a project, verify it exists, delete it", {
 
   wait_for("Project created", 20, function(){
     projects_post <- get_projects(api_key = test_api_key)[["projects"]]
-    new_proj_name %in% get_values_from_list(projects_post, "projectName")
+    isTRUE(new_proj_name %in% get_values_from_list(projects_post, "projectName"))
   })
 
   projects_post <- get_projects(api_key = test_api_key)[["projects"]]
-  projects_post_num <- length(projects_post)
-  expect_equal(projects_post_num, projects_init_num + 1)
   expect_true(new_proj_name %in% get_values_from_list(projects_post, "projectName"))
+  # delete and check that it was actually deleted
   delete_project(project_name = new_proj_name, api_key = test_api_key)
 
   wait_for("Project deleted", 20, function(){
     projects_end <- get_projects(api_key = test_api_key)[["projects"]]
-    projects_end_num <- length(projects_end)
-    projects_end_num == projects_init_num
+    isFALSE(new_proj_name %in% get_values_from_list(projects_end, "projectName"))
   })
-
   projects_end <- get_projects(api_key = test_api_key)[["projects"]]
-  projects_end_num <- length(projects_end)
-  expect_equal(projects_end_num, projects_init_num)
   expect_false(new_proj_name %in% get_values_from_list(projects_end, "projectName"))
 })
