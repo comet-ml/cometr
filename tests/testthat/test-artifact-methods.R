@@ -287,10 +287,7 @@ if (hasInternet()) {
     # check FAIL with not equal files - error must be raised
     #
     cat("# Modified data", file = asset_path, append = TRUE)
-    error_message <- sprintf("Cannot write Asset '%s' on path '%s', a file already exists.",
-                             asset_filename,
-                             asset_path)
-    expect_error(asset$download(local_path = parent_dir), error_message)
+    expect_error(asset$download(local_path = parent_dir), "a file already exists.")
 
     # check OVERWRITE
     #
@@ -311,10 +308,9 @@ if (hasInternet()) {
     asset_path <- file.path(test_data_tmp, "logo_dark.png")
     asset <- asset_by_name(assets, logical_path = asset_filename)[[1]]
 
-    output_message <- sprintf(
-      "Preserving original Artefact asset '%s' at file '%s' due to selected overwrite strategy.",
-                              asset_filename, asset_path)
-    artifact_asset <- expect_output(asset$download(local_path = parent_dir, overwrite_strategy = "PRESERVE"))
+    artifact_asset <- expect_output(
+      asset$download(local_path = parent_dir, overwrite_strategy = "PRESERVE"),
+      "due to selected overwrite strategy.")
 
     expect_equal(artifact_asset$get_local_path(), asset_path)
     expect_equal(artifact_asset$get_size(), file.size(asset_path))
@@ -326,11 +322,8 @@ if (hasInternet()) {
     logical_path <-  "dataset"
     asset <- asset_by_name(assets, logical_path = logical_path)[[1]]
 
-    error_message <- sprintf(sprintf(
-      "Failed to download remote asset '%s'. Please use asset's URI to download it directly from: '%s'",
-      logical_path, asset$get_link()
-    ))
-    expect_error(asset$download(local_path = parent_dir), error_message)
+    expect_error(asset$download(local_path = parent_dir),
+                 "Failed to download remote asset")
 
   })
 
