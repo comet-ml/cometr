@@ -71,3 +71,27 @@ asset_by_name <- function(assets, logical_path) {
     f$get_logical_path() == logical_path)
   assets[selection]
 }
+
+wait_for <- function(reason, timeout, callback) {
+  start_time <- Sys.time()
+  elapsed <-  0
+  while (!callback()) {
+    now <- Sys.time()
+    elapsed <- now - start_time
+    remaining <- timeout - elapsed
+    if (remaining < 0) {
+      comet_stop(paste0("waited too long (>", timeout, " seconds) for: '", reason, "'"))
+    }
+    LOG_INFO(sprintf("waiting for: '%s' (%03.0fs left)", reason, remaining),
+             echo = TRUE)
+    Sys.sleep(1)
+    LOG_INFO(
+      sprintf(
+        "finished waiting for '%s', it took %03.0f seconds",
+        reason,
+        remaining
+      ),
+      echo = TRUE
+    )
+  }
+}
