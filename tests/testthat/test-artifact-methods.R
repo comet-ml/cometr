@@ -287,15 +287,18 @@ if (hasInternet()) {
     # check FAIL with not equal files - error must be raised
     #
     cat("# Modified data", file = asset_path, append = TRUE)
-    expect_error(asset$download(local_path = parent_dir), "a file already exists.")
+    expect_error(asset$download(local_path = parent_dir),
+                 "a file already exists.")
 
     # check OVERWRITE
     #
     asset_filename <- "test-data/test_table.csv"
     asset_path <- file.path(test_data_tmp, "test_table.csv")
     asset_size_before <- file.size(asset_path)
-    asset <- asset_by_name(assets, logical_path = asset_filename)[[1]]
-    artifact_asset <- asset$download(local_path = parent_dir, overwrite_strategy = "OVERWRITE")
+    asset <-
+      asset_by_name(assets, logical_path = asset_filename)[[1]]
+    artifact_asset <-
+      asset$download(local_path = parent_dir, overwrite_strategy = "OVERWRITE")
 
     expect_equal(asset_size_before, file.size(asset_path))
     expect_equal(artifact_asset$get_local_path(), asset_path)
