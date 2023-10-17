@@ -144,13 +144,22 @@ test_that("create and delete work", {
                            api_key = test_api_key, keep_active = FALSE, log_output = FALSE,
                            log_error = FALSE, log_code = FALSE, log_system_details = FALSE,
                            log_git_info = FALSE)
-  Sys.sleep(2)
+
+  wait_for("Experiment created", 20, function(){
+    experiments_post <- get_experiments(project_name = test_proj, api_key = test_api_key)[["experiments"]]
+    expect_true(test_experiment %in% get_values_from_list(experiments_post, "experimentName"))
+  })
 
   experiments_post <- get_experiments(project_name = test_proj, api_key = test_api_key)[["experiments"]]
   experiments_post_num <- length(experiments_post)
   expect_true(test_experiment %in% get_values_from_list(experiments_post, "experimentName"))
   exp$delete()
-  Sys.sleep(2)
+
+  wait_for("Experiment deleted", 20, function(){
+    experiments_end <- get_experiments(project_name = test_proj, api_key = test_api_key)[["experiments"]]
+    experiments_end_num <- length(experiments_end)
+    experiments_end_num == experiments_post_num - 1
+  })
 
   experiments_end <- get_experiments(project_name = test_proj, api_key = test_api_key)[["experiments"]]
   experiments_end_num <- length(experiments_end)
