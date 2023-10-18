@@ -107,6 +107,17 @@ parse_artifact_name <- function(artifact_name) {
   list(workspace=workspace, artifact_name=artifact_name, version_or_alias=version_or_alias)
 }
 
+create_full_artifact_name <- function(artifact_name, workspace, version) {
+  name <- artifact_name
+  if (!is.null(workspace)) {
+    name <- paste0(workspace, "/", name)
+  }
+  if (!is.null(version)) {
+    name <- paste0(name, ":", version)
+  }
+  name
+}
+
 encode_metadata <- function(metadata) {
   jsonlite::toJSON(metadata, auto_unbox = TRUE)
 }

@@ -81,6 +81,25 @@ test_that("parse_artifact_name works", {
   expect_identical(unlist(res), unlist(expected))
 })
 
+test_that("create_full_artifact_name works", {
+  names <- list(
+    list("workspace", "artifact-name", "versionOrAlias"),
+    list("workspace", "artifact-name", NULL),
+    list(NULL, "artifact-name", "versionOrAlias"),
+    list(NULL, "artifact-name", NULL)
+  )
+  expected <- list(
+    "workspace/artifact-name:versionOrAlias",
+    "workspace/artifact-name",
+    "artifact-name:versionOrAlias",
+    "artifact-name"
+  )
+  res <- sapply(names, function(n) create_full_artifact_name(
+    artifact_name = n[[2]], workspace = n[[1]], version = n[[3]]
+  ))
+  expect_identical(unlist(res), unlist(expected))
+})
+
 test_that("encode_metadata and decode_metadata works", {
   metadata <- list(foo="bar")
 
