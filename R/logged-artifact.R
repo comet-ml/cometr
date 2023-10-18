@@ -77,10 +77,6 @@ LoggedArtifact <- R6::R6Class(
 
     },
 
-    get_full_artifact_name = function() {
-
-    },
-
     #' @description
     #' Get the name of the artifact.
     get_artifact_name = function() {
