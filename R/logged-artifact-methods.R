@@ -87,3 +87,47 @@ download_artifact_asset <- function(experiment_key,
     asset_type = asset_type
   )
 }
+
+download_logged_artifact <- function(experiment_key,
+                                     logged_artifact,
+                                     path,
+                                     overwrite_strategy,
+                                     api_key = NULL) {
+  artifact <- Artifact$new(
+    artifact_name = logged_artifact$get_artifact_name(),
+    artifact_type = logged_artifact$get_artifact_type(),
+  )
+  assets <- logged_artifact$get_assets()
+  file_assets_num <-
+    sum(unlist(sapply(assets, function(a) !a$is_remote())))
+
+  LOG_INFO(
+    sprintf(
+      "Downloading %d assets of the Artifact '%s'",
+      file_assets_num,
+      create_full_artifact_name(
+        artifact_name = logged_artifact$get_artifact_name(),
+        workspace = logged_artifact$get_workspace(),
+        version = as.character(logged_artifact$get_artifact_version())
+      )
+    ),
+    echo = TRUE
+  )
+
+  for (asset in assets) {
+    if (asset$is_remote()) {
+      artifact_asset <- create_remote_asset(
+        logical_path = asset$get_logical_path(),
+        overwrite = asset$has_overwrite(),
+        link = asset$get_link(),
+        metadata = asset$get_metadata()
+      )
+    } else {
+      artifact_asset <- asset$download(local_path = path,
+                                       overwrite_strategy = overwrite_strategy)
+    }
+    # add asset
+    artifact$add_asset(artifact_asset)
+  }
+  artifact
+}

@@ -75,7 +75,7 @@ if (hasInternet()) {
     file.copy(test_path("test-data"), parent_dir, recursive = TRUE)
 
     test_data_tmp <- file.path(parent_dir, "test-data")
-    asset_files = list.files(test_data_tmp,
+    asset_files <- list.files(test_data_tmp,
                              recursive = TRUE,
                              full.names = FALSE)
     expect_length(asset_files, 4)
@@ -92,7 +92,7 @@ if (hasInternet()) {
     artifact$add(local_path = test_data_tmp,
                  metadata = metadata)
     artifact$add(local_path = file.path(test_data_tmp, "sample-script.R"),
-                 logical_path = "samle-code",
+                 logical_path = "sample-code",
                  metadata = metadata)
 
     logged_artifact <- test_exp$log_artifact(artifact)
@@ -155,6 +155,62 @@ if (hasInternet()) {
 
     expect_error(asset$download(local_path = parent_dir),
                  "Failed to download remote asset")
+
+  })
+
+  test_that("LoggedArtifact download works", {
+    # move assets to temporary dir
+    parent_dir <- withr::local_tempdir()
+    file.copy(test_path("test-data"), parent_dir, recursive = TRUE)
+
+    test_data_tmp <- file.path(parent_dir, "test-data")
+    asset_files <- list.files(test_data_tmp,
+                             recursive = TRUE,
+                             full.names = FALSE)
+    expect_length(asset_files, 4)
+
+    # create and log artifact
+    artifact_name <- paste0("artifact-", generate_random_id())
+    metadata <- list(foo="bar")
+    remote_uri <- "http://localhost/dataset.dat"
+    artifact <- create_artifact(artifact_name = artifact_name,
+                                artifact_type = "dataset")
+    artifact$add_remote(uri = remote_uri,
+                        logical_path = "dataset",
+                        metadata = metadata)
+    artifact$add(local_path = test_data_tmp,
+                 metadata = metadata)
+    artifact$add(local_path = file.path(test_data_tmp, "sample-script.R"),
+                 logical_path = "sample-code",
+                 metadata = metadata)
+
+    logged_artifact <- test_exp$log_artifact(artifact)
+
+    assets <- logged_artifact$get_assets()
+    expect_length(assets, 6)
+
+    # Download assets to temporary dir and validate
+    #
+    download_dir <- file.path(parent_dir, "download_dir")
+    artifact <- logged_artifact$download(
+      path = download_dir, overwrite_strategy = FALSE
+    )
+    artifact_assets <- artifact$get_assets()
+    expect_length(artifact_assets, 6)
+
+    downloaded_asset_files <- list.files(download_dir,
+                              recursive = TRUE,
+                              full.names = FALSE)
+    expect_length(downloaded_asset_files, 5)
+
+    expected_names <- unlist(sapply(asset_files, function(f) basename(f), USE.NAMES = FALSE))
+    expected_names <- sort(append(expected_names, "sample-code"))
+    names <- sort(unlist(sapply(downloaded_asset_files, function(f) basename(f), USE.NAMES = FALSE)))
+
+    expect_equal(names, expected_names)
+
+    expect_equal(artifact$get_artifact_name(), artifact_name)
+    expect_equal(artifact$get_artifact_type(), "dataset")
 
   })
 

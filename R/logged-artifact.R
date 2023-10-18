@@ -77,6 +77,10 @@ LoggedArtifact <- R6::R6Class(
 
     },
 
+    get_full_artifact_name = function() {
+
+    },
+
     #' @description
     #' Get the name of the artifact.
     get_artifact_name = function() {
@@ -226,6 +230,30 @@ LoggedArtifact <- R6::R6Class(
       )
       private$aliases <- aliases
       invisible(self)
+    },
+
+    #' @description
+    #' Download the current Artifact Version assets to a given directory
+    #' (or the local directory by default). This downloads only non-remote assets.
+    #' @param path Where to download artifact version assets. If not provided,
+    #' a temporary path will be used.
+    #' @param overwrite_strategy One of the three possible strategies to handle
+    #' conflict when trying to download an artifact version asset to a path with an existing
+    #' file. See below for allowed values. Default is False or "FAIL".
+    #'
+    #' Overwrite strategy allowed values:
+    #' * False or "FAIL": If a file already exists and its content is different, raise the
+    #' `comet_ml.exceptions.ArtifactDownloadException`.
+    #' * "PRESERVE": If a file already exists and its content is different, show a WARNING but
+    #' preserve the existing content.
+    #' * True or "OVERWRITE": If a file already exists and its content is different, replace it
+    #' by the asset version asset.
+    #' @return [`Artifact`] object.
+    download = function(path = NULL, overwrite_strategy = FALSE) {
+      download_logged_artifact(experiment_key = private$experiment_key,
+                               logged_artifact = self,
+                               path = path,
+                               overwrite_strategy = overwrite_strategy)
     }
   ),
 
