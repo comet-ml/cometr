@@ -25,7 +25,6 @@ exp$stop()
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-LoggedArtifact-new}{\code{LoggedArtifact$new()}}
-\item \href{#method-LoggedArtifact-get_full_artifact_name}{\code{LoggedArtifact$get_full_artifact_name()}}
 \item \href{#method-LoggedArtifact-get_artifact_name}{\code{LoggedArtifact$get_artifact_name()}}
 \item \href{#method-LoggedArtifact-get_artifact_type}{\code{LoggedArtifact$get_artifact_type()}}
 \item \href{#method-LoggedArtifact-get_artifact_version}{\code{LoggedArtifact$get_artifact_version()}}
@@ -104,15 +103,6 @@ It is the sum of all the artifact version assets.}
 }
 \if{html}{\out{</div>}}
 }
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-LoggedArtifact-get_full_artifact_name"></a>}}
-\if{latex}{\out{\hypertarget{method-LoggedArtifact-get_full_artifact_name}{}}}
-\subsection{Method \code{get_full_artifact_name()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{LoggedArtifact$get_full_artifact_name()}\if{html}{\out{</div>}}
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-LoggedArtifact-get_artifact_name"></a>}}

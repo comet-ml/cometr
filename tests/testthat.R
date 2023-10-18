@@ -1,6 +1,7 @@
 library(testthat)
 library(cometr)
 
-if (!on_cran()) {
+onCRAN <- function() !identical(Sys.getenv("NOT_CRAN"), "true")
+if (!onCRAN()) {
   test_check("cometr")
 }
