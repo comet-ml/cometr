@@ -25,6 +25,7 @@ exp$stop()
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-LoggedArtifact-new}{\code{LoggedArtifact$new()}}
+\item \href{#method-LoggedArtifact-get_full_artifact_name}{\code{LoggedArtifact$get_full_artifact_name()}}
 \item \href{#method-LoggedArtifact-get_artifact_name}{\code{LoggedArtifact$get_artifact_name()}}
 \item \href{#method-LoggedArtifact-get_artifact_type}{\code{LoggedArtifact$get_artifact_type()}}
 \item \href{#method-LoggedArtifact-get_artifact_version}{\code{LoggedArtifact$get_artifact_version()}}
@@ -43,6 +44,7 @@ exp$stop()
 \item \href{#method-LoggedArtifact-update_artifact_tags}{\code{LoggedArtifact$update_artifact_tags()}}
 \item \href{#method-LoggedArtifact-update_version_tags}{\code{LoggedArtifact$update_version_tags()}}
 \item \href{#method-LoggedArtifact-update_aliases}{\code{LoggedArtifact$update_aliases()}}
+\item \href{#method-LoggedArtifact-download}{\code{LoggedArtifact$download()}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -102,6 +104,15 @@ It is the sum of all the artifact version assets.}
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-LoggedArtifact-get_full_artifact_name"></a>}}
+\if{latex}{\out{\hypertarget{method-LoggedArtifact-get_full_artifact_name}{}}}
+\subsection{Method \code{get_full_artifact_name()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{LoggedArtifact$get_full_artifact_name()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-LoggedArtifact-get_artifact_name"></a>}}
@@ -312,6 +323,42 @@ Update the logged artifact version aliases
 \item{\code{aliases}}{The new aliases for the artifact version}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-LoggedArtifact-download"></a>}}
+\if{latex}{\out{\hypertarget{method-LoggedArtifact-download}{}}}
+\subsection{Method \code{download()}}{
+Download the current Artifact Version assets to a given directory
+(or the local directory by default). This downloads only non-remote assets.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{LoggedArtifact$download(path = NULL, overwrite_strategy = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{path}}{Where to download artifact version assets. If not provided,
+a temporary path will be used.}
+
+\item{\code{overwrite_strategy}}{One of the three possible strategies to handle
+conflict when trying to download an artifact version asset to a path with an existing
+file. See below for allowed values. Default is False or "FAIL".
+
+Overwrite strategy allowed values:
+\itemize{
+\item False or "FAIL": If a file already exists and its content is different, raise the
+\code{comet_ml.exceptions.ArtifactDownloadException}.
+\item "PRESERVE": If a file already exists and its content is different, show a WARNING but
+preserve the existing content.
+\item True or "OVERWRITE": If a file already exists and its content is different, replace it
+by the asset version asset.
+}}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{\link{Artifact}} object.
 }
 }
 }
