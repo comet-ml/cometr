@@ -315,8 +315,13 @@ ArtifactAsset <- R6::R6Class(
       private$link <- link
       private$local_path <- local_path
       private$metadata <- metadata
-      private$asset_type <- asset_type
       private$overwrite <-  overwrite
+
+      if (is.null(asset_type)) {
+        private$asset_type <- "asset"
+      } else {
+        private$asset_type <- asset_type
+      }
     },
 
     #' @description
@@ -364,11 +369,7 @@ ArtifactAsset <- R6::R6Class(
     #' @description
     #' Asset type
     get_asset_type = function() {
-      if (is.null(private$asset_type)) {
-        "asset"
-      } else {
-        private$asset_type
-      }
+      private$asset_type
     }
   ),
 
