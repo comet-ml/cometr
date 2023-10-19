@@ -33,3 +33,18 @@ Creates new \code{Artifact} object with provided parameters. After that,
 the \code{Artifact} object can be used to save assets and can be logged
 with an \code{\link{Experiment}}.
 }
+\examples{
+\dontrun{
+library(cometr)
+# Assuming you have COMET_API_KEY, COMET_WORKSPACE, COMET_PROJECT_NAME variables define
+exp <- create_experiment()
+
+# Create a Comet Artifact
+artifact <- create_artifact(artifact_name = "Artifact-Name", artifact_type = "Artifact-Type")
+artifact$add("local-file")
+
+exp$log_artifact(artifact)
+exp$stop()
+}
+
+}

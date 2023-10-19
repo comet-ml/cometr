@@ -14,6 +14,22 @@ NULL
 #' Version. The aliases list is normalized to remove duplicates.
 #' @param metadata Some additional meta-data to attach to the future Artifact Version.
 #' @param version_tags List of tags to be attached to the future Artifact Version.
+#'
+#' @examples
+#' \dontrun{
+#' library(cometr)
+#' # Assuming you have COMET_API_KEY, COMET_WORKSPACE, COMET_PROJECT_NAME variables define
+#' exp <- create_experiment()
+#'
+#' # Create a Comet Artifact
+#' artifact <- create_artifact(artifact_name = "Artifact-Name", artifact_type = "Artifact-Type")
+#' artifact$add("local-file")
+#'
+#' exp$log_artifact(artifact)
+#' exp$stop()
+#' }
+#'
+#' @export
 create_artifact <-
   function(artifact_name,
            artifact_type,
