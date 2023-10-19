@@ -1,5 +1,5 @@
-## R CMD check results
+## ── R CMD check results ────────────────────────────────────────────────────────────────────────────────────────── cometr 0.4.0 ────
 
-0 errors | 0 warnings | 1 note
+Duration: 1m 39.5s
 
-* This is an update release with new maintainer.
+0 errors ✔ | 0 warnings ✔ | 0 notes ✔
