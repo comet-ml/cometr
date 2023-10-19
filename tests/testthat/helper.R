@@ -93,3 +93,19 @@ wait_for <- function(reason, timeout, callback) {
   ),
   echo = TRUE)
 }
+
+create_unique_name_experiment <-
+  function(prefix = "cometr-experiment-") {
+    new_exp_name <- paste0(prefix, generate_random_id())
+    create_experiment(
+      experiment_name = new_exp_name,
+      project_name = test_proj,
+      api_key = test_api_key,
+      keep_active = FALSE,
+      log_output = TRUE,
+      log_error = FALSE,
+      log_code = FALSE,
+      log_system_details = FALSE,
+      log_git_info = FALSE
+    )
+  }

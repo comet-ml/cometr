@@ -1,12 +1,9 @@
 if (hasInternet()) {
 
-  new_exp_name <- paste0("exp-logged-artifacts-", generate_random_id())
-  test_exp <- create_experiment(experiment_name = new_exp_name, project_name = test_proj,
-                                api_key = test_api_key, keep_active = FALSE,
-                                log_output = TRUE, log_error = FALSE, log_code = FALSE,
-                                log_system_details = FALSE, log_git_info = FALSE)
-
   test_that("LoggedArtifact update_artifact_tags works", {
+    test_exp <- create_unique_name_experiment(prefix = "exp-logged-artifacts-")
+    on.exit(test_exp$delete())
+
     artifact_name <- paste0("artifact-", generate_random_id())
     version <- "3.3.1"
     tags <- list("tag1", "tag2")
@@ -15,6 +12,8 @@ if (hasInternet()) {
                                 artifact_version = version,
                                 version_tags = tags)
     logged_artifact <- test_exp$log_artifact(artifact)
+
+    test_exp$stop()
 
     new_tags <- list("tag3", "tag4")
     logged_artifact$update_artifact_tags(new_tags)
@@ -28,6 +27,9 @@ if (hasInternet()) {
   })
 
   test_that("LoggedArtifact update_version_tags works", {
+    test_exp <- create_unique_name_experiment(prefix = "exp-logged-artifacts-")
+    on.exit(test_exp$delete())
+
     artifact_name <- paste0("artifact-", generate_random_id())
     version <- "2.3.1"
     tags <- list("tag1", "tag2")
@@ -36,6 +38,8 @@ if (hasInternet()) {
                                 artifact_version = version,
                                 version_tags = tags)
     logged_artifact <- test_exp$log_artifact(artifact)
+
+    test_exp$stop()
 
     new_tags <- list("tag3", "tag4")
     logged_artifact$update_version_tags(new_tags)
@@ -49,6 +53,9 @@ if (hasInternet()) {
   })
 
   test_that("LoggedArtifact update_aliases works", {
+    test_exp <- create_unique_name_experiment(prefix = "exp-logged-artifacts-")
+    on.exit(test_exp$delete())
+
     artifact_name <- paste0("artifact-", generate_random_id())
     version <- "2.1.1"
     aliases <- list("alias1", "alias2")
@@ -57,6 +64,8 @@ if (hasInternet()) {
                                 artifact_version = version,
                                 aliases = aliases)
     logged_artifact <- test_exp$log_artifact(artifact)
+
+    test_exp$stop()
 
     new_aliases <- list("alias3", "alias4")
     logged_artifact$update_aliases(new_aliases)
@@ -70,6 +79,9 @@ if (hasInternet()) {
   })
 
   test_that("LoggedArtifactAsset download works", {
+    test_exp <- create_unique_name_experiment(prefix = "exp-logged-artifacts-")
+    on.exit(test_exp$delete())
+
     # move assets to temporary dir
     parent_dir <- withr::local_tempdir()
     file.copy(test_path("test-data"), parent_dir, recursive = TRUE)
@@ -96,6 +108,8 @@ if (hasInternet()) {
                  metadata = metadata)
 
     logged_artifact <- test_exp$log_artifact(artifact)
+
+    test_exp$stop()
 
     assets <- logged_artifact$get_assets()
     expect_length(assets, 6)
@@ -159,6 +173,9 @@ if (hasInternet()) {
   })
 
   test_that("LoggedArtifact download works", {
+    test_exp <- create_unique_name_experiment(prefix = "exp-logged-artifacts-")
+    on.exit(test_exp$delete())
+
     # move assets to temporary dir
     parent_dir <- withr::local_tempdir()
     file.copy(test_path("test-data"), parent_dir, recursive = TRUE)
@@ -185,6 +202,8 @@ if (hasInternet()) {
                  metadata = metadata)
 
     logged_artifact <- test_exp$log_artifact(artifact)
+
+    test_exp$stop()
 
     assets <- logged_artifact$get_assets()
     expect_length(assets, 6)
@@ -213,6 +232,4 @@ if (hasInternet()) {
     expect_equal(artifact$get_artifact_type(), "dataset")
 
   })
-
-  test_exp$delete()
 }
