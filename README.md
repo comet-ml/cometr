@@ -178,9 +178,9 @@ artifact <- logged_artifact$download(path = "./data", overwrite_strategy = FALSE
 
 Where `overwrite_strategy` defines how existing files should be handled:
 
-* `FALSE` or "FAIL": If a file already exists and its content is different, raise the error.
-* "PRESERVE": If a file already exists and its content is different, show a WARNING but preserve the existing content.
-* `TRUE` or "OVERWRITE": If a file already exists and its content is different, replace it by the asset version asset.
+* `FALSE` or `"FAIL"`: If a file already exists and its content is different, raise an error.
+* `"PRESERVE"`: If a file already exists and its content is different, show a WARNING but preserve the existing content.
+* `TRUE` or `"OVERWRITE"`: If a file already exists and its content is different, replace it by the asset version asset.
 
 #### Learn more
 
