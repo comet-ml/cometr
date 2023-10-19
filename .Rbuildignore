@@ -8,3 +8,4 @@
 ^\.github$
 ^CRAN-SUBMISSION$
 ^cran-comments\.md$
+^tests/testthat/cometr\.log$
