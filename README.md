@@ -182,7 +182,7 @@ Where `overwrite_strategy` defines how existing files should be handled:
 * "PRESERVE": If a file already exists and its content is different, show a WARNING but preserve the existing content.
 * `TRUE` or "OVERWRITE": If a file already exists and its content is different, replace it by the asset version asset.
 
-**Learn more**
+#### Learn more
 
 You can find more details about Comet Artifacts at:
 
