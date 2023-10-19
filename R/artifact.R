@@ -220,7 +220,7 @@ Artifact <- R6::R6Class(
     },
 
     #' @description
-    #' Adds an initialized [`ArtifactAsset`] object to this Artefact.
+    #' Adds an initialized [`ArtifactAsset`] object to this Artifact.
     #' @param asset The initialized [`ArtifactAsset`] object
     add_asset = function(asset) {
       logical_path <- asset$get_logical_path()

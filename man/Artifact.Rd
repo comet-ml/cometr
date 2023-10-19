@@ -215,7 +215,7 @@ name, a model file name.}
 \if{html}{\out{<a id="method-Artifact-add_asset"></a>}}
 \if{latex}{\out{\hypertarget{method-Artifact-add_asset}{}}}
 \subsection{Method \code{add_asset()}}{
-Adds an initialized \code{\link{ArtifactAsset}} object to this Artefact.
+Adds an initialized \code{\link{ArtifactAsset}} object to this Artifact.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Artifact$add_asset(asset)}\if{html}{\out{</div>}}
 }
