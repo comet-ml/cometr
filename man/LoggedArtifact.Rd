@@ -333,15 +333,14 @@ a temporary path will be used.}
 
 \item{\code{overwrite_strategy}}{One of the three possible strategies to handle
 conflict when trying to download an artifact version asset to a path with an existing
-file. See below for allowed values. Default is False or "FAIL".
+file. See below for allowed values. Default is \code{FALSE} or "FAIL".
 
 Overwrite strategy allowed values:
 \itemize{
-\item False or "FAIL": If a file already exists and its content is different, raise the
-\code{comet_ml.exceptions.ArtifactDownloadException}.
+\item \code{FALSE} or "FAIL": If a file already exists and its content is different, raise the error.
 \item "PRESERVE": If a file already exists and its content is different, show a WARNING but
 preserve the existing content.
-\item True or "OVERWRITE": If a file already exists and its content is different, replace it
+\item \code{TRUE} or "OVERWRITE": If a file already exists and its content is different, replace it
 by the asset version asset.
 }}
 }

@@ -11,13 +11,13 @@ You can read more about Comet to see its full capabilities on [Comet's website](
 
 To install the stable CRAN version:
 
-```
+```R
 install.packages("cometr")
 ```
 
 To install the latest development version from GitHub:
 
-```
+```R
 install.packages("remotes")
 remotes::install_github("comet-ml/cometr")
 ```
@@ -30,7 +30,7 @@ To use `cometr`, you must first have a [Comet](https://www.comet.com/) account (
 
 `cometr` is most useful when used in an R script that is run using the `Rscript` tool. It can also be used in interactive environments (such as the R shell or RStudio). To use Comet in your R script, you need to first load `cometr` and create a Comet Experiment by calling `create_experiment()`.
 
-```
+```R
 library(cometr)
 API_KEY <- "<your API key>"
 exp <- create_experiment(experiment_name = "my-first-experiment",
@@ -51,7 +51,7 @@ Now that an Experiment object has been created, you can run your machine learnin
 
 Here is an example of how you can use the `exp` object to set or retrieve experiment information:
 
-```
+```R
 > exp$get_key()
 [1] "46d53bbce4e14fb692585b6e73da6e0c"
 > exp$log_metric("metric1", 5, step = 1)
@@ -80,7 +80,7 @@ A Comet Experiment will automatically end when the R script that created it fini
 
 While the Experiment object and its associated functions are the cornerstone of `cometr`, there are other functions that aren't directly related to a specific experiment, such as `get_workspaces()`, `get_projects()`, `get_experiments()`, `create_project()`, `delete_project()`.
 
-```
+```R
 > get_workspaces(api_key = API_KEY)
 $workspaceNames
 $workspaceNames[[1]]
@@ -110,7 +110,7 @@ When you are ready to send the Artifact to Comet, you will log it with `Experime
 
 Here is an example of how you can use the `exp` object to log Comet artifact:
 
-```
+```R
 metadata <- list(foo="bar")
 tags <- list("tag1", "tag2")
 aliases <- list("alias1", "alias2")
@@ -143,9 +143,9 @@ The code above will create new Comet Artifact. After that remote and local asset
 
 **Access a logged Artifact version**
 
-You can retrieve a logged Artifact from any workspace that you have permission to access, and a workspace name with the Experiment$get_artifact() method:
+You can retrieve a logged Artifact from any workspace that you have permission to access, and a workspace name with the `Experiment$get_artifact()` method:
 
-```
+```R
 logged_artifact <- exp$get_artifact(artifact_name=NAME,
                                     workspace=WORKSPACE,
                                     version_or_alias=VERSION_OR_ALIAS)
@@ -165,6 +165,22 @@ The full name of the Artifact has the following format `workspace/artifact-name:
 * `artifact-name` - will get the latest version of the artifact `artifact-name` from default user's workspace
 
 You can also use an alias for a specific version of the Artifact in the above examples instead of the semantic version if you prefer.
+
+#### Download an Artifact
+
+The process of using an Artifact is similar to the one used to create it.
+
+Here is an example you can use `logged_artifact` to download its content into local folder:
+
+```R
+artifact <- logged_artifact$download(path = "./data", overwrite_strategy = FALSE)
+```
+
+Where `overwrite_strategy` defines how existing files should be handled:
+
+* `FALSE` or "FAIL": If a file already exists and its content is different, raise the error.
+* "PRESERVE": If a file already exists and its content is different, show a WARNING but preserve the existing content.
+* `TRUE` or "OVERWRITE": If a file already exists and its content is different, replace it by the asset version asset.
 
 **Learn more**
 
