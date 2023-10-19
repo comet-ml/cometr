@@ -210,7 +210,7 @@ Configuration variables can be set either as environment variables or in a `come
 
 A `cometr` config file is a YAML file named `.comet.yml` that can be defined either in the current working directory or in the user's home directory. For example, a `cometr` config file that defines a default workspace and a default project could look like this:
 
-```
+```yml
 COMET_WORKSPACE: my_workspace
 COMET_PROJECT_NAME: my_project
 ```
