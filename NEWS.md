@@ -1,3 +1,8 @@
+# cometr 0.4.0
+
+* Added support for downloading Comet Artifacts `LoggedArtifact$download()`
+* Added support for downloading Comet Artifact Asset `LoggedArtifactAsset$download()`
+
 # cometr 0.3.0
 
 * Added support for logging Comet Artifacts `Experiment$log_artifact(artifact)`

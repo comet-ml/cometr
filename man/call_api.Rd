@@ -8,7 +8,9 @@ call_api(
   endpoint,
   method = c("GET", "POST"),
   params = list(),
+  parse_response = TRUE,
   response_json = TRUE,
+  local_file_path = NULL,
   api_key = NULL
 )
 }
@@ -20,8 +22,13 @@ call_api(
 \item{params}{A list of parameters. For GET endpoints, the parameters are appended
 to the URL; for POST endpoints, the parameters are sent in the body of the request.}
 
+\item{parse_response}{If \code{TRUE}, try to parse response from server.}
+
 \item{response_json}{If \code{TRUE}, try to parse the response as JSON. If \code{FALSE}, return
-the response as raw data (useful when the response is a file).}
+the response as raw data, e.g. binary.}
+
+\item{local_file_path}{The path to the local file for saving downloaded content
+if appropriate.}
 
 \item{api_key}{Comet API key (can also be specified using the \code{COMET_API_KEY}
 parameter as an environment variable or in a comet config file).}

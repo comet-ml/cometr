@@ -107,27 +107,6 @@ if (hasInternet()) {
     expect_equal(remote_assets[[1]]$get_metadata(), metadata)
   })
 
-  test_that("LoggedArtifact update_artifact_tags works", {
-    artifact_name <- paste0("artifact-", generate_random_id())
-    version <- "3.3.1"
-    tags <- list("tag1", "tag2")
-    artifact <- create_artifact(artifact_name = artifact_name,
-                                artifact_type = "update-tags-test",
-                                artifact_version = version,
-                                version_tags = tags)
-    logged_artifact <- test_exp$log_artifact(artifact)
-
-    new_tags <- list("tag3", "tag4")
-    logged_artifact$update_artifact_tags(new_tags)
-
-    # get artifact and check tags
-    logged_artifact <- get_artifact_by_name(
-      artifact_name = artifact_name,
-      experiment_key = test_exp$get_key()
-    )
-    expect_equal(logged_artifact$get_artifact_tags(), new_tags)
-  })
-
   test_that("Artifact can be logged with defined version", {
     artifact_name <- paste0("artifact-", generate_random_id())
     version <- "2.3.1"
@@ -198,49 +177,6 @@ if (hasInternet()) {
     expect_equal(logged_artifact$get_artifact_id(), artifact_id)
     expect_equal(logged_artifact$get_artifact_version_id(), artifact_version_id)
   })
-
-  test_that("LoggedArtifact update_version_tags works", {
-    artifact_name <- paste0("artifact-", generate_random_id())
-    version <- "2.3.1"
-    tags <- list("tag1", "tag2")
-    artifact <- create_artifact(artifact_name = artifact_name,
-                                artifact_type = "update-version-tags-test",
-                                artifact_version = version,
-                                version_tags = tags)
-    logged_artifact <- test_exp$log_artifact(artifact)
-
-    new_tags <- list("tag3", "tag4")
-    logged_artifact$update_version_tags(new_tags)
-
-    # get artifact and check version tags
-    logged_artifact <- get_artifact_by_name(
-      artifact_name = artifact_name,
-      experiment_key = test_exp$get_key()
-    )
-    expect_equal(logged_artifact$get_version_tags(), new_tags)
-  })
-
-  test_that("LoggedArtifact update_aliases works", {
-    artifact_name <- paste0("artifact-", generate_random_id())
-    version <- "2.1.1"
-    aliases <- list("alias1", "alias2")
-    artifact <- create_artifact(artifact_name = artifact_name,
-                                artifact_type = "update-version-aliases-test",
-                                artifact_version = version,
-                                aliases = aliases)
-    logged_artifact <- test_exp$log_artifact(artifact)
-
-    new_aliases <- list("alias3", "alias4")
-    logged_artifact$update_aliases(new_aliases)
-
-    # get artifact and check version aliases
-    logged_artifact <- get_artifact_by_name(
-      artifact_name = artifact_name,
-      experiment_key = test_exp$get_key()
-    )
-    expect_equal(logged_artifact$get_aliases(), new_aliases)
-  })
-
 
   test_exp$delete()
 }

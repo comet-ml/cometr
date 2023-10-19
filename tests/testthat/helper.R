@@ -65,3 +65,47 @@ get_subp <- function(sub_pid) {
 }
 
 hasInternet <- function() !is.null(curl::nslookup("r-project.org", error = FALSE))
+
+asset_by_name <- function(assets, logical_path) {
+  selection <- sapply(assets, function(f)
+    f$get_logical_path() == logical_path)
+  assets[selection]
+}
+
+wait_for <- function(reason, timeout, callback) {
+  start_time <- Sys.time()
+  elapsed <-  0
+  while (!callback()) {
+    now <- Sys.time()
+    elapsed <- now - start_time
+    remaining <- timeout - elapsed
+    if (remaining < 0) {
+      comet_stop(paste0("waited too long (>", timeout, " seconds) for: '", reason, "'"))
+    }
+    LOG_INFO(sprintf("waiting for: '%s' (%03.0fs left)", reason, remaining),
+             echo = TRUE)
+    Sys.sleep(1)
+  }
+  LOG_INFO(sprintf(
+    "finished waiting for '%s', it took %03.0f seconds",
+    reason,
+    elapsed
+  ),
+  echo = TRUE)
+}
+
+create_unique_name_experiment <-
+  function(prefix = "cometr-experiment-") {
+    new_exp_name <- paste0(prefix, generate_random_id())
+    create_experiment(
+      experiment_name = new_exp_name,
+      project_name = test_proj,
+      api_key = test_api_key,
+      keep_active = FALSE,
+      log_output = TRUE,
+      log_error = FALSE,
+      log_code = FALSE,
+      log_system_details = FALSE,
+      log_git_info = FALSE
+    )
+  }

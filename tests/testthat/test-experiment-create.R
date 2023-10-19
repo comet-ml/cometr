@@ -140,21 +140,28 @@ test_that("create and delete work", {
   skip_if_offline()
   on.exit(reset_comet_cache())
 
+  test_experiment <- paste0("test-exp-", generate_random_id())
+
   exp <- create_experiment(experiment_name = test_experiment, project_name = test_proj,
                            api_key = test_api_key, keep_active = FALSE, log_output = FALSE,
                            log_error = FALSE, log_code = FALSE, log_system_details = FALSE,
                            log_git_info = FALSE)
-  Sys.sleep(2)
 
+  wait_for("Experiment created", 20, function(){
+    experiments_post <- get_experiments(project_name = test_proj, api_key = test_api_key)[["experiments"]]
+    isTRUE(test_experiment %in% get_values_from_list(experiments_post, "experimentName"))
+  })
   experiments_post <- get_experiments(project_name = test_proj, api_key = test_api_key)[["experiments"]]
-  experiments_post_num <- length(experiments_post)
   expect_true(test_experiment %in% get_values_from_list(experiments_post, "experimentName"))
+  # delete experiment and check that it was deleted
   exp$delete()
-  Sys.sleep(2)
 
-  experiments_end <- get_experiments(project_name = test_proj, api_key = test_api_key)[["experiments"]]
-  experiments_end_num <- length(experiments_end)
-  expect_equal(experiments_end_num, experiments_post_num - 1)
+  wait_for("Experiment deleted", 20, function(){
+    experiments_post <- get_experiments(project_name = test_proj, api_key = test_api_key)[["experiments"]]
+    isFALSE(test_experiment %in% get_values_from_list(experiments_post, "experimentName"))
+  })
+  experiments_post <- get_experiments(project_name = test_proj, api_key = test_api_key)[["experiments"]]
+  expect_false(test_experiment %in% get_values_from_list(experiments_post, "experimentName"))
 })
 
 test_that("keepalive process is alive until the experiment stops", {

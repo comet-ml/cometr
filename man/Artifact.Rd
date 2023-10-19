@@ -38,6 +38,7 @@ exp$stop()
 \item \href{#method-Artifact-get_assets}{\code{Artifact$get_assets()}}
 \item \href{#method-Artifact-add}{\code{Artifact$add()}}
 \item \href{#method-Artifact-add_remote}{\code{Artifact$add_remote()}}
+\item \href{#method-Artifact-add_asset}{\code{Artifact$add_asset()}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -206,6 +207,23 @@ name, a model file name.}
 \item{\code{overwrite}}{If \code{\link{TRUE}} will overwrite all existing assets with the same name.}
 
 \item{\code{metadata}}{Some additional data to attach to the asset.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Artifact-add_asset"></a>}}
+\if{latex}{\out{\hypertarget{method-Artifact-add_asset}{}}}
+\subsection{Method \code{add_asset()}}{
+Adds an initialized \code{\link{ArtifactAsset}} object to this Artifact.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Artifact$add_asset(asset)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{asset}}{The initialized \code{\link{ArtifactAsset}} object}
 }
 \if{html}{\out{</div>}}
 }

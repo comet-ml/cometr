@@ -15,18 +15,27 @@ get_api_version <- function() {
 #' @param method The HTTP method to use, either "GET" or "POST".
 #' @param params A list of parameters. For GET endpoints, the parameters are appended
 #' to the URL; for POST endpoints, the parameters are sent in the body of the request.
+#' @param parse_response If `TRUE`, try to parse response from server.
 #' @param response_json If `TRUE`, try to parse the response as JSON. If `FALSE`, return
-#' the response as raw data (useful when the response is a file).
+#' the response as raw data, e.g. binary.
+#' @param local_file_path The path to the local file for saving downloaded content
+#' if appropriate.
 #' @return The parsed response
 #' @export
-call_api <- function(endpoint, method = c("GET", "POST"), params = list(), response_json = TRUE, api_key = NULL) {
+call_api <- function(endpoint,
+                     method = c("GET", "POST"),
+                     params = list(),
+                     parse_response = TRUE,
+                     response_json = TRUE,
+                     local_file_path = NULL,
+                     api_key = NULL) {
   LOG_DEBUG("Call to API endpoint ", endpoint)
   method <- match.arg(method)
   api_key <- api_key %||% get_config_api_key(must_work = TRUE)
 
   auth <- httr::add_headers("Authorization" = api_key)
   agent <- httr::user_agent(sprintf("Comet API for R cometr/%s", utils::packageVersion(PACKAGE_NAME)))
-  timeout <- httr::timeout(20)
+  timeout <- httr::timeout(60)
   params <- Filter(Negate(is.null), params)
   url <- sprintf("%s%s%s", get_config_url(), .cometrenv$COMET_API_ENDPOINT_BASE, endpoint)
 
@@ -53,6 +62,11 @@ call_api <- function(endpoint, method = c("GET", "POST"), params = list(), respo
       url <- httr::modify_url(url, query = params)
       LOG_INFO("API call: ", method, " ", url, ", params: ", params, ", body_params ", body_params)
       response <- httr::POST(url, auth, agent, encode = "multipart", body = body_params, timeout)
+    } else if (endpoint == "/experiment/asset/get-asset" && !is.null(local_file_path)) {
+      # download asset to file
+      parse_response <- FALSE
+      url <- httr::modify_url(url, query = params)
+      response <- httr::GET(url, auth, agent, timeout, httr::write_disk(local_file_path))
     } else if (method == "GET") {
       url <- httr::modify_url(url, query = params)
       LOG_INFO("API call: ", method, " ", url, ", params: ", params)
@@ -67,9 +81,14 @@ call_api <- function(endpoint, method = c("GET", "POST"), params = list(), respo
 
   check_response(res = response, params = params)
 
-  parsed <- parse_response(response, response_json = response_json)
-  LOG_INFO("Parsed response: ", parsed)
-  parsed
+  if (parse_response) {
+    parsed <- parse_response(response, response_json = response_json)
+    LOG_INFO("Parsed response: ", parsed)
+    parsed
+  } else {
+    LOG_INFO("Response received: ", response)
+    response
+  }
 }
 
 check_response <- function(res, params = NULL) {

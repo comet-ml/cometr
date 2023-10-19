@@ -107,10 +107,65 @@ parse_artifact_name <- function(artifact_name) {
   list(workspace=workspace, artifact_name=artifact_name, version_or_alias=version_or_alias)
 }
 
+create_full_artifact_name <- function(artifact_name, workspace, version) {
+  name <- artifact_name
+  if (!is.null(workspace)) {
+    name <- paste0(workspace, "/", name)
+  }
+  if (!is.null(version)) {
+    name <- paste0(name, ":", version)
+  }
+  name
+}
+
 encode_metadata <- function(metadata) {
   jsonlite::toJSON(metadata, auto_unbox = TRUE)
 }
 
 decode_metadata <- function(metadata) {
   jsonlite::fromJSON(metadata, simplifyVector = FALSE)
+}
+
+validate_artifact_overwrite_strategy <- function(overwrite_strategy) {
+  if (isBool(overwrite_strategy)) {
+    if (overwrite_strategy) {
+      return("OVERWRITE")
+    } else {
+      return("FAIL")
+    }
+  } else if (is.character(overwrite_strategy)) {
+    user_overwrite_strategy <- tolower(overwrite_strategy)
+    if (user_overwrite_strategy == "fail") {
+      return("FAIL")
+    } else if (user_overwrite_strategy == "preserve") {
+      return("PRESERVE")
+    } else if (user_overwrite_strategy == "overwrite") {
+      return("OVERWRITE")
+    }
+  }
+
+    comet_stop("Unsupported overwrite_strategy value: ", overwrite_strategy)
+  }
+
+resolve_artifact_asset_path <- function(parent_dir,
+                                        asset_file,
+                                        overwrite_strategy) {
+  asset_path <- file.path(parent_dir, asset_file)
+
+  result <- list(asset_path=asset_path)
+  result["already_exists"] <- FALSE
+  if (file.exists(asset_path)) {
+    result["already_exists"] <- TRUE
+    if (overwrite_strategy == "OVERWRITE") {
+      # remove existing file
+      file.remove(asset_path)
+    }
+  } else {
+    # create parent directories
+    parent_dir <- dirname(asset_path)
+    if (!dir.exists(parent_dir)) {
+      dir.create(parent_dir, recursive = TRUE)
+    }
+  }
+  result
 }

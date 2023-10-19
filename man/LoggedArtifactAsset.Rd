@@ -17,6 +17,7 @@ particular \code{\link{Artifact}} to the Comet.
 \item \href{#method-LoggedArtifactAsset-get_id}{\code{LoggedArtifactAsset$get_id()}}
 \item \href{#method-LoggedArtifactAsset-get_artifact_version_id}{\code{LoggedArtifactAsset$get_artifact_version_id()}}
 \item \href{#method-LoggedArtifactAsset-get_artifact_id}{\code{LoggedArtifactAsset$get_artifact_id()}}
+\item \href{#method-LoggedArtifactAsset-download}{\code{LoggedArtifactAsset$download()}}
 }
 }
 \if{html}{\out{
@@ -108,5 +109,40 @@ The ID of Artifact associated with this asset
 \if{html}{\out{<div class="r">}}\preformatted{LoggedArtifactAsset$get_artifact_id()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-LoggedArtifactAsset-download"></a>}}
+\if{latex}{\out{\hypertarget{method-LoggedArtifactAsset-download}{}}}
+\subsection{Method \code{download()}}{
+Download the asset to a given full path or directory.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{LoggedArtifactAsset$download(
+  local_path = NULL,
+  logical_path = NULL,
+  overwrite_strategy = FALSE
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{local_path}}{The root folder to which to download. If \code{NULL}, will
+download to a tmp path, otherwise will be either a root local path or a full local path.}
+
+\item{\code{logical_path}}{The path relative to the root local_path to use
+If \code{NULL} and \code{local_path==NULL} then no relative path is used, file would
+just be a tmp path on local disk.
+If \code{NULL} and \code{local_path!=NULL} then the local_path will be treated
+as a root path, and the asset's \code{logical_path} will be appended to the
+root path to form a full local path.}
+
+\item{\code{overwrite_strategy}}{can be \code{FALSE}, "FAIL", "PRESERVE" or "OVERWRITE"
+and follows the same semantics for overwrite strategy as artifact.download()}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{ArtifactAsset} holding information about downloaded asset data file.
+}
 }
 }

@@ -180,7 +180,7 @@ LoggedArtifact <- R6::R6Class(
       files = private$load_artifact_assets()
       if (length(files)) {
         remote_indexes = sapply(files, function(f)
-          f$remote)
+          isTRUE(f[["remote"]]))
         lapply(files[remote_indexes], function (file)
           private$to_logged_asset(file))
       } else {
@@ -226,6 +226,30 @@ LoggedArtifact <- R6::R6Class(
       )
       private$aliases <- aliases
       invisible(self)
+    },
+
+    #' @description
+    #' Download the current Artifact Version assets to a given directory
+    #' (or the local directory by default). This downloads only non-remote assets.
+    #' @param path Where to download artifact version assets. If not provided,
+    #' a temporary path will be used.
+    #' @param overwrite_strategy One of the three possible strategies to handle
+    #' conflict when trying to download an artifact version asset to a path with an existing
+    #' file. See below for allowed values. Default is False or "FAIL".
+    #'
+    #' Overwrite strategy allowed values:
+    #' * False or "FAIL": If a file already exists and its content is different, raise the
+    #' `comet_ml.exceptions.ArtifactDownloadException`.
+    #' * "PRESERVE": If a file already exists and its content is different, show a WARNING but
+    #' preserve the existing content.
+    #' * True or "OVERWRITE": If a file already exists and its content is different, replace it
+    #' by the asset version asset.
+    #' @return [`Artifact`] object.
+    download = function(path = NULL, overwrite_strategy = FALSE) {
+      download_logged_artifact(experiment_key = private$experiment_key,
+                               logged_artifact = self,
+                               path = path,
+                               overwrite_strategy = overwrite_strategy)
     }
   ),
 
@@ -343,6 +367,56 @@ LoggedArtifactAsset <- R6::R6Class(
     #' The ID of Artifact associated with this asset
     get_artifact_id = function() {
       private$artifact_id
+    },
+
+    #' @description
+    #' Download the asset to a given full path or directory.
+    #'
+    #' @param local_path The root folder to which to download. If `NULL`, will
+    #' download to a tmp path, otherwise will be either a root local path or a full local path.
+    #' @param logical_path The path relative to the root local_path to use
+    #' If `NULL` and `local_path==NULL` then no relative path is used, file would
+    #' just be a tmp path on local disk.
+    #' If `NULL` and `local_path!=NULL` then the local_path will be treated
+    #' as a root path, and the asset's `logical_path` will be appended to the
+    #' root path to form a full local path.
+    #' @param overwrite_strategy can be `FALSE`, "FAIL", "PRESERVE" or "OVERWRITE"
+    #' and follows the same semantics for overwrite strategy as artifact.download()
+    #' @return `ArtifactAsset` holding information about downloaded asset data file.
+    download = function(local_path = NULL,
+                        logical_path = NULL,
+                        overwrite_strategy = FALSE) {
+      if (is.null(local_path)) {
+        root_path <- tempfile()
+      } else {
+        root_path <- local_path
+      }
+      if (is.null(logical_path)) {
+        asset_filename <- self$get_logical_path()
+      } else {
+        asset_filename <- logical_path
+      }
+
+      if (self$is_remote()) {
+        comet_stop(
+          sprintf(
+            "Failed to download remote asset '%s'. Please use asset's URI to download it directly from: '%s'",
+            asset_filename, self$get_link()
+          ),
+          echo = TRUE
+        )
+      }
+
+      download_artifact_asset(
+        experiment_key = private$experiment_key,
+        asset_id = private$id,
+        artifact_version_id = private$artifact_version_id,
+        asset_filename = asset_filename,
+        root_path = root_path,
+        overwrite_strategy = overwrite_strategy,
+        asset_type = super$get_asset_type(),
+        metadata = super$get_metadata()
+      )
     }
   ),
 

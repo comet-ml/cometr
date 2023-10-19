@@ -14,6 +14,22 @@ NULL
 #' Version. The aliases list is normalized to remove duplicates.
 #' @param metadata Some additional meta-data to attach to the future Artifact Version.
 #' @param version_tags List of tags to be attached to the future Artifact Version.
+#'
+#' @examples
+#' \dontrun{
+#' library(cometr)
+#' # Assuming you have COMET_API_KEY, COMET_WORKSPACE, COMET_PROJECT_NAME variables define
+#' exp <- create_experiment()
+#'
+#' # Create a Comet Artifact
+#' artifact <- create_artifact(artifact_name = "Artifact-Name", artifact_type = "Artifact-Type")
+#' artifact$add("local-file")
+#'
+#' exp$log_artifact(artifact)
+#' exp$stop()
+#' }
+#'
+#' @export
 create_artifact <-
   function(artifact_name,
            artifact_type,
@@ -209,17 +225,34 @@ Artifact <- R6::R6Class(
         logical_path <- remote_asset_name_from_uri(uri)
       }
 
-      asset = ArtifactAsset$new(
+      asset <- create_remote_asset(
         logical_path = logical_path,
         overwrite = overwrite,
-        remote = TRUE,
         link = uri,
         metadata = metadata
       )
-      private$add_asset(asset)
+      self$add_asset(asset)
+      invisible(self)
+    },
+
+    #' @description
+    #' Adds an initialized [`ArtifactAsset`] object to this Artifact.
+    #' @param asset The initialized [`ArtifactAsset`] object
+    add_asset = function(asset) {
+      logical_path <- asset$get_logical_path()
+      if (any(private$assets_names == logical_path)) {
+        comet_stop(
+          sprintf(
+            "Cannot add new asset with logical_path '%s', an existing asset already exists with this logical_path. To add this asset to this artifact you should use a new unique logical_path.",
+            logical_path
+          )
+        )
+      } else {
+        private$assets = append(private$assets, asset)
+        private$assets_names = append(private$assets_names, logical_path)
+      }
       invisible(self)
     }
-
   ),
 
   private = list(
@@ -243,7 +276,7 @@ Artifact <- R6::R6Class(
         metadata = metadata
       )
       for (asset in assets) {
-        private$add_asset(asset)
+        self$add_asset(asset)
       }
     },
 
@@ -260,22 +293,7 @@ Artifact <- R6::R6Class(
         overwrite = overwrite,
         metadata = metadata
       )
-      private$add_asset(asset)
-    },
-
-    add_asset = function(asset) {
-      logical_path <- asset$get_logical_path()
-      if (any(private$assets_names == logical_path)) {
-        comet_stop(
-          sprintf(
-            "Cannot add new asset with logical_path '%s', an existing asset already exists with this logical_path. To add this asset to this artifact you should use a new unique logical_path.",
-            logical_path
-          )
-        )
-      } else {
-        private$assets = append(private$assets, asset)
-        private$assets_names = append(private$assets_names, logical_path)
-      }
+      self$add_asset(asset)
     }
   )
 )
@@ -315,8 +333,13 @@ ArtifactAsset <- R6::R6Class(
       private$link <- link
       private$local_path <- local_path
       private$metadata <- metadata
-      private$asset_type <- asset_type
       private$overwrite <-  overwrite
+
+      if (is.null(asset_type)) {
+        private$asset_type <- "asset"
+      } else {
+        private$asset_type <- asset_type
+      }
     },
 
     #' @description
@@ -364,11 +387,7 @@ ArtifactAsset <- R6::R6Class(
     #' @description
     #' Asset type
     get_asset_type = function() {
-      if (is.null(private$asset_type)) {
-        "asset"
-      } else {
-        private$asset_type
-      }
+      private$asset_type
     }
   ),
 
@@ -384,7 +403,7 @@ ArtifactAsset <- R6::R6Class(
   )
 )
 
-create_assets_from_folder = function(folder, logical_path, overwrite, metadata) {
+create_assets_from_folder <- function(folder, logical_path, overwrite, metadata) {
   asset_files = list.files(path = folder,
                            recursive = TRUE,
                            full.names = FALSE)
@@ -406,16 +425,31 @@ create_assets_from_folder = function(folder, logical_path, overwrite, metadata) 
   })
 }
 
-create_asset_from_file = function(asset_file,
+create_asset_from_file <- function(asset_file,
                                   logical_path,
                                   overwrite,
-                                  metadata) {
+                                  metadata,
+                                  asset_type = NULL) {
   size <- file.size(asset_file)
   ArtifactAsset$new(
     logical_path = logical_path,
     overwrite = overwrite,
     local_path = asset_file,
     metadata = metadata,
-    size = size
+    size = size,
+    asset_type = asset_type
+  )
+}
+
+create_remote_asset <- function(logical_path,
+                                link,
+                                metadata,
+                                overwrite) {
+  ArtifactAsset$new(
+    logical_path = logical_path,
+    overwrite = overwrite,
+    remote = TRUE,
+    link = link,
+    metadata = metadata
   )
 }

@@ -48,12 +48,16 @@ log_artifact <- function(artifact,
     return(logged_artifact)
   }
 
+  full_artifact_name <- create_full_artifact_name(
+    artifact_name = logged_artifact$get_artifact_name(),
+    workspace = logged_artifact$get_workspace(),
+    version = as.character(logged_artifact$get_artifact_version())
+  )
+
   LOG_INFO(
     sprintf(
-      "Artifact '%s/%s:%s' uploading started",
-      logged_artifact$get_workspace(),
-      logged_artifact$get_artifact_name(),
-      as.character(logged_artifact$get_artifact_version())
+      "Artifact '%s' uploading started",
+      full_artifact_name
     ), echo = TRUE
   )
 
@@ -75,10 +79,8 @@ log_artifact <- function(artifact,
 
     LOG_INFO(
       sprintf(
-        "Artifact '%s/%s:%s' has been successfully uploaded",
-        logged_artifact$get_workspace(),
-        logged_artifact$get_artifact_name(),
-        as.character(logged_artifact$get_artifact_version())
+        "Artifact '%s' has been successfully uploaded",
+        full_artifact_name
       ), echo = TRUE
     )
   },
@@ -377,3 +379,4 @@ get_artifact_by_name <- function(experiment_key,
                consumer_experiment_key = experiment_key,
                api_key = api_key)
 }
+

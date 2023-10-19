@@ -2,7 +2,7 @@ PACKAGE_NAME <- "cometr"
 .cometrenv <- new.env(parent = emptyenv())
 
 .cometrenv$COMET_CONFIG_FILE_NAME <- ".comet.yml"
-.cometrenv$COMET_API_DEFAULT_URL <- "https://www.comet-ml.com/clientlib/"
+.cometrenv$COMET_API_DEFAULT_URL <- "https://www.comet.com/clientlib/"
 .cometrenv$COMET_API_VERSION <- "v2"
 .cometrenv$COMET_API_ENDPOINT_BASE <- paste0("/api/rest/", .cometrenv$COMET_API_VERSION)
 

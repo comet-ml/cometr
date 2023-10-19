@@ -1,6 +1,6 @@
 Package: cometr
 Title: 'Comet' API for R
-Version: 0.3.0
+Version: 0.4.0
 Authors@R: c(
     person(given = "Dean",
            family = "Attali",
@@ -33,14 +33,16 @@ Imports:
     R.utils,
     R6 (>= 2.4.0),
     utils,
-    yaml
+    yaml,
+    digest
 Suggests:
     covr,
     curl,
     git2r (>= 0.22.1),
     httptest,
     ps,
-    testthat
+    testthat,
+    withr
 Depends: 
     R (>= 3.5.0)
 License: MIT + file LICENSE
