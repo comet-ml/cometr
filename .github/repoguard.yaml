@@ -1,0 +1,3 @@
+# RepoGuard — see https://github.com/comet-ml/repo-guard#waiving-a-check
+keep:
+  reason: "Live: Comet's R SDK, published on CRAN as cometr; CRAN points bug reports at this repo's issues"
